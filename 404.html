@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>404 - Halaman Tidak Ditemukan | Stasiun Geofisika Mataram</title>
+    <meta name="description" content="Halaman yang Anda cari tidak ditemukan di website Stasiun Geofisika Mataram - BMKG">
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1e40af",
+                        "secondary": "#0ea5e9",
+                        "accent": "#f59e0b",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        "bmkg-blue": "#1e3a8a",
+                        "bmkg-green": "#059669",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-white min-h-screen flex items-center justify-center">
+    <div class="max-w-2xl mx-auto px-4 text-center">
+        <!-- Error Icon -->
+        <div class="mb-8">
+            <div class="w-32 h-32 mx-auto bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
+                <span class="material-symbols-outlined text-6xl text-red-600">error</span>
+            </div>
+        </div>
+        
+        <!-- Error Message -->
+        <div class="mb-8">
+            <h1 class="text-6xl font-bold text-slate-900 dark:text-white mb-4">404</h1>
+            <h2 class="text-2xl font-bold text-slate-700 dark:text-slate-300 mb-4">Halaman Tidak Ditemukan</h2>
+            <p class="text-lg text-slate-600 dark:text-slate-400 mb-6">
+                Maaf, halaman yang Anda cari tidak dapat ditemukan. Mungkin halaman telah dipindahkan atau URL yang dimasukkan salah.
+            </p>
+        </div>
+        
+        <!-- Navigation Options -->
+        <div class="space-y-4 mb-8">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-bmkg-blue text-white rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                    <span class="material-symbols-outlined">home</span>
+                    Kembali ke Beranda
+                </a>
+                <button onclick="history.back()" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white rounded-lg font-medium hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
+                    <span class="material-symbols-outlined">arrow_back</span>
+                    Halaman Sebelumnya
+                </button>
+            </div>
+        </div>
+        
+        <!-- Quick Links -->
+        <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200 dark:border-slate-700">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Halaman Populer</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <a href="/#gempa" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-red-600">vibration</span>
+                    <span class="font-medium">Gempa Bumi Terkini</span>
+                </a>
+                <a href="/#tsunami" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-cyan-600">tsunami</span>
+                    <span class="font-medium">Status Tsunami</span>
+                </a>
+                <a href="/#magnet" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-purple-600">explore</span>
+                    <span class="font-medium">Magnet Bumi</span>
+                </a>
+                <a href="/#kontak" class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">
+                    <span class="material-symbols-outlined text-green-600">contact_phone</span>
+                    <span class="font-medium">Kontak Kami</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contact Info -->
+        <div class="mt-8 text-sm text-slate-500 dark:text-slate-400">
+            <p>Jika masalah berlanjut, hubungi kami di:</p>
+            <p class="font-medium">geofisika.mataram@bmkg.go.id | (0370) 123-4567</p>
+        </div>
+        
+        <!-- BMKG Logo -->
+        <div class="mt-8 flex items-center justify-center gap-3 text-slate-400">
+            <div class="w-8 h-8 bg-bmkg-blue rounded-lg flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-lg">sensors</span>
+            </div>
+            <span class="text-sm">Stasiun Geofisika Mataram - BMKG</span>
+        </div>
+    </div>
+    
+    <script>
+        // Auto redirect after 10 seconds
+        setTimeout(() => {
+            if (confirm('Halaman tidak ditemukan. Kembali ke beranda?')) {
+                window.location.href = '/';
+            }
+        }, 10000);
+        
+        // Track 404 errors (for analytics)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_not_found', {
+                'page_location': window.location.href,
+                'page_referrer': document.referrer
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+{
+  "socialMedia": {
+    "facebook": {
+      "url": "https://www.facebook.com/InfoBMKG",
+      "name": "Facebook BMKG",
+      "icon": "facebook",
+      "color": "#1877f2",
+      "active": true
+    },
+    "twitter": {
+      "url": "https://twitter.com/infoBMKG",
+      "name": "Twitter BMKG",
+      "icon": "twitter",
+      "color": "#1da1f2",
+      "active": true
+    },
+    "instagram": {
+      "url": "https://www.instagram.com/infobmkg",
+      "name": "Instagram BMKG",
+      "icon": "instagram",
+      "color": "#e4405f",
+      "active": true
+    },
+    "youtube": {
+      "url": "https://www.youtube.com/channel/UCkZlJNmJoR6wjzKGKGb0fhA",
+      "name": "YouTube BMKG",
+      "icon": "youtube",
+      "color": "#ff0000",
+      "active": true
+    },
+    "linkedin": {
+      "url": "https://www.linkedin.com/company/bmkg-indonesia",
+      "name": "LinkedIn BMKG",
+      "icon": "linkedin",
+      "color": "#0077b5",
+      "active": false
+    },
+    "telegram": {
+      "url": "https://t.me/infobmkg",
+      "name": "Telegram BMKG",
+      "icon": "telegram",
+      "color": "#0088cc",
+      "active": false
+    }
+  },
+  "bmkgNetwork": {
+    "bmkgPusat": {
+      "url": "https://www.bmkg.go.id",
+      "name": "BMKG Pusat",
+      "description": "Jakarta",
+      "active": true
+    },
+    "cuacaBmkg": {
+      "url": "https://weather.bmkg.go.id",
+      "name": "Cuaca BMKG",
+      "description": "Prakiraan",
+      "active": true
+    },
+    "iklimBmkg": {
+      "url": "https://iklim.bmkg.go.id",
+      "name": "Iklim BMKG",
+      "description": "Klimatologi",
+      "active": true
+    },
+    "infoGempa": {
+      "url": "https://earthquake.bmkg.go.id",
+      "name": "Info Gempa",
+      "description": "Real-time",
+      "active": true
+    },
+    "inaTews": {
+      "url": "https://tsunami.bmkg.go.id",
+      "name": "InaTEWS",
+      "description": "Tsunami",
+      "active": true
+    },
+    "maritim": {
+      "url": "https://maritim.bmkg.go.id",
+      "name": "Maritim",
+      "description": "Pelayaran",
+      "active": true
+    }
+  },
+  "governmentPortals": {
+    "portalIndonesia": {
+      "url": "https://www.indonesia.go.id",
+      "name": "Portal Indonesia",
+      "active": true
+    },
+    "sekretariatNegara": {
+      "url": "https://www.setneg.go.id",
+      "name": "Sekretariat Negara",
+      "active": true
+    },
+    "presidenRi": {
+      "url": "https://www.presidenri.go.id",
+      "name": "Presiden RI",
+      "active": true
+    },
+    "kemenko": {
+      "url": "https://www.kemenko.go.id",
+      "name": "Kemenko",
+      "active": true
+    },
+    "provNtb": {
+      "url": "https://ntbprov.go.id",
+      "name": "Prov. NTB",
+      "active": true
+    },
+    "kotaMataram": {
+      "url": "https://www.mataramkota.go.id",
+      "name": "Kota Mataram",
+      "active": true
+    }
+  },
+  "contactInfo": {
+    "address": {
+      "street": "Jl. Raya Selaparang No. 123",
+      "city": "Mataram",
+      "province": "Nusa Tenggara Barat",
+      "postalCode": "83115",
+      "country": "Indonesia"
+    },
+    "phone": {
+      "main": "+62-370-123-4567",
+      "emergency": "+62-370-999-8888",
+      "formatted": {
+        "main": "(0370) 123-4567",
+        "emergency": "(0370) 999-8888"
+      }
+    },
+    "email": {
+      "main": "geofisika.mataram@bmkg.go.id",
+      "info": "info@stasiun-mataram.bmkg.go.id",
+      "emergency": "darurat@stasiun-mataram.bmkg.go.id"
+    },
+    "coordinates": {
+      "latitude": -8.5833,
+      "longitude": 116.1167,
+      "formatted": {
+        "latitude": "8°35'S",
+        "longitude": "116°07'E"
+      }
+    },
+    "operatingHours": {
+      "monitoring": "24 jam setiap hari",
+      "publicService": "08:00 - 16:00 WITA",
+      "emergency": "24 jam setiap hari"
+    }
+  },
+  "legalPages": {
+    "privacyPolicy": {
+      "url": "/privacy-policy",
+      "name": "Kebijakan Privasi",
+      "active": true
+    },
+    "termsOfService": {
+      "url": "/terms-of-service",
+      "name": "Syarat & Ketentuan",
+      "active": true
+    },
+    "sitemap": {
+      "url": "/sitemap.xml",
+      "name": "Peta Situs",
+      "active": true
+    },
+    "accessibility": {
+      "url": "/accessibility",
+      "name": "Aksesibilitas",
+      "active": true
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-27T14:35:00.000Z",
+    "timezone": "Asia/Makassar",
+    "language": "id-ID",
+    "organization": "Stasiun Geofisika Mataram - BMKG"
+  }
+}

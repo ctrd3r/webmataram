@@ -1,0 +1,124 @@
+{
+  "name": "Stasiun Geofisika Mataram",
+  "short_name": "SGM BMKG",
+  "description": "Website resmi Stasiun Geofisika Mataram - BMKG untuk monitoring geofisika wilayah NTB",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "orientation": "portrait-primary",
+  "categories": ["government", "utilities", "weather"],
+  "lang": "id",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Gempa Terkini",
+      "short_name": "Gempa",
+      "description": "Lihat data gempa bumi terkini",
+      "url": "/#gempa",
+      "icons": [
+        {
+          "src": "icons/shortcut-gempa.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Status Tsunami",
+      "short_name": "Tsunami",
+      "description": "Cek status peringatan tsunami",
+      "url": "/#tsunami",
+      "icons": [
+        {
+          "src": "icons/shortcut-tsunami.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Kontak Darurat",
+      "short_name": "Darurat",
+      "description": "Hubungi layanan darurat",
+      "url": "/#kontak",
+      "icons": [
+        {
+          "src": "icons/shortcut-emergency.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshots/desktop-home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Homepage on desktop"
+    },
+    {
+      "src": "screenshots/mobile-home.png",
+      "sizes": "375x667",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Homepage on mobile"
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "web",
+      "url": "https://www.bmkg.go.id"
+    }
+  ],
+  "prefer_related_applications": false
+}

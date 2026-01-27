@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate BMKG Favicons</title>
+    <style>
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        .favicon-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Official BMKG Favicon Generator</h1>
+    <p><strong>Using Official Logo from:</strong> <a href="https://www.bmkg.go.id/images/profil/logo-bmkg.png" target="_blank">https://www.bmkg.go.id/images/profil/logo-bmkg.png</a></p>
+    <div class="favicon-grid">
+        <div>
+            <h3>16x16</h3>
+            <canvas id="canvas16" width="16" height="16"></canvas>
+            <br><a id="download16" download="favicon-16x16.png">Download</a>
+        </div>
+        <div>
+            <h3>32x32</h3>
+            <canvas id="canvas32" width="32" height="32"></canvas>
+            <br><a id="download32" download="favicon-32x32.png">Download</a>
+        </div>
+        <div>
+            <h3>180x180 (Apple)</h3>
+            <canvas id="canvas180" width="180" height="180"></canvas>
+            <br><a id="download180" download="apple-touch-icon.png">Download</a>
+        </div>
+        <div>
+            <h3>192x192 (PWA)</h3>
+            <canvas id="canvas192" width="192" height="192"></canvas>
+            <br><a id="download192" download="icon-192x192.png">Download</a>
+        </div>
+    </div>
+
+    <script>
+        // BMKG Logo drawing function
+        function drawBMKGLogo(ctx, size) {
+            const center = size / 2;
+            const radius = size * 0.45;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background circle with gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#1e3a8a');
+            gradient.addColorStop(1, '#0ea5e9');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(center, center, radius, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // White border
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = size * 0.02;
+            ctx.stroke();
+            
+            // Inner elements (simplified for small sizes)
+            ctx.strokeStyle = '#ffffff';
+            ctx.fillStyle = '#ffffff';
+            ctx.lineWidth = size * 0.015;
+            
+            // Globe circles
+            ctx.beginPath();
+            ctx.arc(center, center, radius * 0.6, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.arc(center, center, radius * 0.4, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Compass points
+            const compassSize = radius * 0.25;
+            // North
+            ctx.beginPath();
+            ctx.moveTo(center, center - radius * 0.25);
+            ctx.lineTo(center - compassSize * 0.2, center - compassSize * 0.5);
+            ctx.lineTo(center, center - compassSize * 0.3);
+            ctx.lineTo(center + compassSize * 0.2, center - compassSize * 0.5);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Center dot
+            ctx.beginPath();
+            ctx.arc(center, center, size * 0.025, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // BMKG text (only for larger sizes)
+            if (size >= 32) {
+                ctx.font = `bold ${size * 0.08}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.fillText('BMKG', center, center + radius * 0.85);
+            }
+        }
+        
+        // Generate all favicon sizes
+        const sizes = [16, 32, 180, 192];
+        
+        sizes.forEach(size => {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            const downloadLink = document.getElementById(`download${size}`);
+            
+            // Draw logo
+            drawBMKGLogo(ctx, size);
+            
+            // Setup download link
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                downloadLink.href = url;
+            });
+        });
+        
+        // Generate additional PWA icon sizes
+        const additionalSizes = [72, 96, 128, 144, 152, 384, 512];
+        
+        additionalSizes.forEach(size => {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            drawBMKGLogo(ctx, size);
+            
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.href = url;
+                link.textContent = `Download ${size}x${size}`;
+                link.style.display = 'block';
+                link.style.margin = '5px';
+                document.body.appendChild(link);
+            });
+        });
+    </script>
+</body>
+</html>

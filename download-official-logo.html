@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Download Official BMKG Logo & Generate Favicons</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .logo-preview { border: 1px solid #ccc; padding: 20px; margin: 20px 0; text-align: center; }
+        .favicon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0; }
+        .favicon-item { border: 1px solid #ddd; padding: 15px; text-align: center; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        button { background: #1e3a8a; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #1e40af; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .info { background: #dbeafe; color: #1e40af; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏛️ Official BMKG Logo & Favicon Generator</h1>
+        
+        <div class="status info">
+            <strong>📋 Instruksi:</strong>
+            <ol>
+                <li>Klik "Load Official BMKG Logo" untuk memuat logo resmi</li>
+                <li>Logo akan ditampilkan dan siap untuk generate favicon</li>
+                <li>Klik "Generate All Favicons" untuk membuat semua ukuran</li>
+                <li>Download semua file dan tempatkan di direktori yang sesuai</li>
+            </ol>
+        </div>
+
+        <div class="logo-preview">
+            <h3>Official BMKG Logo Preview</h3>
+            <img id="officialLogo" style="max-width: 200px; max-height: 200px;" />
+            <br>
+            <button onclick="loadOfficialLogo()">Load Official BMKG Logo</button>
+            <button onclick="downloadOriginalLogo()" id="downloadOriginal" style="display:none;">Download Original PNG</button>
+        </div>
+
+        <div id="status"></div>
+
+        <div class="favicon-grid" id="faviconGrid" style="display:none;">
+            <div class="favicon-item">
+                <h4>Favicon 16x16</h4>
+                <canvas id="canvas16" width="16" height="16"></canvas>
+                <br><a id="download16" download="favicon-16x16.png" style="display:none;">Download</a>
+            </div>
+            
+            <div class="favicon-item">
+                <h4>Favicon 32x32</h4>
+                <canvas id="canvas32" width="32" height="32"></canvas>
+                <br><a id="download32" download="favicon-32x32.png" style="display:none;">Download</a>
+            </div>
+            
+            <div class="favicon-item">
+                <h4>Apple Touch Icon 180x180</h4>
+                <canvas id="canvas180" width="180" height="180"></canvas>
+                <br><a id="download180" download="apple-touch-icon.png" style="display:none;">Download</a>
+            </div>
+            
+            <div class="favicon-item">
+                <h4>PWA Icon 192x192</h4>
+                <canvas id="canvas192" width="192" height="192"></canvas>
+                <br><a id="download192" download="icon-192x192.png" style="display:none;">Download</a>
+            </div>
+            
+            <div class="favicon-item">
+                <h4>PWA Icon 512x512</h4>
+                <canvas id="canvas512" width="512" height="512"></canvas>
+                <br><a id="download512" download="icon-512x512.png" style="display:none;">Download</a>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button onclick="generateAllFavicons()" id="generateBtn" style="display:none; font-size: 16px; padding: 15px 30px;">
+                🎨 Generate All Favicons
+            </button>
+        </div>
+
+        <div id="additionalSizes"></div>
+    </div>
+
+    <script>
+        let officialLogoImg = null;
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+
+        function loadOfficialLogo() {
+            showStatus('📥 Loading official BMKG logo...', 'info');
+            
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            
+            img.onload = function() {
+                officialLogoImg = img;
+                document.getElementById('officialLogo').src = img.src;
+                document.getElementById('downloadOriginal').style.display = 'inline-block';
+                document.getElementById('generateBtn').style.display = 'inline-block';
+                document.getElementById('faviconGrid').style.display = 'grid';
+                
+                showStatus('✅ Official BMKG logo loaded successfully! Ready to generate favicons.', 'success');
+            };
+            
+            img.onerror = function() {
+                showStatus('❌ Failed to load official BMKG logo. Please check your internet connection.', 'error');
+            };
+            
+            // Load official BMKG logo
+            img.src = 'https://www.bmkg.go.id/images/profil/logo-bmkg.png';
+        }
+
+        function downloadOriginalLogo() {
+            if (!officialLogoImg) return;
+            
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = officialLogoImg.naturalWidth;
+            canvas.height = officialLogoImg.naturalHeight;
+            
+            ctx.drawImage(officialLogoImg, 0, 0);
+            
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = 'logo-bmkg-official.png';
+                link.href = url;
+                link.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        function drawLogoOnCanvas(canvas, size) {
+            if (!officialLogoImg) return;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, size, size);
+            
+            // Calculate dimensions to maintain aspect ratio
+            const logoAspect = officialLogoImg.naturalWidth / officialLogoImg.naturalHeight;
+            let drawWidth, drawHeight, offsetX, offsetY;
+            
+            if (logoAspect > 1) {
+                // Logo is wider than tall
+                drawWidth = size * 0.9;
+                drawHeight = drawWidth / logoAspect;
+                offsetX = (size - drawWidth) / 2;
+                offsetY = (size - drawHeight) / 2;
+            } else {
+                // Logo is taller than wide or square
+                drawHeight = size * 0.9;
+                drawWidth = drawHeight * logoAspect;
+                offsetX = (size - drawWidth) / 2;
+                offsetY = (size - drawHeight) / 2;
+            }
+            
+            // Draw logo centered
+            ctx.drawImage(officialLogoImg, offsetX, offsetY, drawWidth, drawHeight);
+        }
+
+        function generateAllFavicons() {
+            if (!officialLogoImg) {
+                showStatus('❌ Please load the official logo first!', 'error');
+                return;
+            }
+
+            showStatus('🎨 Generating all favicon sizes...', 'info');
+
+            const sizes = [
+                { size: 16, id: 'canvas16', downloadId: 'download16' },
+                { size: 32, id: 'canvas32', downloadId: 'download32' },
+                { size: 180, id: 'canvas180', downloadId: 'download180' },
+                { size: 192, id: 'canvas192', downloadId: 'download192' },
+                { size: 512, id: 'canvas512', downloadId: 'download512' }
+            ];
+
+            sizes.forEach(({ size, id, downloadId }) => {
+                const canvas = document.getElementById(id);
+                const downloadLink = document.getElementById(downloadId);
+                
+                drawLogoOnCanvas(canvas, size);
+                
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    downloadLink.href = url;
+                    downloadLink.style.display = 'inline-block';
+                });
+            });
+
+            // Generate additional PWA sizes
+            generateAdditionalSizes();
+            
+            showStatus('✅ All favicons generated successfully! Click download links to save files.', 'success');
+        }
+
+        function generateAdditionalSizes() {
+            const additionalSizes = [72, 96, 128, 144, 152, 384];
+            const container = document.getElementById('additionalSizes');
+            
+            container.innerHTML = '<h3>Additional PWA Icon Sizes</h3>';
+            
+            additionalSizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                canvas.style.border = '1px solid #ccc';
+                canvas.style.margin = '5px';
+                
+                drawLogoOnCanvas(canvas, size);
+                
+                const div = document.createElement('div');
+                div.style.display = 'inline-block';
+                div.style.margin = '10px';
+                div.style.textAlign = 'center';
+                
+                const label = document.createElement('div');
+                label.textContent = `${size}x${size}`;
+                label.style.fontSize = '12px';
+                label.style.marginBottom = '5px';
+                
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.textContent = 'Download';
+                link.style.display = 'block';
+                link.style.fontSize = '12px';
+                link.style.marginTop = '5px';
+                
+                canvas.toBlob(blob => {
+                    const url = URL.createObjectURL(blob);
+                    link.href = url;
+                });
+                
+                div.appendChild(label);
+                div.appendChild(canvas);
+                div.appendChild(link);
+                container.appendChild(div);
+            });
+        }
+
+        // Auto-load logo when page loads
+        window.addEventListener('load', () => {
+            setTimeout(loadOfficialLogo, 1000);
+        });
+    </script>
+</body>
+</html>

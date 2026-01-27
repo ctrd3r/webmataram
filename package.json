@@ -1,0 +1,109 @@
+{
+  "name": "stasiun-geofisika-mataram",
+  "version": "1.0.0",
+  "description": "Website resmi Stasiun Geofisika Mataram - BMKG dengan arsitektur Jamstack modern",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx live-server --port=3000 --host=localhost --open=/",
+    "build": "npm run build:css && npm run build:js && npm run optimize",
+    "build:css": "npx tailwindcss -i ./src/styles.css -o ./dist/styles.min.css --minify",
+    "build:js": "npx terser script.js -o dist/script.min.js --compress --mangle",
+    "optimize": "npm run optimize:images && npm run optimize:html",
+    "optimize:images": "npx imagemin images/* --out-dir=dist/images --plugin=imagemin-mozjpeg --plugin=imagemin-pngquant",
+    "optimize:html": "npx html-minifier --input-dir . --output-dir dist --file-ext html --remove-comments --collapse-whitespace --minify-css --minify-js",
+    "lighthouse": "npx lighthouse http://localhost:3000 --output=html --output-path=./reports/lighthouse.html --chrome-flags='--headless'",
+    "a11y": "npx pa11y http://localhost:3000 --reporter=html > ./reports/accessibility.html",
+    "perf": "npx autocannon -c 10 -d 30 http://localhost:3000",
+    "test:browsers": "npx playwright test",
+    "validate": "npm run validate:html && npm run validate:css && npm run validate:js",
+    "validate:html": "npx html-validate *.html",
+    "validate:css": "npx stylelint styles.css",
+    "validate:js": "npx eslint script.js",
+    "deploy:netlify": "npx netlify deploy --prod --dir=dist",
+    "deploy:vercel": "npx vercel --prod",
+    "start": "npm run dev",
+    "test": "npm run validate && npm run lighthouse && npm run a11y"
+  },
+  "keywords": [
+    "bmkg",
+    "geofisika",
+    "gempa-bumi",
+    "tsunami",
+    "seismologi",
+    "mataram",
+    "ntb",
+    "jamstack",
+    "pwa",
+    "real-time",
+    "monitoring"
+  ],
+  "author": {
+    "name": "Stasiun Geofisika Mataram - BMKG",
+    "email": "geofisika.mataram@bmkg.go.id",
+    "url": "https://geofisika-mataram.bmkg.go.id"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bmkg/stasiun-geofisika-mataram.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bmkg/stasiun-geofisika-mataram/issues"
+  },
+  "homepage": "https://geofisika-mataram.bmkg.go.id",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "terser": "^5.26.0",
+    "imagemin": "^8.0.1",
+    "imagemin-mozjpeg": "^10.0.0",
+    "imagemin-pngquant": "^9.0.2",
+    "html-minifier": "^4.0.0",
+    "lighthouse": "^11.4.0",
+    "pa11y": "^8.0.0",
+    "autocannon": "^7.15.0",
+    "playwright": "^1.40.0",
+    "html-validate": "^8.7.4",
+    "stylelint": "^16.1.0",
+    "eslint": "^8.56.0",
+    "live-server": "^1.2.2",
+    "netlify-cli": "^17.10.1",
+    "vercel": "^33.0.1"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "type": "module",
+  "files": [
+    "index.html",
+    "styles.css",
+    "script.js",
+    "manifest.json",
+    "sw.js",
+    "robots.txt",
+    "sitemap.xml",
+    ".htaccess",
+    "404.html",
+    "icons/",
+    "images/"
+  ],
+  "config": {
+    "api_base_url": "https://api.geofisika-mataram.bmkg.go.id/v1",
+    "websocket_url": "wss://ws.geofisika-mataram.bmkg.go.id",
+    "cdn_url": "https://cdn.geofisika-mataram.bmkg.go.id"
+  },
+  "funding": {
+    "type": "government",
+    "url": "https://www.bmkg.go.id"
+  }
+}

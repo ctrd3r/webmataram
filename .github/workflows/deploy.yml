@@ -1,0 +1,287 @@
+name: Deploy Stasiun Geofisika Mataram
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+  CACHE_KEY: node-modules
+
+jobs:
+  # Quality Assurance
+  qa:
+    name: Quality Assurance
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Lint JavaScript
+      run: npm run validate:js
+      
+    - name: Lint CSS
+      run: npm run validate:css
+      
+    - name: Validate HTML
+      run: npm run validate:html
+      
+    - name: Check code formatting
+      run: npx prettier --check "**/*.{js,css,html,md,json}"
+
+  # Security Audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run security audit
+      run: npm audit --audit-level=moderate
+      
+    - name: Check for vulnerabilities
+      run: npx audit-ci --moderate
+
+  # Performance Testing
+  performance:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    needs: [qa]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Start server
+      run: npm run dev &
+      
+    - name: Wait for server
+      run: npx wait-on http://localhost:3000
+      
+    - name: Run Lighthouse CI
+      run: |
+        npm install -g @lhci/cli
+        lhci autorun
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        
+    - name: Run accessibility tests
+      run: npm run a11y
+      
+    - name: Upload performance reports
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-reports
+        path: reports/
+
+  # Build and Test
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    needs: [qa, security]
+    
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build project
+      run: npm run build
+      
+    - name: Install Playwright
+      run: npx playwright install --with-deps ${{ matrix.browser }}
+      
+    - name: Run cross-browser tests
+      run: npx playwright test --project=${{ matrix.browser }}
+      
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: test-results-${{ matrix.browser }}
+        path: test-results/
+
+  # Deploy to Staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, performance]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build for staging
+      run: npm run build
+      env:
+        NODE_ENV: staging
+        API_BASE_URL: ${{ secrets.STAGING_API_BASE_URL }}
+        WEBSOCKET_URL: ${{ secrets.STAGING_WEBSOCKET_URL }}
+        
+    - name: Deploy to Netlify Staging
+      uses: nwtgck/actions-netlify@v2.1
+      with:
+        publish-dir: './dist'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions - Staging"
+        enable-pull-request-comment: true
+        enable-commit-comment: true
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
+
+  # Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, performance]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Build for production
+      run: npm run build
+      env:
+        NODE_ENV: production
+        API_BASE_URL: ${{ secrets.PROD_API_BASE_URL }}
+        WEBSOCKET_URL: ${{ secrets.PROD_WEBSOCKET_URL }}
+        GOOGLE_ANALYTICS_ID: ${{ secrets.GOOGLE_ANALYTICS_ID }}
+        SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+        
+    - name: Optimize assets
+      run: |
+        npx imagemin dist/images/* --out-dir=dist/images/optimized
+        npx html-minifier --input-dir dist --output-dir dist --file-ext html --remove-comments --collapse-whitespace --minify-css --minify-js
+        
+    - name: Deploy to Netlify Production
+      uses: nwtgck/actions-netlify@v2.1
+      with:
+        publish-dir: './dist'
+        production-deploy: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions - Production"
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PROD_SITE_ID }}
+        
+    - name: Update sitemap
+      run: |
+        curl -X POST "https://www.google.com/ping?sitemap=https://geofisika-mataram.bmkg.go.id/sitemap.xml"
+        
+    - name: Notify deployment
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+      if: always()
+
+  # Post-deployment monitoring
+  monitor:
+    name: Post-deployment Monitoring
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Health check
+      run: |
+        curl -f https://geofisika-mataram.bmkg.go.id/health || exit 1
+        
+    - name: Performance check
+      run: |
+        npx lighthouse https://geofisika-mataram.bmkg.go.id --output=json --output-path=./lighthouse-prod.json --chrome-flags='--headless'
+        
+    - name: Check Core Web Vitals
+      run: |
+        node -e "
+        const report = require('./lighthouse-prod.json');
+        const lcp = report.audits['largest-contentful-paint'].numericValue;
+        const fid = report.audits['max-potential-fid'].numericValue;
+        const cls = report.audits['cumulative-layout-shift'].numericValue;
+        
+        console.log('Core Web Vitals:');
+        console.log('LCP:', lcp, 'ms (target: <2500ms)');
+        console.log('FID:', fid, 'ms (target: <100ms)');
+        console.log('CLS:', cls, '(target: <0.1)');
+        
+        if (lcp > 2500 || fid > 100 || cls > 0.1) {
+          console.error('Core Web Vitals targets not met!');
+          process.exit(1);
+        }
+        "
+        
+    - name: Update status badge
+      run: |
+        curl -X POST "https://img.shields.io/endpoint?url=https://geofisika-mataram.bmkg.go.id/api/status-badge"

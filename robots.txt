@@ -1,0 +1,46 @@
+# robots.txt untuk Stasiun Geofisika Mataram
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://geofisika-mataram.bmkg.go.id/sitemap.xml
+
+# Disallow sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /config/
+Disallow: /logs/
+Disallow: /*.log$
+Disallow: /*.bak$
+
+# Allow important pages
+Allow: /
+Allow: /index.html
+Allow: /styles.css
+Allow: /script.js
+Allow: /manifest.json
+Allow: /sw.js
+
+# Crawl delay for respectful crawling
+Crawl-delay: 1
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
