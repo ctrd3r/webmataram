@@ -55,7 +55,7 @@
                         <ul>
                             <li><a href="gempa.php">Gempabumi Dirasakan</a></li>
                             <li><a href="petir.php">Petir</a></li>
-                            <li><a href="#">Tanda Waktu</a></li>
+                            <li><a href="#">Tanda Waktu</a></li>                            <li><a href="mitigasi.html">Edukasi Mitigasi</a></li>
                         </ul>
                     </li>
                     <li class="dropdown"><a href="#"><span>Produk Geofisika</span> <i class="bi bi-chevron-down"></i></a>

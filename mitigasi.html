@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Edukasi Mitigasi - Stasiun Geofisika Mataram | BMKG NTB</title>
+    <meta name="description"
+        content="Materi edukatif untuk pemahaman dan kesiapsiagaan menghadapi gempa bumi dan tsunami dari BMKG Stasiun Geofisika Mataram.">
+    <meta name="keywords" content="mitigasi, edukasi gempa, edukasi tsunami, siaga bencana, BMKG, Mataram, NTB">
+    <meta name="author" content="Stasiun Geofisika Mataram - BMKG">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1e40af",
+                        "secondary": "#0ea5e9",
+                        "accent": "#f59e0b",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        "bmkg-blue": "#1e3a8a",
+                        "bmkg-green": "#059669",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header
+        class="bg-white dark:bg-slate-900 shadow-lg sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700"
+        role="banner">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo dan Nama -->
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-white rounded-lg p-1">
+                            <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG"
+                                class="w-full h-full object-contain" crossorigin="anonymous" />
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-bmkg-blue dark:text-blue-400">
+                                Stasiun Geofisika Mataram
+                            </h1>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">
+                                BMKG - Nusa Tenggara Barat
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-8" role="navigation">
+                    <a href="index.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Beranda</a>
+                    <a href="gempabumi.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Gempa
+                        Bumi</a>
+                    <a href="tsunami.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tsunami</a>
+                    <a href="mitigasi.html" class="text-bmkg-blue font-medium">Mitigasi</a>
+                    <a href="tanda-waktu.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tanda
+                        Waktu</a>
+                    <a href="berita.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Berita</a>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-3">
+                    <button
+                        class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                        id="theme-toggle">
+                        <span class="material-symbols-outlined text-xl dark:hidden">dark_mode</span>
+                        <span class="material-symbols-outlined text-xl hidden dark:block">light_mode</span>
+                    </button>
+                    <button id="mobile-menu-btn"
+                        class="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                        <span class="material-symbols-outlined text-xl">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="md:hidden hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+            <div class="px-4 py-2 space-y-1">
+                <a href="index.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Beranda</a>
+                <a href="gempabumi.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Gempa
+                    Bumi</a>
+                <a href="tsunami.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Tsunami</a>
+                <a href="mitigasi.html"
+                    class="block px-3 py-2 text-bmkg-blue font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800">Mitigasi</a>
+                <a href="berita.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Berita</a>
+                <a href="tanda-waktu.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Tanda
+                    Waktu</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="bg-gradient-to-r from-bmkg-blue to-blue-800 text-white py-16 relative overflow-hidden">
+            <div
+                class="absolute inset-0 opacity-10 bg-[radial-gradient(circle,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[length:30px_30px]">
+            </div>
+            <div class="max-w-7xl mx-auto px-4 text-center relative z-10">
+                <h1 class="text-4xl md:text-5xl font-bold mb-4 animate-fade-in">Edukasi Gempa Bumi dan Tsunami</h1>
+                <p class="text-xl text-blue-100 max-w-2xl mx-auto">Materi edukatif untuk meningkatkan pemahaman dan
+                    kesiapsiagaan menghadapi ancaman gempa bumi dan tsunami.</p>
+            </div>
+        </section>
+
+        <!-- Navigation Breadcrumbs -->
+        <nav class="bg-slate-50 dark:bg-slate-800 py-3 border-b border-slate-200 dark:border-slate-700"
+            aria-label="Breadcrumb">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <ol class="flex items-center space-x-2 text-sm">
+                    <li><a href="index.html" class="text-slate-500 hover:text-bmkg-blue flex items-center"><span
+                                class="material-symbols-outlined text-lg">home</span></a></li>
+                    <li class="text-slate-400">/</li>
+                    <li class="text-bmkg-blue font-medium">Mitigasi</li>
+                </ol>
+            </div>
+        </nav>
+
+        <!-- Main Content Body -->
+        <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <!-- Category: Gempa Bumi -->
+            <div class="mb-20">
+                <div class="flex items-center gap-3 mb-8 border-b border-blue-200 dark:border-blue-900 pb-4">
+                    <span
+                        class="material-symbols-outlined text-4xl text-blue-600 p-2 bg-blue-50 dark:bg-blue-900/30 rounded-xl">vibration</span>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Edukasi Gempa Bumi</h2>
+                </div>
+
+                <!-- Video Grid -->
+                <div class="mb-16">
+                    <h3 class="text-xl font-bold mb-8 flex items-center gap-2"><span
+                            class="material-symbols-outlined text-blue-500">movie</span> Video Edukasi</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                        <article
+                            class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-100 dark:border-slate-700 group hover:shadow-2xl transition-all duration-300">
+                            <div class="aspect-video relative overflow-hidden bg-slate-900">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/1nXkJq5OZl0"
+                                    title="Apa Sih Gempa Bumi Itu?" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                            </div>
+                            <div class="p-8">
+                                <h4
+                                    class="text-xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                                    Apa Sih Gempa Bumi Itu?</h4>
+                                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Penjelasan ringkas tentang
+                                    pengertian gempa bumi, penyebabnya, dan bagaimana fenomena ini terjadi secara
+                                    saintifik.</p>
+                            </div>
+                        </article>
+
+                        <article
+                            class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-100 dark:border-slate-700 group hover:shadow-2xl transition-all duration-300">
+                            <div class="aspect-video relative overflow-hidden bg-slate-900">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/mEL6vm1bujc"
+                                    title="Penyebab Gempa Bumi" frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen></iframe>
+                            </div>
+                            <div class="p-8">
+                                <h4
+                                    class="text-xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-blue-600 transition-colors">
+                                    Penyebab Gempa Bumi</h4>
+                                <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Mengenal lebih dalam
+                                    faktor-faktor geologis yang menyebabkan terjadinya getaran pada permukaan bumi.</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- Books & Resources -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                    <div class="lg:col-span-2">
+                        <h3 class="text-xl font-bold mb-8 flex items-center gap-2"><span
+                                class="material-symbols-outlined text-blue-500">menu_book</span> Buku & Panduan</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div
+                                class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-md hover:border-blue-300 dark:hover:border-blue-500 transition-all flex flex-col justify-between">
+                                <div>
+                                    <div
+                                        class="w-14 h-14 bg-blue-100 dark:bg-blue-900/40 rounded-xl flex items-center justify-center mb-4">
+                                        <span
+                                            class="material-symbols-outlined text-3xl text-blue-600">auto_stories</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-lg mb-2">Buku Saku
+                                        Gempabumi dan Tsunami</h4>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 italic">Badan Meteorologi,
+                                        Klimatologi, dan Geofisika</p>
+                                </div>
+                                <a href="https://content.bmkg.go.id/wp-content/uploads/BMKG_Buku-Saku-Gempabumi-dan-Tsunami.pdf"
+                                    target="_blank"
+                                    class="w-full py-3 px-4 bg-primary text-white rounded-xl text-center font-bold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
+                                    Unduh PDF <span class="material-symbols-outlined text-sm">download</span>
+                                </a>
+                            </div>
+
+                            <div
+                                class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-md hover:border-blue-300 dark:hover:border-blue-500 transition-all flex flex-col justify-between">
+                                <div>
+                                    <div
+                                        class="w-14 h-14 bg-emerald-100 dark:bg-emerald-900/40 rounded-xl flex items-center justify-center mb-4">
+                                        <span
+                                            class="material-symbols-outlined text-3xl text-emerald-600">military_tech</span>
+                                    </div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-lg mb-2">Buku Satu Dekade
+                                        SLG</h4>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 italic">Sekolah Lapang
+                                        Gempabumi dan Tsunami (2010-2020)</p>
+                                </div>
+                                <a href="https://content.bmkg.go.id/wp-content/uploads/Buku-Satu-Dekade-SLG_ISBN.pdf"
+                                    target="_blank"
+                                    class="w-full py-3 px-4 bg-emerald-600 text-white rounded-xl text-center font-bold hover:bg-emerald-700 transition-colors flex items-center justify-center gap-2">
+                                    Unduh PDF <span class="material-symbols-outlined text-sm">download</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <h3 class="text-xl font-bold mb-8 flex items-center gap-2"><span
+                                class="material-symbols-outlined text-blue-500">info</span> Informasi Tambahan</h3>
+                        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-2xl text-white shadow-lg">
+                            <h4
+                                class="font-bold mb-4 flex items-center gap-2 px-3 py-1 bg-white/20 rounded-full w-fit text-sm">
+                                <span class="material-symbols-outlined text-sm">warning</span> Waspada Gempa
+                            </h4>
+                            <ul class="space-y-4 text-sm">
+                                <li class="flex items-start gap-3">
+                                    <span class="font-bold text-lg leading-none">1.</span>
+                                    <span>Jangan panik, segera cari perlindungan di bawah meja kokoh.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="font-bold text-lg leading-none">2.</span>
+                                    <span>Jauhi kaca, lemari besar, dan benda yang mudah jatuh.</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <span class="font-bold text-lg leading-none">3.</span>
+                                    <span>Jika di luar, cari ruang terbuka jauh dari bangunan/tiang.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div
+                            class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-md">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-2">Peralatan Darurat</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 italic">Siapkan "Tas Siaga
+                                Bencana" berisi senter, obat-obatan, dan dokumen penting.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category: Tsunami -->
+            <div class="pt-12 border-t border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-3 mb-8 border-b border-cyan-200 dark:border-cyan-900 pb-4">
+                    <span
+                        class="material-symbols-outlined text-4xl text-cyan-600 p-2 bg-cyan-50 dark:bg-cyan-900/30 rounded-xl">tsunami</span>
+                    <h2 class="text-3xl font-bold text-slate-900 dark:text-white">Edukasi Tsunami</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-16">
+                    <article
+                        class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-100 dark:border-slate-700 group hover:shadow-2xl transition-all duration-300">
+                        <div class="aspect-video relative overflow-hidden bg-slate-900">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/6qWWysS53E4"
+                                title="Mengenal Apa Itu Tsunami" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-8">
+                            <h4
+                                class="text-xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors">
+                                Mengenal Apa Itu Tsunami</h4>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Materi mendalam tentang
+                                mekanisme pembangkit tsunami, tanda-tanda alam, dan sejarah tsunami di Indonesia.</p>
+                        </div>
+                    </article>
+
+                    <article
+                        class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-xl border border-slate-100 dark:border-slate-700 group hover:shadow-2xl transition-all duration-300">
+                        <div class="aspect-video relative overflow-hidden bg-slate-900">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/YXpIW3GoGco"
+                                title="Mitigasi Menghadapi Tsunami" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-8">
+                            <h4
+                                class="text-xl font-bold mb-3 text-slate-900 dark:text-white group-hover:text-cyan-600 transition-colors">
+                                Mitigasi Menghadapi Tsunami</h4>
+                            <p class="text-slate-600 dark:text-slate-400 leading-relaxed">Langkah-langkah strategis
+                                untuk mengevakuasi diri saat peringatan dini tsunami dikeluarkan.</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    <div class="lg:col-span-3">
+                        <h3 class="text-xl font-bold mb-8 flex items-center gap-2"><span
+                                class="material-symbols-outlined text-cyan-500">shield</span> Program Tsunami Ready</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div
+                                class="bg-gradient-to-r from-cyan-50 to-white dark:from-cyan-950 dark:to-slate-800 p-6 rounded-2xl border border-cyan-100 dark:border-cyan-900 shadow-sm flex gap-6">
+                                <div class="flex-shrink-0">
+                                    <span class="material-symbols-outlined text-5xl text-cyan-600">verified</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-lg mb-2">Panduan Tsunami
+                                        Ready</h4>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 italic">Recognition
+                                        program untuk komunitas siaga tsunami.</p>
+                                    <a href="https://content.bmkg.go.id/wp-content/uploads/Panduan-Implementasi-Tsunami-Ready-Recognition-Program.pdf"
+                                        target="_blank"
+                                        class="text-cyan-600 font-bold hover:underline inline-flex items-center gap-1">
+                                        Unduh Panduan <span class="material-symbols-outlined text-xs">open_in_new</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div
+                                class="bg-gradient-to-r from-cyan-50 to-white dark:from-cyan-950 dark:to-slate-800 p-6 rounded-2xl border border-cyan-100 dark:border-cyan-900 shadow-sm flex gap-6">
+                                <div class="flex-shrink-0">
+                                    <span class="material-symbols-outlined text-5xl text-cyan-600">package_2</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 dark:text-white text-lg mb-2">Tsunami Ready Kit
+                                    </h4>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 mb-4 italic">Panduan teknis
+                                        pembentukan komunitas Tsunami Ready.</p>
+                                    <a href="https://content.bmkg.go.id/wp-content/uploads/Tsunami-Ready-Kit-Panduan-Teknis-Komunitas-Tsunami-Ready.pdf"
+                                        target="_blank"
+                                        class="text-cyan-600 font-bold hover:underline inline-flex items-center gap-1">
+                                        Unduh Kit <span class="material-symbols-outlined text-xs">open_in_new</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div
+                            class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-md">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-2">InaTEWS Booklet</h4>
+                            <p class="text-xs text-slate-500 mb-4">Indonesia Tsunami Early Warning System Information.
+                            </p>
+                            <div class="space-y-2">
+                                <a href="https://content.bmkg.go.id/wp-content/uploads/04.-INA_Booklet-A5.pdf"
+                                    target="_blank"
+                                    class="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-900 text-xs font-medium hover:bg-slate-100 transition-colors">
+                                    <span>Bahasa Indonesia</span>
+                                    <span class="material-symbols-outlined text-slate-400">download</span>
+                                </a>
+                                <a href="https://content.bmkg.go.id/wp-content/uploads/01.-ENG_Booklet-_A5.pdf"
+                                    target="_blank"
+                                    class="flex items-center justify-between p-2 rounded-lg bg-slate-50 dark:bg-slate-900 text-xs font-medium hover:bg-slate-100 transition-colors">
+                                    <span>English Version</span>
+                                    <span class="material-symbols-outlined text-slate-400">download</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-900 text-white" role="contentinfo">
+        <div class="bg-gradient-to-r from-bmkg-blue to-blue-800 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Logo & Organization Info -->
+                    <div class="lg:col-span-1">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="flex items-center justify-center w-16 h-16 bg-white rounded-lg p-2">
+                                <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG"
+                                    class="w-full h-full object-contain" />
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Stasiun Geofisika Mataram</h3>
+                                <p class="text-blue-100 text-sm">BMKG - Nusa Tenggara Barat</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-100 mb-6 text-sm leading-relaxed">Unit Pelaksana Teknis BMKG yang bertugas
+                            melakukan monitoring dan analisis geofisika untuk wilayah Nusa Tenggara Barat.</p>
+                        <!-- Socials -->
+                        <div class="flex space-x-4">
+                            <a href="#"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"><span
+                                    class="material-symbols-outlined text-sm">public</span></a>
+                            <a href="#"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"><span
+                                    class="material-symbols-outlined text-sm">mail</span></a>
+                        </div>
+                    </div>
+                    <!-- Layanan -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Layanan BMKG</h4>
+                        <ul class="space-y-3 text-blue-100 text-sm">
+                            <li><a href="gempabumi.html" class="hover:text-white transition-colors">Gempa Bumi</a></li>
+                            <li><a href="tsunami.html" class="hover:text-white transition-colors">Peringatan Tsunami</a>
+                            </li>
+                            <li><a href="mitigasi.html" class="hover:text-white transition-colors">Edukasi Mitigasi</a>
+                            </li>
+                            <li><a href="tanda-waktu.html" class="hover:text-white transition-colors">Tanda Waktu</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- Informasi -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Informasi</h4>
+                        <ul class="space-y-3 text-blue-100 text-sm">
+                            <li><a href="berita.html" class="hover:text-white transition-colors">Berita Terbaru</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">Layanan Data</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <!-- Kontak -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Kontak</h4>
+                        <div class="space-y-4 text-blue-100 text-sm">
+                            <p>Jl. Adisucipto No. 10, Rembiga, Kota Mataram, NTB 83115</p>
+                            <p class="font-bold text-yellow-300">Emergency: (0370) 7503527</p>
+                            <p>Email: stageof.mataram@bmkg.go.id</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-slate-900 py-6 text-center text-sm text-slate-400 border-t border-slate-700">
+            <p>© 2026 Stasiun Geofisika Mataram - BMKG. Hak cipta dilindungi undang-undang.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="bmkg-clock.js" defer></script>
+    <script src="script.js" defer></script>
+</body>
+
+</html>

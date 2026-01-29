@@ -61,7 +61,7 @@ $result = mysqli_query($conn, "SELECT * FROM infopetir ORDER BY id DESC LIMIT 1"
                         <ul>
                             <li><a href="gempa.php">Gempabumi Dirasakan</a></li>
                             <li><a href="petir.php">Petir</a></li>
-                            <li><a href="waktu.php">Tanda Waktu</a></li>
+                            <li><a href="waktu.php">Tanda Waktu</a></li>                            <li><a href="mitigasi.html">Edukasi Mitigasi</a></li>
                         </ul>
                     </li>
                     <li class="dropdown"><a href="#"><span>Produk Geofisika</span> <i class="bi bi-chevron-down"></i></a>

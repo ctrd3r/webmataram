@@ -71,6 +71,7 @@ $result = mysqli_query($conn, "SELECT * FROM kemitraan ORDER BY id DESC LIMIT $a
                             <li><a href="gempa.php">Gempabumi Dirasakan</a></li>
                             <li><a href="petir.php">Petir</a></li>
                             <li><a href="waktu.php">Tanda Waktu</a></li>
+                            <li><a href="mitigasi.html">Edukasi Mitigasi</a></li>
                             <li><a href="https://www.bmkg.go.id/gempabumi/antisipasi-gempabumi.bmkg">Antisipasi Gempa Bumi</a></li>
                         </ul>
                     </li>
@@ -182,6 +183,7 @@ $result = mysqli_query($conn, "SELECT * FROM kemitraan ORDER BY id DESC LIMIT $a
                             <li><i class="bx bx-chevron-right"></i> <a href="http://202.90.198.40/sismon-wrs/">Sistem Monitoring InaTEWS</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a href="http://dataonline.bmkg.go.id">Data Online BMKG</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a href="http://web.meteo.bmkg.go.id">Informasi Cuaca</a></li>
+                            <li><i class="bx bx-chevron-right"></i> <a href="mitigasi.html">Edukasi Mitigasi</a></li>
                             <li><i class="bx bx-chevron-right"></i> <a href="http://cews.bmkg.go.id">CEWS (Climate Early Warning System)</a></li>
                         </ul>
                     </div>
@@ -222,3 +224,5 @@ $result = mysqli_query($conn, "SELECT * FROM kemitraan ORDER BY id DESC LIMIT $a
 </body>
 
 </html>
+
+

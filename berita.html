@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Berita Terkini - BMKG</title>
-    <meta name="description" content="Berita terkini seputar gempa bumi, cuaca, tsunami, dan informasi meteorologi dari BMKG">
+    <meta name="description"
+        content="Berita terkini seputar gempa bumi, cuaca, tsunami, dan informasi meteorologi dari BMKG">
     <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body class="bg-gray-50">
     <!-- Header -->
     <header class="bg-blue-600 text-white shadow-lg">
         <div class="container mx-auto px-4 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
-                    <img src="images/bmkg-logo.png" alt="Logo BMKG" class="h-12 w-12" onerror="this.style.display='none'">
+                    <img src="images/bmkg-logo.png" alt="Logo BMKG" class="h-12 w-12"
+                        onerror="this.style.display='none'">
                     <div>
                         <h1 class="text-2xl font-bold">BMKG News</h1>
                         <p class="text-blue-200 text-sm">Berita Meteorologi, Klimatologi & Geofisika</p>
@@ -26,10 +30,11 @@
                         <a href="index.html" class="hover:text-blue-200 transition-colors">Beranda</a>
                         <a href="gempabumi.html" class="hover:text-blue-200 transition-colors">Gempa Bumi</a>
                         <a href="tsunami.html" class="hover:text-blue-200 transition-colors">Tsunami</a>
+                        <a href="mitigasi.html" class="hover:text-blue-200 transition-colors">Mitigasi</a>
                         <a href="berita.html" class="text-blue-200 font-semibold">Berita</a>
                         <a href="tanda-waktu.html" class="hover:text-blue-200 transition-colors">Tanda Waktu</a>
                     </nav>
-                    
+
                     <!-- BMKG Clock Container -->
                     <div id="bmkg-clock-container" class="bmkg-clock-container"></div>
                 </div>
@@ -43,9 +48,10 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
             <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div class="flex flex-col md:flex-row gap-4 flex-1">
-                    <input type="text" id="searchInput" placeholder="Cari berita..." 
-                           class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <select id="categoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <input type="text" id="searchInput" placeholder="Cari berita..."
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="categoryFilter"
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
                         <option value="">Semua Kategori</option>
                         <option value="gempa-bumi">Gempa Bumi</option>
                         <option value="cuaca">Cuaca</option>
@@ -54,7 +60,8 @@
                         <option value="edukasi">Edukasi</option>
                     </select>
                 </div>
-                <button onclick="searchNews()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                <button onclick="searchNews()"
+                    class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                     Cari
                 </button>
             </div>
@@ -81,7 +88,7 @@
                     </select>
                 </div>
             </div>
-            
+
             <div id="newsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- News cards akan dimuat di sini -->
             </div>
@@ -94,8 +101,8 @@
 
             <!-- Load more button -->
             <div class="text-center mt-8">
-                <button id="loadMoreBtn" onclick="loadMoreNews()" 
-                        class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                <button id="loadMoreBtn" onclick="loadMoreNews()"
+                    class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
                     Muat Lebih Banyak
                 </button>
             </div>
@@ -134,4 +141,5 @@
     <script src="bmkg-clock.js"></script>
     <script src="berita.js"></script>
 </body>
+
 </html>
