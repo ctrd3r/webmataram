@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita Terkini - BMKG</title>
+    <meta name="description" content="Berita terkini seputar gempa bumi, cuaca, tsunami, dan informasi meteorologi dari BMKG">
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="images/bmkg-logo.png" alt="Logo BMKG" class="h-12 w-12" onerror="this.style.display='none'">
+                    <div>
+                        <h1 class="text-2xl font-bold">BMKG News</h1>
+                        <p class="text-blue-200 text-sm">Berita Meteorologi, Klimatologi & Geofisika</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="index.html" class="hover:text-blue-200 transition-colors">Beranda</a>
+                        <a href="gempabumi.html" class="hover:text-blue-200 transition-colors">Gempa Bumi</a>
+                        <a href="tsunami.html" class="hover:text-blue-200 transition-colors">Tsunami</a>
+                        <a href="berita.html" class="text-blue-200 font-semibold">Berita</a>
+                        <a href="tanda-waktu.html" class="hover:text-blue-200 transition-colors">Tanda Waktu</a>
+                    </nav>
+                    
+                    <!-- BMKG Clock Container -->
+                    <div id="bmkg-clock-container" class="bmkg-clock-container"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Filter dan Search -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex flex-col md:flex-row gap-4 flex-1">
+                    <input type="text" id="searchInput" placeholder="Cari berita..." 
+                           class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="categoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Kategori</option>
+                        <option value="gempa-bumi">Gempa Bumi</option>
+                        <option value="cuaca">Cuaca</option>
+                        <option value="tsunami">Tsunami</option>
+                        <option value="teknologi">Teknologi</option>
+                        <option value="edukasi">Edukasi</option>
+                    </select>
+                </div>
+                <button onclick="searchNews()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Cari
+                </button>
+            </div>
+        </div>
+
+        <!-- Featured News -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Berita Utama</h2>
+            <div id="featuredNews" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Featured news akan dimuat di sini -->
+            </div>
+        </section>
+
+        <!-- Latest News -->
+        <section>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Berita Terbaru</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="text-gray-600">Urutkan:</span>
+                    <select id="sortOrder" onchange="loadNews()" class="px-3 py-1 border border-gray-300 rounded">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="popular">Terpopuler</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="newsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- News cards akan dimuat di sini -->
+            </div>
+
+            <!-- Loading indicator -->
+            <div id="loadingIndicator" class="text-center py-8 hidden">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <p class="mt-2 text-gray-600">Memuat berita...</p>
+            </div>
+
+            <!-- Load more button -->
+            <div class="text-center mt-8">
+                <button id="loadMoreBtn" onclick="loadMoreNews()" 
+                        class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    Muat Lebih Banyak
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">BMKG</h3>
+                    <p class="text-gray-300">Badan Meteorologi, Klimatologi, dan Geofisika</p>
+                    <p class="text-gray-300">Memberikan informasi cuaca, iklim, dan gempa bumi terpercaya</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Layanan</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="gempabumi.html" class="hover:text-white">Info Gempa Bumi</a></li>
+                        <li><a href="tsunami.html" class="hover:text-white">Peringatan Tsunami</a></li>
+                        <li><a href="berita.html" class="hover:text-white">Berita Terkini</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Kontak</h3>
+                    <p class="text-gray-300">Website: bmkg.go.id</p>
+                    <p class="text-gray-300">Email: info@bmkg.go.id</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 BMKG. Hak cipta dilindungi undang-undang.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="bmkg-clock.js"></script>
+    <script src="berita.js"></script>
+</body>
+</html>

@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Gempabumi Terkini - Stasiun Geofisika Mataram | BMKG NTB</title>
+    <meta name="description" content="Informasi gempabumi dirasakan wilayah Nusa Tenggara Barat dari Stasiun Geofisika Mataram BMKG. Data real-time gempa yang dirasakan masyarakat dengan analisis seismologi lengkap.">
+    <meta name="keywords" content="gempabumi dirasakan, gempa bumi, seismologi, BMKG, NTB, Mataram, gempa terkini, seismograf, magnitudo, episenter, gempa dirasakan">
+    <meta name="author" content="Stasiun Geofisika Mataram - BMKG">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://geofisika-mataram.bmkg.go.id/gempabumi.html">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://geofisika-mataram.bmkg.go.id/gempabumi.html">
+    <meta property="og:title" content="Gempabumi Dirasakan - Stasiun Geofisika Mataram BMKG">
+    <meta property="og:description" content="Informasi gempabumi dirasakan wilayah Nusa Tenggara Barat dengan data real-time dari Stasiun Geofisika Mataram BMKG.">
+    <meta property="og:image" content="https://geofisika-mataram.bmkg.go.id/images/og-gempabumi.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Gempabumi Dirasakan - Stasiun Geofisika Mataram BMKG">
+    <meta property="twitter:description" content="Data gempabumi dirasakan real-time wilayah NTB dari BMKG Stasiun Geofisika Mataram.">
+    
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Gempabumi Dirasakan",
+      "description": "Informasi gempabumi dirasakan wilayah Nusa Tenggara Barat",
+      "url": "https://geofisika-mataram.bmkg.go.id/gempabumi.html",
+      "mainEntity": {
+        "@type": "Dataset",
+        "name": "Data Gempabumi Dirasakan NTB",
+        "description": "Dataset gempabumi dirasakan real-time wilayah Nusa Tenggara Barat",
+        "provider": {
+          "@type": "Organization",
+          "name": "Stasiun Geofisika Mataram - BMKG"
+        }
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Beranda",
+            "item": "https://geofisika-mataram.bmkg.go.id/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Gempabumi Dirasakan",
+            "item": "https://geofisika-mataram.bmkg.go.id/gempabumi.html"
+          }
+        ]
+      }
+    }
+    </script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1e40af",
+                        "secondary": "#0ea5e9",
+                        "accent": "#f59e0b",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        "bmkg-blue": "#1e3a8a",
+                        "bmkg-green": "#059669",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-slate-900 shadow-lg sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700" role="banner">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo dan Nama -->
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-white rounded-lg p-1">
+                            <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG" class="w-full h-full object-contain" crossorigin="anonymous" />
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-bmkg-blue dark:text-blue-400">
+                                Stasiun Geofisika Mataram
+                            </h1>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">
+                                BMKG - Nusa Tenggara Barat
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-8" role="navigation">
+                    <a href="index.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Beranda</a>
+                    <a href="gempabumi.html" class="text-bmkg-blue font-medium">Gempabumi Dirasakan</a>
+                    <a href="tsunami.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tsunami</a>
+                    <a href="petir.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Petir</a>
+                    <a href="waktu.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tanda Waktu</a>
+                    <a href="berita.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Berita</a>
+                    <a href="kontak.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Kontak</a>
+                </nav>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-3">
+                    <button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" id="theme-toggle">
+                        <span class="material-symbols-outlined text-xl dark:hidden">dark_mode</span>
+                        <span class="material-symbols-outlined text-xl hidden dark:block">light_mode</span>
+                    </button>
+                    <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                        <span class="material-symbols-outlined text-xl">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+            <div class="px-4 py-2 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Beranda</a>
+                <a href="gempabumi.html" class="block px-3 py-2 text-bmkg-blue font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800">Gempabumi Dirasakan</a>
+                <a href="tsunami.html" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Tsunami</a>
+                <a href="petir.html" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Petir</a>
+                <a href="waktu.html" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Tanda Waktu</a>
+                <a href="berita.html" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Berita</a>
+                <a href="kontak.html" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Kontak</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="bg-slate-50 dark:bg-slate-800 py-3" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li>
+                    <a href="index.html" class="text-slate-600 dark:text-slate-400 hover:text-bmkg-blue">
+                        <span class="material-symbols-outlined text-lg">home</span>
+                    </a>
+                </li>
+                <li class="text-slate-400">/</li>
+                <li class="text-bmkg-blue font-medium">Gempabumi Terkini</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-red-600 text-2xl">vibration</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Gempabumi Terkini</h1>
+                    <p class="text-slate-600 dark:text-slate-400">Data gempa bumi Terkini wilayah NTB</p>
+                </div>
+            </div>
+            
+            <!-- Status Update -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-sm font-medium text-blue-900 dark:text-blue-100">
+                        Data real-time dari API BMKG • Sumber: Badan Meteorologi, Klimatologi, dan Geofisika
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Data</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="total-count">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-600">database</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Magnitudo Tertinggi</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="max-magnitude">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-orange-600">trending_up</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Kedalaman Rata-rata</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="avg-depth">-- km</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600">straighten</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Status Monitoring</p>
+                        <p class="text-sm font-bold text-green-600" id="monitoring-status">AKTIF</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600">sensors</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter dan Search -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 mb-8">
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Filter Data Gempabumi</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Cari Lokasi</label>
+                    <input type="text" placeholder="Masukkan nama lokasi..." class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white" id="location-search">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Magnitudo Minimum</label>
+                    <select class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white" id="magnitude-filter">
+                        <option value="0">Semua Magnitudo</option>
+                        <option value="2">M ≥ 2.0</option>
+                        <option value="3">M ≥ 3.0</option>
+                        <option value="4">M ≥ 4.0</option>
+                        <option value="5">M ≥ 5.0</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Kedalaman</label>
+                    <select class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white" id="depth-filter">
+                        <option value="all">Semua Kedalaman</option>
+                        <option value="shallow">Dangkal (< 70 km)</option>
+                        <option value="intermediate">Menengah (70-300 km)</option>
+                        <option value="deep">Dalam (> 300 km)</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-bmkg-blue text-white rounded-lg hover:bg-blue-700 transition-colors" id="apply-filter">
+                        <span class="material-symbols-outlined text-sm mr-2">filter_list</span>
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mb-8">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Data Gempabumi Terkini</h2>
+                    <div class="flex items-center gap-2">
+                        <button class="px-4 py-2 text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors" id="refresh-data">
+                            <span class="material-symbols-outlined text-sm mr-1">refresh</span>
+                            Refresh
+                        </button>
+                        <button class="px-4 py-2 text-sm bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors" id="export-data">
+                            <span class="material-symbols-outlined text-sm mr-1">download</span>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loading-state" class="p-8 text-center hidden">
+                <div class="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-slate-600 dark:text-slate-400">Memuat data gempabumi...</p>
+            </div>
+            
+            <!-- Data Table -->
+            <div id="earthquake-table">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 dark:bg-slate-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">#</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Waktu Gempa</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Magnitudo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Kedalaman</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Koordinat</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lokasi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Gempa Dirasakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="earthquake-data" class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                            <!-- Data akan diisi oleh JavaScript atau server-side -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-slate-700 dark:text-slate-300">
+                            Menampilkan <span id="showing-from">1</span> - <span id="showing-to">10</span> dari <span id="total-records">0</span> data
+                        </div>
+                        <div class="flex space-x-2" id="pagination-container">
+                            <!-- Pagination buttons akan diisi oleh JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informasi Tambahan -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Skala Magnitudo -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Skala Magnitudo Richter</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-green-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M < 3.0 - Tidak Dirasakan</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M 3.0-3.9 - Dirasakan Ringan</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-orange-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M 4.0-4.9 - Dirasakan Jelas</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-red-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M 5.0-5.9 - Merusak Ringan</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-red-700 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M ≥ 6.0 - Merusak Berat</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kontak dan Link Terkait -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Informasi & Kontak</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-red-600">emergency</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Hotline BMKG</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">021-4246321 (24 Jam)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-600">phone</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Stasiun Geofisika Mataram</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">stageof.mataram@bmkg.go.id</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-green-600">link</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Link Terkait</p>
+                            <div class="text-sm text-slate-600 dark:text-slate-400">
+                                <a href="https://www.bmkg.go.id/gempabumi/antisipasi-gempabumi.bmkg" target="_blank" class="hover:text-bmkg-blue">Antisipasi Gempa Bumi</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white mt-16" role="contentinfo">
+        <!-- Main Footer Content -->
+        <div class="bg-gradient-to-r from-bmkg-blue to-blue-800 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Logo & Organization Info -->
+                    <div class="lg:col-span-1">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="flex items-center justify-center w-16 h-16 bg-white rounded-lg p-2">
+                                <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG" class="w-full h-full object-contain" crossorigin="anonymous" />
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Stasiun Geofisika Mataram</h3>
+                                <p class="text-blue-100 text-sm">BMKG - Nusa Tenggara Barat</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-100 mb-6 text-sm leading-relaxed">
+                            Unit Pelaksana Teknis BMKG yang bertugas melakukan monitoring dan analisis geofisika untuk wilayah Nusa Tenggara Barat.
+                        </p>
+                    </div>
+                    
+                    <!-- Link BMKG -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Link BMKG</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="https://inatews.bmkg.go.id/wrs/index.html" target="_blank" class="text-blue-100 hover:text-white transition-colors">WRS</a></li>
+                            <li><a href="http://202.90.198.40/sismon-wrs/" target="_blank" class="text-blue-100 hover:text-white transition-colors">Sistem Monitoring InaTEWS</a></li>
+                            <li><a href="http://dataonline.bmkg.go.id" target="_blank" class="text-blue-100 hover:text-white transition-colors">Data Online BMKG</a></li>
+                            <li><a href="http://web.meteo.bmkg.go.id" target="_blank" class="text-blue-100 hover:text-white transition-colors">Informasi Cuaca</a></li>
+                            <li><a href="http://cews.bmkg.go.id" target="_blank" class="text-blue-100 hover:text-white transition-colors">CEWS</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Kontak -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Kontak</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li class="text-blue-100">📍 Jl. Adi Sucipto No.10</li>
+                            <li class="text-blue-100">Rembige, Selaparang</li>
+                            <li class="text-blue-100">Mataram, NTB</li>
+                            <li><a href="mailto:stageof.mataram@bmkg.go.id" class="text-blue-100 hover:text-white transition-colors">✉️ stageof.mataram@bmkg.go.id</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Social Media -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Sosial Media</h4>
+                        <p class="text-blue-100 text-sm mb-4">Ikuti informasi terkini dari kami</p>
+                        <div class="flex space-x-3">
+                            <a href="https://twitter.com/stageof_mataram" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
+                                <span class="text-blue-400">🐦</span>
+                            </a>
+                            <a href="https://www.facebook.com/stasiungeofisika.mataram" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
+                                <span class="text-blue-400">📘</span>
+                            </a>
+                            <a href="https://www.instagram.com/infogempa_ntb" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
+                                <span class="text-pink-400">📷</span>
+                            </a>
+                            <a href="https://www.youtube.com/@stasiungeofisikamataram7031" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
+                                <span class="text-red-400">📺</span>
+                            </a>
+                            <a href="https://wa.me/6281338099295" target="_blank" class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors">
+                                <span class="text-green-400">💬</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="bg-slate-800 py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-slate-400">
+                    <p>&copy; 2024 Stasiun Geofisika Mataram - BMKG. Hak Cipta Dilindungi.</p>
+                    <p>Dikelola oleh Badan Meteorologi, Klimatologi, dan Geofisika</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="gempabumi-enhanced.js"></script>
+</body>
+</html>
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Gempa Bumi",
+            "item": "https://geofisika-mataram.bmkg.go.id/gempabumi.html"
+          }
+        ]
+      }
+    }
+    </script>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+    
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1e40af",
+                        "secondary": "#0ea5e9",
+                        "accent": "#f59e0b",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        "bmkg-blue": "#1e3a8a",
+                        "bmkg-green": "#059669",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-slate-900 shadow-lg sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700" role="banner">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo dan Nama -->
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-white rounded-lg p-1">
+                            <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG" class="w-full h-full object-contain" crossorigin="anonymous" />
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-bmkg-blue dark:text-blue-400">
+                                Stasiun Geofisika Mataram
+                            </h1>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">
+                                BMKG - Nusa Tenggara Barat
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-8" role="navigation">
+                    <a href="index.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Beranda</a>
+                    <a href="gempabumi.html" class="text-bmkg-blue font-medium">Gempa Bumi</a>
+                    <a href="tsunami.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tsunami</a>
+                    <a href="magnet.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Magnet Bumi</a>
+                    <a href="berita.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Berita</a>
+                    <a href="kontak.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Kontak</a>
+                </nav>
+                
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-3">
+                    <button class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" id="theme-toggle">
+                        <span class="material-symbols-outlined text-xl dark:hidden">dark_mode</span>
+                        <span class="material-symbols-outlined text-xl hidden dark:block">light_mode</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="bg-slate-50 dark:bg-slate-800 py-3" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li>
+                    <a href="index.html" class="text-slate-600 dark:text-slate-400 hover:text-bmkg-blue">
+                        <span class="material-symbols-outlined text-lg">home</span>
+                    </a>
+                </li>
+                <li class="text-slate-400">/</li>
+                <li class="text-bmkg-blue font-medium">Gempa Bumi</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-red-600 text-2xl">vibration</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Gempa Bumi Terkini</h1>
+                    <p class="text-slate-600 dark:text-slate-400">Informasi gempa bumi real-time wilayah Nusa Tenggara Barat</p>
+                </div>
+            </div>
+            
+            <!-- Status Update -->
+            <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-sm font-medium text-blue-900 dark:text-blue-100">
+                        Data diperbarui setiap 30 detik • Terakhir update: <span id="last-update">--:--:-- WITA</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Gempa Hari Ini</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="today-count">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-600">today</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Gempa Minggu Ini</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="week-count">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600">date_range</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Magnitudo Tertinggi</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="max-magnitude">--</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-orange-600">trending_up</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Status Seismograf</p>
+                        <p class="text-sm font-bold text-green-600" id="seismograph-status">AKTIF</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600">sensors</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter dan Search -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700 mb-8">
+            <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Filter Data Gempa</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Periode</label>
+                    <select class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white" id="period-filter">
+                        <option value="today">Hari Ini</option>
+                        <option value="week">7 Hari Terakhir</option>
+                        <option value="month">30 Hari Terakhir</option>
+                        <option value="all">Semua Data</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Magnitudo Minimum</label>
+                    <select class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white" id="magnitude-filter">
+                        <option value="0">Semua Magnitudo</option>
+                        <option value="2">M ≥ 2.0</option>
+                        <option value="3">M ≥ 3.0</option>
+                        <option value="4">M ≥ 4.0</option>
+                        <option value="5">M ≥ 5.0</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Wilayah</label>
+                    <select class="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white" id="region-filter">
+                        <option value="all">Semua Wilayah</option>
+                        <option value="lombok">Lombok</option>
+                        <option value="sumbawa">Sumbawa</option>
+                        <option value="ntb">NTB</option>
+                        <option value="sekitar">Sekitar NTB</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-bmkg-blue text-white rounded-lg hover:bg-blue-700 transition-colors" id="apply-filter">
+                        <span class="material-symbols-outlined text-sm mr-2">filter_list</span>
+                        Terapkan Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gempa Terbaru -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mb-8">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Gempa Bumi Terbaru</h2>
+                    <button class="px-4 py-2 text-sm bg-blue-50 dark:bg-blue-900/30 text-blue-600 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors" id="refresh-data">
+                        <span class="material-symbols-outlined text-sm mr-1">refresh</span>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loading-state" class="p-8 text-center">
+                <div class="w-8 h-8 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-slate-600 dark:text-slate-400">Memuat data gempa bumi...</p>
+            </div>
+            
+            <!-- Data Table -->
+            <div id="earthquake-table" class="hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 dark:bg-slate-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Waktu</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Magnitudo</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Kedalaman</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lokasi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Koordinat</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="earthquake-data" class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-slate-700 dark:text-slate-300">
+                            Menampilkan <span id="showing-from">1</span> - <span id="showing-to">10</span> dari <span id="total-records">0</span> data
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-50 dark:hover:bg-slate-700" id="prev-page" disabled>
+                                Sebelumnya
+                            </button>
+                            <button class="px-3 py-1 text-sm border border-slate-300 dark:border-slate-600 rounded hover:bg-slate-50 dark:hover:bg-slate-700" id="next-page">
+                                Selanjutnya
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informasi Tambahan -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Skala Magnitudo -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Skala Magnitudo Richter</h3>
+                <div class="space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-green-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M < 3.0 - Tidak Dirasakan</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-yellow-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M 3.0-3.9 - Dirasakan Ringan</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-orange-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M 4.0-4.9 - Dirasakan Jelas</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-red-500 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M 5.0-5.9 - Merusak Ringan</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-4 h-4 bg-red-700 rounded"></div>
+                        <span class="text-sm text-slate-600 dark:text-slate-400">M ≥ 6.0 - Merusak Berat</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kontak Darurat -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4">Kontak Darurat</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-red-600">emergency</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Hotline BMKG</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">021-4246321 (24 Jam)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-600">phone</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Stasiun Geofisika Mataram</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">0370-999-XXX</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-green-600">email</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Email</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">geofisika.mataram@bmkg.go.id</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (sama seperti index.html) -->
+    <footer class="bg-slate-900 text-white mt-16" role="contentinfo">
+        <div class="bg-gradient-to-r from-bmkg-blue to-blue-800 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Logo & Organization Info -->
+                    <div class="lg:col-span-1">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="flex items-center justify-center w-16 h-16 bg-white rounded-lg p-2">
+                                <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG" class="w-full h-full object-contain" crossorigin="anonymous" />
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Stasiun Geofisika Mataram</h3>
+                                <p class="text-blue-100 text-sm">BMKG - Nusa Tenggara Barat</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-100 mb-6 text-sm leading-relaxed">
+                            Unit Pelaksana Teknis BMKG yang bertugas melakukan monitoring dan analisis geofisika untuk wilayah Nusa Tenggara Barat dengan teknologi terdepan.
+                        </p>
+                    </div>
+                    
+                    <!-- Quick Links -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Layanan Geofisika</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="gempabumi.html" class="text-blue-100 hover:text-white transition-colors">Gempa Bumi</a></li>
+                            <li><a href="tsunami.html" class="text-blue-100 hover:text-white transition-colors">Tsunami</a></li>
+                            <li><a href="magnet.html" class="text-blue-100 hover:text-white transition-colors">Magnet Bumi</a></li>
+                            <li><a href="#" class="text-blue-100 hover:text-white transition-colors">Tanda Waktu</a></li>
+                            <li><a href="#" class="text-blue-100 hover:text-white transition-colors">Seismologi Teknik</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Kontak & Darurat</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li class="text-blue-100">📍 Jl. Raya Selaparang No. 123</li>
+                            <li class="text-blue-100">Mataram, NTB 83115</li>
+                            <li><a href="tel:+62370999" class="text-blue-100 hover:text-white transition-colors">📞 0370-999-XXX</a></li>
+                            <li><a href="mailto:geofisika.mataram@bmkg.go.id" class="text-blue-100 hover:text-white transition-colors">✉️ geofisika.mataram@bmkg.go.id</a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Technical Info -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Informasi Teknis</h4>
+                        <ul class="space-y-2 text-sm text-blue-100">
+                            <li>🌐 Koordinat: 8°35'S, 116°07'E</li>
+                            <li>⏰ Operasional: 24/7</li>
+                            <li>🔄 Update: Real-time</li>
+                            <li>📊 Versi: 2.0.0</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Copyright -->
+        <div class="bg-slate-800 py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-slate-400">
+                    <p>&copy; 2024 Stasiun Geofisika Mataram - BMKG. Hak Cipta Dilindungi.</p>
+                    <p>Dikelola oleh Badan Meteorologi, Klimatologi, dan Geofisika</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+    <script src="gempabumi.js"></script>
+</body>
+</html>
