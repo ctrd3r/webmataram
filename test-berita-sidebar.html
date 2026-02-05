@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Berita Sidebar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-2xl font-bold mb-6">Test Berita dengan Sidebar</h1>
+        
+        <!-- Test API Connection -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">Test API Connection</h2>
+            <button onclick="testAPI()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                Test API Berita
+            </button>
+            <div id="apiResult" class="mt-4 p-4 bg-gray-100 rounded hidden">
+                <pre id="apiOutput"></pre>
+            </div>
+        </div>
+
+        <!-- Test Sidebar Components -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-lg font-semibold mb-4">Area Konten Berita</h3>
+                    <div id="newsContent" class="space-y-4">
+                        <p class="text-gray-600">Konten berita akan muncul di sini...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-1">
+                <!-- Test Navigation Widget -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">
+                        <i class="fas fa-compass text-blue-600 mr-2"></i>
+                        Navigasi Cepat
+                    </h3>
+                    <nav class="space-y-2">
+                        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
+                            <i class="fas fa-home w-5 mr-3 text-blue-500"></i>
+                            <span>Beranda</span>
+                        </a>
+                        <a href="#" class="flex items-center p-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
+                            <i class="fas fa-mountain w-5 mr-3 text-red-500"></i>
+                            <span>Info Gempa Bumi</span>
+                        </a>
+                        <a href="#" class="flex items-center p-2 bg-blue-50 text-blue-600 rounded-lg">
+                            <i class="fas fa-newspaper w-5 mr-3 text-blue-600"></i>
+                            <span class="font-semibold">Berita Terkini</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Test Popular News Widget -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">
+                        <i class="fas fa-fire text-orange-500 mr-2"></i>
+                        Berita Populer
+                    </h3>
+                    <div id="popularNews" class="space-y-4">
+                        <div class="text-center py-4 text-gray-500">
+                            <i class="fas fa-newspaper text-2xl mb-2 opacity-50"></i>
+                            <p class="text-sm">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Test Weather Widget -->
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <i class="fas fa-cloud-sun mr-2"></i>
+                        Info Cuaca Terkini
+                    </h3>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold mb-2">28°C</div>
+                        <div class="text-sm opacity-90 mb-2">Cerah</div>
+                        <div class="text-xs opacity-75">Mataram, NTB</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            const outputPre = document.getElementById('apiOutput');
+            
+            try {
+                resultDiv.classList.remove('hidden');
+                outputPre.textContent = 'Loading...';
+                
+                const response = await fetch('api/get_news.php?limit=3');
+                const result = await response.json();
+                
+                outputPre.textContent = JSON.stringify(result, null, 2);
+                
+                if (result.success && result.data) {
+                    loadTestNews(result.data);
+                }
+            } catch (error) {
+                outputPre.textContent = 'Error: ' + error.message;
+            }
+        }
+        
+        function loadTestNews(news) {
+            const container = document.getElementById('newsContent');
+            
+            if (!news || news.length === 0) {
+                container.innerHTML = '<p class="text-red-600">Tidak ada berita ditemukan</p>';
+                return;
+            }
+            
+            container.innerHTML = news.map(item => `
+                <div class="border border-gray-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-gray-800 mb-2">${item.judul}</h4>
+                    <p class="text-sm text-gray-600 mb-2">${item.ringkasan || 'Tidak ada ringkasan'}</p>
+                    <div class="text-xs text-gray-500">
+                        <span>Kategori: ${item.kategori || 'Tidak ada kategori'}</span>
+                        <span class="mx-2">•</span>
+                        <span>Views: ${item.views || 0}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Auto test on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(testAPI, 1000);
+        });
+    </script>
+</body>
+</html>

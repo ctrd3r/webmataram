@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Admin Panel - BMKG News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-2xl font-bold mb-6">Debug Admin Panel</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">API Tests</h2>
+            <div class="space-y-4">
+                <button onclick="testAuthorsAPI()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Test Authors API
+                </button>
+                <button onclick="testNewsStatsAPI()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Test News Stats API
+                </button>
+                <button onclick="testCategoriesAPI()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">
+                    Test Categories API
+                </button>
+                <button onclick="testNewsAPI()" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
+                    Test News API
+                </button>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-4">Test Results</h2>
+            <div id="testResults" class="space-y-2">
+                <!-- Results will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function addResult(test, success, data) {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `p-3 rounded ${success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`;
+            resultDiv.innerHTML = `
+                <div class="font-semibold">${test}: ${success ? 'SUCCESS' : 'FAILED'}</div>
+                <pre class="text-sm mt-2 overflow-x-auto">${JSON.stringify(data, null, 2)}</pre>
+            `;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        async function testAuthorsAPI() {
+            try {
+                const response = await fetch('../api/get_authors.php');
+                const result = await response.json();
+                addResult('Authors API', result.success, result);
+            } catch (error) {
+                addResult('Authors API', false, { error: error.message });
+            }
+        }
+
+        async function testNewsStatsAPI() {
+            try {
+                const response = await fetch('../api/manage_news.php?action=stats');
+                const result = await response.json();
+                addResult('News Stats API', result.success, result);
+            } catch (error) {
+                addResult('News Stats API', false, { error: error.message });
+            }
+        }
+
+        async function testCategoriesAPI() {
+            try {
+                const response = await fetch('../api/get_categories.php');
+                const result = await response.json();
+                addResult('Categories API', result.success, result);
+            } catch (error) {
+                addResult('Categories API', false, { error: error.message });
+            }
+        }
+
+        async function testNewsAPI() {
+            try {
+                const response = await fetch('../api/get_news.php?limit=5');
+                const result = await response.json();
+                addResult('News API', result.success, result);
+            } catch (error) {
+                addResult('News API', false, { error: error.message });
+            }
+        }
+    </script>
+</body>
+</html>

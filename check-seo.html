@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Checker - Real-time</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { color: #2563eb; }
+        .success { color: #10b981; font-weight: bold; }
+        .error { color: #ef4444; font-weight: bold; }
+        .warning { color: #f59e0b; font-weight: bold; }
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 12px;
+            max-height: 400px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #1d4ed8; }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 SEO Real-time Checker</h1>
+        
+        <div class="section">
+            <h2>Test URL:</h2>
+            <input type="text" id="testUrl" value="detail-berita.html?slug=gempa-bumi-magnitudo-52-guncang-jawa-barat" 
+                   style="width: 100%; padding: 10px; font-size: 14px; border: 2px solid #ddd; border-radius: 5px;">
+            <br><br>
+            <button onclick="checkSEO()">🔍 Check SEO</button>
+            <button onclick="openInNewTab()">🔗 Open Page</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function openInNewTab() {
+            const url = document.getElementById('testUrl').value;
+            window.open(url, '_blank');
+        }
+
+        async function checkSEO() {
+            const url = document.getElementById('testUrl').value;
+            const resultsDiv = document.getElementById('results');
+            
+            resultsDiv.innerHTML = '<div class="section"><h2>⏳ Checking...</h2></div>';
+
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                
+                let results = '<div class="grid">';
+                
+                // Left column - Meta Tags
+                results += '<div class="section">';
+                results += '<h2>📋 Meta Tags</h2>';
+                
+                const metaTags = [
+                    { name: 'Title', pattern: /<title[^>]*>(.*?)<\/title>/i },
+                    { name: 'Description', pattern: /<meta\s+name="description"\s+content="([^"]*)"/i },
+                    { name: 'Keywords', pattern: /<meta\s+name="keywords"\s+content="([^"]*)"/i },
+                    { name: 'Canonical', pattern: /<link\s+rel="canonical"\s+[^>]*href="([^"]*)"/i },
+                    { name: 'OG Title', pattern: /<meta\s+property="og:title"\s+[^>]*content="([^"]*)"/i },
+                    { name: 'OG Description', pattern: /<meta\s+property="og:description"\s+[^>]*content="([^"]*)"/i },
+                    { name: 'OG Image', pattern: /<meta\s+property="og:image"\s+[^>]*content="([^"]*)"/i },
+                    { name: 'OG Type', pattern: /<meta\s+property="og:type"\s+[^>]*content="([^"]*)"/i },
+                    { name: 'Twitter Card', pattern: /<meta\s+name="twitter:card"\s+[^>]*content="([^"]*)"/i },
+                    { name: 'Twitter Title', pattern: /<meta\s+name="twitter:title"\s+[^>]*content="([^"]*)"/i },
+                ];
+
+                metaTags.forEach(tag => {
+                    const match = html.match(tag.pattern);
+                    if (match) {
+                        results += `<p class="success">✅ ${tag.name}: ${match[1].substring(0, 60)}${match[1].length > 60 ? '...' : ''}</p>`;
+                    } else {
+                        results += `<p class="error">❌ ${tag.name}: Not found</p>`;
+                    }
+                });
+                
+                results += '</div>';
+                
+                // Right column - Structured Data
+                results += '<div class="section">';
+                results += '<h2>📊 Structured Data</h2>';
+                
+                const jsonLdMatches = html.match(/<script\s+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi);
+                
+                if (jsonLdMatches && jsonLdMatches.length > 0) {
+                    results += `<p class="success">✅ Found ${jsonLdMatches.length} JSON-LD script(s)</p>`;
+                    
+                    jsonLdMatches.forEach((match, index) => {
+                        const jsonContent = match.replace(/<script[^>]*>|<\/script>/gi, '').trim();
+                        try {
+                            const data = JSON.parse(jsonContent);
+                            results += `<h3>Schema ${index + 1}:</h3>`;
+                            
+                            if (data['@graph']) {
+                                results += '<p class="success">✅ Multiple schemas in @graph:</p><ul>';
+                                data['@graph'].forEach(item => {
+                                    results += `<li class="success">• ${item['@type']}</li>`;
+                                });
+                                results += '</ul>';
+                            } else if (data['@type']) {
+                                results += `<p class="success">✅ Type: ${data['@type']}</p>`;
+                            }
+                            
+                            results += '<details><summary>View JSON</summary>';
+                            results += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                            results += '</details>';
+                        } catch (e) {
+                            results += `<p class="error">❌ Invalid JSON in schema ${index + 1}</p>`;
+                            results += '<pre>' + jsonContent.substring(0, 200) + '...</pre>';
+                        }
+                    });
+                } else {
+                    results += '<p class="warning">⚠️ No structured data found in HTML</p>';
+                    results += '<p>This might be added dynamically by JavaScript.</p>';
+                    results += '<p><strong>Solution:</strong> Open the page in browser and check again after page loads.</p>';
+                }
+                
+                results += '</div>';
+                results += '</div>';
+                
+                // Full HTML preview
+                results += '<div class="section">';
+                results += '<h2>📄 HTML Head Preview</h2>';
+                const headMatch = html.match(/<head[^>]*>([\s\S]*?)<\/head>/i);
+                if (headMatch) {
+                    results += '<pre>' + headMatch[1].substring(0, 2000) + (headMatch[1].length > 2000 ? '\n\n... (truncated)' : '') + '</pre>';
+                }
+                results += '</div>';
+                
+                // Instructions
+                results += '<div class="section">';
+                results += '<h2>💡 Next Steps</h2>';
+                results += '<ol>';
+                results += '<li><strong>If structured data not found:</strong> Open the page in browser, wait 2 seconds, then view page source</li>';
+                results += '<li><strong>Look for:</strong> <code>&lt;script type="application/ld+json"&gt;</code></li>';
+                results += '<li><strong>If found in browser but not here:</strong> JavaScript is adding it (this is OK!)</li>';
+                results += '<li><strong>To test properly:</strong> Use browser DevTools → Elements tab → Search for "ld+json"</li>';
+                results += '</ol>';
+                results += '</div>';
+                
+                resultsDiv.innerHTML = results;
+
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="section"><h2 class="error">❌ Error</h2><p>${error.message}</p></div>`;
+            }
+        }
+
+        // Auto-check on load
+        window.onload = () => {
+            checkSEO();
+        };
+    </script>
+</body>
+</html>

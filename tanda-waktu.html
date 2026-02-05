@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Tanda Waktu - Stasiun Geofisika Mataram | BMKG NTB</title>
+    <meta name="description" content="Informasi tanda waktu, hilal, gerhana, dan fenomena astronomi dari Stasiun Geofisika Mataram BMKG NTB">
+    <meta name="keywords" content="tanda waktu, hilal, gerhana, astronomi, BMKG, NTB, Mataram">
+    <meta name="author" content="Stasiun Geofisika Mataram - BMKG">
+    <link rel="canonical" href="https://geofisika-mataram.bmkg.go.id/tanda-waktu.html">
+    
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles.css">
+    
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "bmkg-blue": "#1e3a8a",
+                        "bmkg-green": "#059669",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-white">
+    <!-- Header -->
+    <header class="bg-white dark:bg-slate-900 shadow-lg sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-white rounded-lg p-1">
+                            <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG" class="w-full h-full object-contain" crossorigin="anonymous" />
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-bmkg-blue dark:text-blue-400">Stasiun Geofisika Mataram</h1>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">BMKG - Nusa Tenggara Barat</p>
+                        </div>
+                    </a>
+                </div>
+                
+                <div class="flex items-center space-x-6">
+                    <nav class="hidden md:flex space-x-8">
+                        <a href="index.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Beranda</a>
+                        <a href="gempabumi.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Gempa Bumi</a>
+                        <a href="tsunami.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tsunami</a>
+                        <a href="berita.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Berita</a>
+                        <a href="tanda-waktu.html" class="text-bmkg-blue font-medium">Tanda Waktu</a>
+                    </nav>
+                    
+                    <!-- BMKG Clock Container -->
+                    <div id="bmkg-clock-container" class="bmkg-clock-container"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Breadcrumb -->
+    <nav class="bg-slate-50 dark:bg-slate-800 py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li><a href="index.html" class="text-slate-600 dark:text-slate-400 hover:text-bmkg-blue"><span class="material-symbols-outlined text-lg">home</span></a></li>
+                <li class="text-slate-400">/</li>
+                <li class="text-bmkg-blue font-medium">Tanda Waktu</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-purple-600 text-2xl">schedule</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Tanda Waktu</h1>
+                    <p class="text-slate-600 dark:text-slate-400">Informasi astronomi, hilal, gerhana, dan fenomena langit</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Time Display -->
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl p-8 text-white mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold mb-2">Waktu Lokal</h3>
+                    <div class="text-3xl font-bold font-mono" id="local-time">--:--:--</div>
+                    <div class="text-sm opacity-90" id="local-date">-- --- ----</div>
+                    <div class="text-xs opacity-75 mt-1">WITA (UTC+8)</div>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold mb-2">Waktu Universal</h3>
+                    <div class="text-3xl font-bold font-mono" id="utc-time">--:--:--</div>
+                    <div class="text-sm opacity-90" id="utc-date">-- --- ----</div>
+                    <div class="text-xs opacity-75 mt-1">UTC (GMT+0)</div>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-lg font-semibold mb-2">Julian Day</h3>
+                    <div class="text-2xl font-bold" id="julian-day">-------</div>
+                    <div class="text-sm opacity-90">JD</div>
+                    <div class="text-xs opacity-75 mt-1">Hari Julian</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="mb-8">
+            <div class="border-b border-slate-200 dark:border-slate-700">
+                <nav class="-mb-px flex space-x-8">
+                    <button onclick="showTab('hilal')" id="tab-hilal" class="tab-button active py-2 px-1 border-b-2 font-medium text-sm">
+                        <span class="material-symbols-outlined text-lg mr-2">crescent_moon</span>
+                        Hilal & Bulan
+                    </button>
+                    <button onclick="showTab('gerhana')" id="tab-gerhana" class="tab-button py-2 px-1 border-b-2 font-medium text-sm">
+                        <span class="material-symbols-outlined text-lg mr-2">brightness_2</span>
+                        Gerhana
+                    </button>
+                    <button onclick="showTab('matahari')" id="tab-matahari" class="tab-button py-2 px-1 border-b-2 font-medium text-sm">
+                        <span class="material-symbols-outlined text-lg mr-2">wb_sunny</span>
+                        Matahari
+                    </button>
+                    <button onclick="showTab('planet')" id="tab-planet" class="tab-button py-2 px-1 border-b-2 font-medium text-sm">
+                        <span class="material-symbols-outlined text-lg mr-2">public</span>
+                        Planet
+                    </button>
+                </nav>
+            </div>
+        </div>
+        <!-- Tab Content: Hilal & Bulan -->
+        <div id="content-hilal" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Moon Phase -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-yellow-600">brightness_3</span>
+                        Fase Bulan Saat Ini
+                    </h3>
+                    <div class="text-center mb-6">
+                        <div class="w-32 h-32 mx-auto mb-4 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-6xl text-yellow-500" id="moon-phase-icon">brightness_3</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-slate-900 dark:text-white" id="moon-phase-name">Bulan Sabit</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400" id="moon-illumination">Pencahayaan: 45%</p>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-slate-600 dark:text-slate-400">Terbit Bulan:</span>
+                            <span class="font-medium" id="moonrise">18:30 WITA</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600 dark:text-slate-400">Tenggelam Bulan:</span>
+                            <span class="font-medium" id="moonset">06:15 WITA</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600 dark:text-slate-400">Umur Bulan:</span>
+                            <span class="font-medium" id="moon-age">12.5 hari</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hilal Information -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-green-600">crescent_moon</span>
+                        Informasi Hilal
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-green-800 dark:text-green-400 mb-2">Bulan Hijriah Saat Ini</h4>
+                            <p class="text-green-700 dark:text-green-300" id="hijri-month">Rajab 1446 H</p>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Ijtima' Terakhir:</span>
+                                <span class="font-medium" id="last-conjunction">25 Jan 2024, 17:54 WITA</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Ijtima' Berikutnya:</span>
+                                <span class="font-medium" id="next-conjunction">24 Feb 2024, 12:30 WITA</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Kemungkinan Hilal:</span>
+                                <span class="font-medium text-green-600" id="hilal-visibility">Dapat Terlihat</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moon Calendar -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Kalender Fase Bulan</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-slate-400 mb-1 block" style="font-size: 16px;">new_moon</span>
+                        <h4 class="font-semibold text-xs mb-1">Bulan Baru</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">24 Feb 2024</p>
+                    </div>
+                    <div class="text-center p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-yellow-500 mb-1 block" style="font-size: 16px;">first_quarter_moon</span>
+                        <h4 class="font-semibold text-xs mb-1">Kuartir Pertama</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">03 Mar 2024</p>
+                    </div>
+                    <div class="text-center p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-yellow-400 mb-1 block" style="font-size: 16px;">full_moon</span>
+                        <h4 class="font-semibold text-xs mb-1">Bulan Purnama</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">10 Mar 2024</p>
+                    </div>
+                    <div class="text-center p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-slate-500 mb-1 block" style="font-size: 16px;">last_quarter_moon</span>
+                        <h4 class="font-semibold text-xs mb-1">Kuartir Terakhir</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">17 Mar 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Gerhana -->
+        <div id="content-gerhana" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Upcoming Eclipse -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-orange-600">brightness_2</span>
+                        Gerhana Mendatang
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-orange-800 dark:text-orange-400 mb-2">Gerhana Bulan Total</h4>
+                            <p class="text-orange-700 dark:text-orange-300 text-sm mb-2">7 September 2025</p>
+                            <p class="text-xs text-orange-600 dark:text-orange-400">Dapat diamati dari wilayah NTB</p>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Mulai Penumbra:</span>
+                                <span class="font-medium">18:41 WITA</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Mulai Umbra:</span>
+                                <span class="font-medium">19:27 WITA</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Totalitas:</span>
+                                <span class="font-medium">20:11 - 21:53 WITA</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Durasi Total:</span>
+                                <span class="font-medium">1 jam 42 menit</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Eclipse History -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-red-600">history</span>
+                        Riwayat Gerhana
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h4 class="font-semibold text-slate-900 dark:text-white">Gerhana Matahari Cincin</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">21 Juni 2020</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">Terlihat sebagian di NTB</p>
+                        </div>
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold text-slate-900 dark:text-white">Gerhana Bulan Sebagian</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">19 November 2021</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">Terlihat dari seluruh Indonesia</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-4">
+                            <h4 class="font-semibold text-slate-900 dark:text-white">Gerhana Matahari Total</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">9 Maret 2016</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">Lintasan totalitas melewati Indonesia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eclipse Safety -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-yellow-600">warning</span>
+                    Keselamatan Pengamatan Gerhana
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-green-600 mb-3">✓ Yang Boleh Dilakukan</h4>
+                        <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li>• Gunakan kacamata gerhana khusus (ISO 12312-2)</li>
+                            <li>• Gunakan filter matahari pada teleskop</li>
+                            <li>• Proyeksi tidak langsung dengan lubang jarum</li>
+                            <li>• Gerhana bulan aman diamati langsung</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-red-600 mb-3">✗ Yang Tidak Boleh Dilakukan</h4>
+                        <ul class="space-y-2 text-sm text-slate-600 dark:text-slate-400">
+                            <li>• Melihat matahari langsung tanpa filter</li>
+                            <li>• Menggunakan kacamata hitam biasa</li>
+                            <li>• Menggunakan CD/DVD sebagai filter</li>
+                            <li>• Melihat melalui teleskop tanpa filter</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Tab Content: Matahari -->
+        <div id="content-matahari" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Sun Position -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-yellow-600">wb_sunny</span>
+                        Posisi Matahari
+                    </h3>
+                    <div class="text-center mb-6">
+                        <div class="w-32 h-32 mx-auto mb-4 bg-gradient-to-br from-yellow-200 to-orange-300 rounded-full flex items-center justify-center">
+                            <span class="material-symbols-outlined text-6xl text-yellow-600">wb_sunny</span>
+                        </div>
+                        <h4 class="text-lg font-semibold text-slate-900 dark:text-white" id="sun-position">Siang Hari</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400" id="sun-elevation">Elevasi: 45°</p>
+                    </div>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-slate-600 dark:text-slate-400">Terbit Matahari:</span>
+                            <span class="font-medium" id="sunrise">06:15 WITA</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600 dark:text-slate-400">Tenggelam Matahari:</span>
+                            <span class="font-medium" id="sunset">18:30 WITA</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600 dark:text-slate-400">Kulminasi:</span>
+                            <span class="font-medium" id="solar-noon">12:22 WITA</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600 dark:text-slate-400">Durasi Siang:</span>
+                            <span class="font-medium" id="daylight-duration">12 jam 15 menit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solar Activity -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-orange-600">flare</span>
+                        Aktivitas Matahari
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                            <h4 class="font-semibold text-yellow-800 dark:text-yellow-400 mb-2">Indeks UV</h4>
+                            <div class="flex items-center gap-2">
+                                <div class="text-2xl font-bold text-yellow-700 dark:text-yellow-300" id="uv-index">8</div>
+                                <div class="text-sm text-yellow-600 dark:text-yellow-400" id="uv-level">Sangat Tinggi</div>
+                            </div>
+                        </div>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Bintik Matahari:</span>
+                                <span class="font-medium" id="sunspot-number">23</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Aktivitas Solar:</span>
+                                <span class="font-medium text-green-600" id="solar-activity">Rendah</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-600 dark:text-slate-400">Angin Matahari:</span>
+                                <span class="font-medium" id="solar-wind">450 km/s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solar Calendar -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Kalender Matahari</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-3xl text-green-500 mb-2">wb_sunny</span>
+                        <h4 class="font-semibold text-sm">Ekuinoks Maret</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">20 Mar 2024</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-3xl text-yellow-500 mb-2">light_mode</span>
+                        <h4 class="font-semibold text-sm">Solstis Juni</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">21 Jun 2024</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-3xl text-orange-500 mb-2">wb_sunny</span>
+                        <h4 class="font-semibold text-sm">Ekuinoks September</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">22 Sep 2024</p>
+                    </div>
+                    <div class="text-center p-4 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                        <span class="material-symbols-outlined text-3xl text-blue-500 mb-2">dark_mode</span>
+                        <h4 class="font-semibold text-sm">Solstis Desember</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-400">21 Des 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: Planet -->
+        <div id="content-planet" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Visible Planets -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-purple-600">public</span>
+                        Planet Terlihat Malam Ini
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-red-500 rounded-full"></div>
+                                <div>
+                                    <h4 class="font-semibold text-slate-900 dark:text-white">Mars</h4>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400">Magnitude: -1.2</p>
+                                </div>
+                            </div>
+                            <div class="text-right text-sm">
+                                <div class="font-medium">Terbit: 19:30</div>
+                                <div class="text-slate-600 dark:text-slate-400">Arah: Timur</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-yellow-400 rounded-full"></div>
+                                <div>
+                                    <h4 class="font-semibold text-slate-900 dark:text-white">Venus</h4>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400">Magnitude: -4.1</p>
+                                </div>
+                            </div>
+                            <div class="text-right text-sm">
+                                <div class="font-medium">Terbit: 05:15</div>
+                                <div class="text-slate-600 dark:text-slate-400">Arah: Timur</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700 rounded-lg">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 bg-orange-400 rounded-full"></div>
+                                <div>
+                                    <h4 class="font-semibold text-slate-900 dark:text-white">Jupiter</h4>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400">Magnitude: -2.8</p>
+                                </div>
+                            </div>
+                            <div class="text-right text-sm">
+                                <div class="font-medium">Terbit: 21:45</div>
+                                <div class="text-slate-600 dark:text-slate-400">Arah: Tenggara</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Astronomical Events -->
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                    <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-indigo-600">star</span>
+                        Peristiwa Astronomi
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-blue-500 pl-4">
+                            <h4 class="font-semibold text-slate-900 dark:text-white">Konjungsi Venus-Jupiter</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">15 Februari 2024</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">Jarak sudut: 0.5°</p>
+                        </div>
+                        <div class="border-l-4 border-red-500 pl-4">
+                            <h4 class="font-semibold text-slate-900 dark:text-white">Oposisi Mars</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">16 Januari 2025</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">Jarak: 96.1 juta km</p>
+                        </div>
+                        <div class="border-l-4 border-yellow-500 pl-4">
+                            <h4 class="font-semibold text-slate-900 dark:text-white">Elongasi Maksimum Merkurius</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">24 Maret 2024</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-500">Elongasi: 18.7° Timur</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Planet Positions -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Posisi Planet Hari Ini</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-slate-700">
+                                <th class="text-left py-3 px-2">Planet</th>
+                                <th class="text-left py-3 px-2">Rasi Bintang</th>
+                                <th class="text-left py-3 px-2">Magnitude</th>
+                                <th class="text-left py-3 px-2">Jarak (AU)</th>
+                                <th class="text-left py-3 px-2">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-600 dark:text-slate-400">
+                            <tr class="border-b border-slate-100 dark:border-slate-700">
+                                <td class="py-3 px-2 font-medium">Merkurius</td>
+                                <td class="py-3 px-2">Aquarius</td>
+                                <td class="py-3 px-2">-0.1</td>
+                                <td class="py-3 px-2">0.89</td>
+                                <td class="py-3 px-2"><span class="text-green-600">Terlihat</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-100 dark:border-slate-700">
+                                <td class="py-3 px-2 font-medium">Venus</td>
+                                <td class="py-3 px-2">Pisces</td>
+                                <td class="py-3 px-2">-4.1</td>
+                                <td class="py-3 px-2">1.12</td>
+                                <td class="py-3 px-2"><span class="text-green-600">Terlihat</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-100 dark:border-slate-700">
+                                <td class="py-3 px-2 font-medium">Mars</td>
+                                <td class="py-3 px-2">Gemini</td>
+                                <td class="py-3 px-2">-1.2</td>
+                                <td class="py-3 px-2">0.68</td>
+                                <td class="py-3 px-2"><span class="text-green-600">Terlihat</span></td>
+                            </tr>
+                            <tr class="border-b border-slate-100 dark:border-slate-700">
+                                <td class="py-3 px-2 font-medium">Jupiter</td>
+                                <td class="py-3 px-2">Taurus</td>
+                                <td class="py-3 px-2">-2.8</td>
+                                <td class="py-3 px-2">4.95</td>
+                                <td class="py-3 px-2"><span class="text-green-600">Terlihat</span></td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-2 font-medium">Saturnus</td>
+                                <td class="py-3 px-2">Aquarius</td>
+                                <td class="py-3 px-2">0.8</td>
+                                <td class="py-3 px-2">10.12</td>
+                                <td class="py-3 px-2"><span class="text-yellow-600">Sulit</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-4 mb-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-white rounded-lg p-1">
+                            <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG" class="w-full h-full object-contain" crossorigin="anonymous" />
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold">Stasiun Geofisika Mataram</h3>
+                            <p class="text-slate-400 text-sm">BMKG - Nusa Tenggara Barat</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-sm">
+                        Informasi tanda waktu, astronomi, dan fenomena langit untuk wilayah NTB.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Layanan Tanda Waktu</h4>
+                    <ul class="space-y-2 text-slate-400 text-sm">
+                        <li>• Hilal dan Fase Bulan</li>
+                        <li>• Prediksi Gerhana</li>
+                        <li>• Posisi Matahari</li>
+                        <li>• Visibilitas Planet</li>
+                        <li>• Kalender Astronomi</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Kontak</h4>
+                    <div class="space-y-2 text-slate-400 text-sm">
+                        <p>Jl. Adisucipto No. 10, Rembiga</p>
+                        <p>Kota Mataram, NTB 83115</p>
+                        <p>Telepon: (0370) 7503527</p>
+                        <p>Email: stageof.mataram@bmkg.go.id</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-700 mt-8 pt-8 text-center">
+                <p class="text-slate-400 text-sm">
+                    © 2026 Stasiun Geofisika Mataram - BMKG. Hak cipta dilindungi undang-undang.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="bmkg-clock.js"></script>
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.add('hidden');
+            });
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active', 'border-purple-500', 'text-purple-600');
+                button.classList.add('border-transparent', 'text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300');
+            });
+            
+            // Show selected tab content
+            const selectedContent = document.getElementById(`content-${tabName}`);
+            if (selectedContent) {
+                selectedContent.classList.remove('hidden');
+            }
+            
+            // Add active class to selected tab button
+            const selectedButton = document.getElementById(`tab-${tabName}`);
+            if (selectedButton) {
+                selectedButton.classList.add('active', 'border-purple-500', 'text-purple-600');
+                selectedButton.classList.remove('border-transparent', 'text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300');
+            }
+        }
+
+        // Time update functions
+        function updateTimes() {
+            const now = new Date();
+            
+            // Local time (WITA - UTC+8)
+            const witaTime = new Date(now.getTime() + (8 * 60 * 60 * 1000));
+            const localTimeElement = document.getElementById('local-time');
+            const localDateElement = document.getElementById('local-date');
+            
+            if (localTimeElement) {
+                localTimeElement.textContent = witaTime.toLocaleTimeString('id-ID', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+            
+            if (localDateElement) {
+                localDateElement.textContent = witaTime.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+            
+            // UTC time
+            const utcTimeElement = document.getElementById('utc-time');
+            const utcDateElement = document.getElementById('utc-date');
+            
+            if (utcTimeElement) {
+                utcTimeElement.textContent = now.toLocaleTimeString('en-GB', {
+                    timeZone: 'UTC',
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+            }
+            
+            if (utcDateElement) {
+                utcDateElement.textContent = now.toLocaleDateString('en-GB', {
+                    timeZone: 'UTC',
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+            }
+            
+            // Julian Day
+            const julianDayElement = document.getElementById('julian-day');
+            if (julianDayElement) {
+                const julianDay = Math.floor((now.getTime() / 86400000) + 2440587.5);
+                julianDayElement.textContent = julianDay.toLocaleString();
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show default tab (hilal)
+            showTab('hilal');
+            
+            // Update times
+            updateTimes();
+            
+            // Update times every second
+            setInterval(updateTimes, 1000);
+        });
+    </script>
+
+    <style>
+        .tab-button.active {
+            border-color: #8b5cf6;
+            color: #8b5cf6;
+        }
+        
+        .tab-button {
+            border-color: transparent;
+            color: #64748b;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .tab-button:hover {
+            color: #374151;
+            border-color: #d1d5db;
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .card-hover {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Add News API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.success {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            color: #065f46;
+        }
+        .result.error {
+            background: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+        pre {
+            background: #f9fafb;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test Add News API</h1>
+        
+        <form id="testForm">
+            <div class="form-group">
+                <label>Judul Berita *</label>
+                <input type="text" id="judul" value="Test Berita dari Form" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Kategori *</label>
+                <select id="kategori" required>
+                    <option value="">Pilih Kategori</option>
+                    <option value="1">Gempa Bumi</option>
+                    <option value="2">Cuaca</option>
+                    <option value="3">Tsunami</option>
+                    <option value="4">Iklim</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Isi Berita *</label>
+                <textarea id="isi_berita" required>Ini adalah konten berita test. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Status</label>
+                <select id="status">
+                    <option value="draft">Draft</option>
+                    <option value="publish">Publish</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Gambar (optional)</label>
+                <input type="text" id="gambar" placeholder="nama-file.jpg">
+            </div>
+            
+            <button type="submit">Test Add News</button>
+        </form>
+        
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.innerHTML = '<strong>Loading...</strong>';
+            
+            const newsData = {
+                judul: document.getElementById('judul').value.trim(),
+                isi_berita: document.getElementById('isi_berita').value.trim(),
+                id_kategori: parseInt(document.getElementById('kategori').value),
+                status: document.getElementById('status').value,
+                gambar: document.getElementById('gambar').value.trim(),
+                id_penulis: 1
+            };
+            
+            console.log('Sending data:', newsData);
+            
+            try {
+                const response = await fetch('api/manage_news.php?action=add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newsData)
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const text = await response.text();
+                console.log('Response text:', text);
+                console.log('Response length:', text.length);
+                
+                // Show raw response
+                resultDiv.innerHTML = `
+                    <strong>Response Status:</strong> ${response.status}<br>
+                    <strong>Response Text (first 500 chars):</strong><br>
+                    <pre>${text.substring(0, 500)}</pre>
+                `;
+                
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (e) {
+                    throw new Error('Invalid JSON response: ' + text.substring(0, 200));
+                }
+                
+                console.log('Parsed result:', result);
+                
+                if (result.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ Success!</strong><br>
+                        ${result.message}<br><br>
+                        <strong>Response Data:</strong>
+                        <pre>${JSON.stringify(result.data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <strong>❌ Error!</strong><br>
+                        ${result.message}<br><br>
+                        <strong>Full Response:</strong>
+                        <pre>${JSON.stringify(result, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>❌ Exception!</strong><br>
+                    ${error.message}<br><br>
+                    <strong>Check browser console for details</strong>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Monitor - BMKG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-2">
+                <i class="fas fa-tachometer-alt text-blue-600"></i>
+                Performance Monitor
+            </h1>
+            <p class="text-gray-600">Monitor dan kelola performa website BMKG</p>
+        </div>
+
+        <!-- Cache Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Cache Files</p>
+                        <p class="text-2xl font-bold text-gray-800" id="cacheFiles">-</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-3">
+                        <i class="fas fa-file text-blue-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Cache Size</p>
+                        <p class="text-2xl font-bold text-gray-800" id="cacheSize">-</p>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-3">
+                        <i class="fas fa-database text-green-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">Page Load</p>
+                        <p class="text-2xl font-bold text-gray-800" id="pageLoad">-</p>
+                    </div>
+                    <div class="bg-yellow-100 rounded-full p-3">
+                        <i class="fas fa-clock text-yellow-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm">API Response</p>
+                        <p class="text-2xl font-bold text-gray-800" id="apiResponse">-</p>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-3">
+                        <i class="fas fa-bolt text-purple-600 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cache Management -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-cog"></i> Cache Management
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button onclick="clearCache()" 
+                        class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition">
+                    <i class="fas fa-trash mr-2"></i>Clear All Cache
+                </button>
+                
+                <button onclick="clearExpiredCache()" 
+                        class="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition">
+                    <i class="fas fa-clock mr-2"></i>Clear Expired
+                </button>
+                
+                <button onclick="clearNewsCache()" 
+                        class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-newspaper mr-2"></i>Clear News Cache
+                </button>
+            </div>
+        </div>
+
+        <!-- Performance Tests -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-flask"></i> Performance Tests
+            </h2>
+            
+            <div class="space-y-4">
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">API Response Time</h3>
+                        <p class="text-sm text-gray-600">Test kecepatan API get_news.php</p>
+                    </div>
+                    <button onclick="testAPISpeed()" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        <i class="fas fa-play mr-2"></i>Test
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Database Query Time</h3>
+                        <p class="text-sm text-gray-600">Test kecepatan query database</p>
+                    </div>
+                    <button onclick="testDBSpeed()" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        <i class="fas fa-play mr-2"></i>Test
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">Page Load Time</h3>
+                        <p class="text-sm text-gray-600">Test kecepatan loading halaman</p>
+                    </div>
+                    <button onclick="testPageLoad()" 
+                            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        <i class="fas fa-play mr-2"></i>Test
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Results -->
+        <div id="testResults" class="bg-white rounded-lg shadow-lg p-6 hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                <i class="fas fa-chart-line"></i> Test Results
+            </h2>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Load cache stats on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCacheStats();
+            measurePageLoad();
+        });
+
+        async function loadCacheStats() {
+            try {
+                const response = await fetch('api/cache_manager_v2.php?action=stats');
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('cacheFiles').textContent = result.data.total_files;
+                    document.getElementById('cacheSize').textContent = result.data.total_size_mb + ' MB';
+                }
+            } catch (error) {
+                console.error('Error loading cache stats:', error);
+            }
+        }
+
+        async function clearCache() {
+            if (!confirm('Clear semua cache? Ini akan memperlambat request berikutnya.')) return;
+            
+            try {
+                const response = await fetch('api/cache_manager_v2.php?action=clear');
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ Cache berhasil dihapus!');
+                    loadCacheStats();
+                }
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        async function clearExpiredCache() {
+            try {
+                const response = await fetch('api/cache_manager_v2.php?action=clear-expired');
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ ' + result.message);
+                    loadCacheStats();
+                }
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        async function clearNewsCache() {
+            try {
+                const response = await fetch('api/cache_manager_v2.php?action=clear-news');
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('✅ ' + result.message);
+                    loadCacheStats();
+                }
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        async function testAPISpeed() {
+            const start = performance.now();
+            
+            try {
+                const response = await fetch('api/get_news.php?limit=10');
+                const end = performance.now();
+                const time = (end - start).toFixed(2);
+                
+                document.getElementById('apiResponse').textContent = time + ' ms';
+                showTestResult('API Response Time', time + ' ms', time < 200 ? 'success' : 'warning');
+            } catch (error) {
+                showTestResult('API Response Time', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        async function testDBSpeed() {
+            const start = performance.now();
+            
+            try {
+                const response = await fetch('api/test_db_speed.php');
+                const result = await response.json();
+                const end = performance.now();
+                const time = (end - start).toFixed(2);
+                
+                if (result.success) {
+                    showTestResult('Database Query Time', `
+                        <p>Average: ${result.average}ms</p>
+                        <p>Simple SELECT: ${result.tests.simple_select}ms</p>
+                        <p>SELECT with WHERE: ${result.tests.select_with_where}ms</p>
+                        <p>SELECT with JOIN: ${result.tests.select_with_join}ms</p>
+                        <p>SELECT with ORDER BY: ${result.tests.select_with_order}ms</p>
+                    `, result.average < 30 ? 'success' : 'warning');
+                } else {
+                    showTestResult('Database Query Time', 'Error: ' + result.message, 'error');
+                }
+            } catch (error) {
+                showTestResult('Database Query Time', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        function testPageLoad() {
+            const timing = performance.timing;
+            const loadTime = timing.loadEventEnd - timing.navigationStart;
+            const domReady = timing.domContentLoadedEventEnd - timing.navigationStart;
+            
+            document.getElementById('pageLoad').textContent = (loadTime / 1000).toFixed(2) + ' s';
+            
+            showTestResult('Page Load Time', `
+                <p>Total Load: ${(loadTime / 1000).toFixed(2)}s</p>
+                <p>DOM Ready: ${(domReady / 1000).toFixed(2)}s</p>
+            `, loadTime < 3000 ? 'success' : 'warning');
+        }
+
+        function measurePageLoad() {
+            window.addEventListener('load', () => {
+                const timing = performance.timing;
+                const loadTime = timing.loadEventEnd - timing.navigationStart;
+                document.getElementById('pageLoad').textContent = (loadTime / 1000).toFixed(2) + ' s';
+            });
+        }
+
+        function showTestResult(title, content, type) {
+            const resultsDiv = document.getElementById('testResults');
+            const contentDiv = document.getElementById('resultsContent');
+            
+            const colorClass = {
+                'success': 'bg-green-50 border-green-200 text-green-800',
+                'warning': 'bg-yellow-50 border-yellow-200 text-yellow-800',
+                'error': 'bg-red-50 border-red-200 text-red-800'
+            }[type] || 'bg-gray-50 border-gray-200 text-gray-800';
+            
+            contentDiv.innerHTML = `
+                <div class="p-4 border rounded-lg ${colorClass}">
+                    <h3 class="font-semibold mb-2">${title}</h3>
+                    <div>${content}</div>
+                </div>
+            `;
+            
+            resultsDiv.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

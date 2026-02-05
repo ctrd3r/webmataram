@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Admin Test - BMKG News</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-8">
+        <h1 class="text-2xl font-bold mb-6">Simple Admin Panel Test</h1>
+        
+        <!-- Dashboard Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-newspaper text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Berita</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalNews">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <i class="fas fa-eye text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Views</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalViews">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-tags text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Kategori</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalCategories">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <i class="fas fa-users text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Penulis</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalAuthors">Loading...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Authors Table -->
+        <div class="bg-white rounded-lg shadow mb-8">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Data Penulis</h3>
+            </div>
+            <div class="p-6">
+                <div id="authorsTable">
+                    Loading...
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent News -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="p-6 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-800">Berita Terbaru</h3>
+            </div>
+            <div class="p-6">
+                <div id="recentNews">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadDashboardStats() {
+            try {
+                console.log('Loading dashboard stats...');
+                
+                // Get news stats
+                const newsResponse = await fetch('../api/manage_news.php?action=stats');
+                const newsResult = await newsResponse.json();
+                console.log('News stats:', newsResult);
+                
+                // Get categories count
+                const categoriesResponse = await fetch('../api/get_categories.php');
+                const categoriesResult = await categoriesResponse.json();
+                console.log('Categories:', categoriesResult);
+                
+                // Get authors count
+                const authorsResponse = await fetch('../api/get_authors.php');
+                const authorsResult = await authorsResponse.json();
+                console.log('Authors:', authorsResult);
+                
+                // Update stats
+                document.getElementById('totalNews').textContent = newsResult.success ? (newsResult.data?.total_news || 0) : 'Error';
+                document.getElementById('totalViews').textContent = newsResult.success ? (newsResult.data?.total_views || 0).toLocaleString() : 'Error';
+                document.getElementById('totalCategories').textContent = categoriesResult.success ? (categoriesResult.data?.length || 0) : 'Error';
+                document.getElementById('totalAuthors').textContent = authorsResult.success ? (authorsResult.data?.length || 0) : 'Error';
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                document.getElementById('totalNews').textContent = 'Error';
+                document.getElementById('totalViews').textContent = 'Error';
+                document.getElementById('totalCategories').textContent = 'Error';
+                document.getElementById('totalAuthors').textContent = 'Error';
+            }
+        }
+
+        async function loadAuthorsTable() {
+            try {
+                const response = await fetch('../api/get_authors.php');
+                const result = await response.json();
+                
+                const container = document.getElementById('authorsTable');
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    container.innerHTML = `
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Penulis</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Berita</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    ${result.data.map(author => `
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex items-center">
+                                                    <div class="flex-shrink-0 h-10 w-10">
+                                                        <div class="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+                                                            ${author.nama_lengkap.charAt(0).toUpperCase()}
+                                                        </div>
+                                                    </div>
+                                                    <div class="ml-4">
+                                                        <div class="text-sm font-medium text-gray-900">${author.nama_lengkap}</div>
+                                                        <div class="text-sm text-gray-500">${author.email || 'Tidak ada email'}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${author.username}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${author.total_berita || 0}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center py-12">
+                            <i class="fas fa-users text-4xl text-gray-400 mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Belum Ada Penulis</h3>
+                            <p class="text-gray-600 mb-4">Data penulis akan muncul di sini.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading authors:', error);
+                document.getElementById('authorsTable').innerHTML = `
+                    <div class="text-center py-12 text-red-500">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                        <p>Error loading authors: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadRecentNews() {
+            try {
+                const response = await fetch('../api/get_news.php?limit=5&sort=newest');
+                const result = await response.json();
+                
+                const container = document.getElementById('recentNews');
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    container.innerHTML = result.data.map(news => `
+                        <div class="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors mb-4">
+                            <img src="../${news.gambar_url || 'images/placeholder-news.jpg'}" alt="${news.judul}" 
+                                 class="w-16 h-16 object-cover rounded-lg"
+                                 onerror="this.src='../images/placeholder-news.jpg'">
+                            <div class="flex-1">
+                                <h4 class="font-semibold text-gray-800 mb-1">${news.judul}</h4>
+                                <p class="text-sm text-gray-600 mb-2">${news.kategori} • ${news.tanggal_publish_formatted}</p>
+                                <div class="flex items-center space-x-4">
+                                    <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
+                                        ${news.status ? news.status.toUpperCase() : 'PUBLISH'}
+                                    </span>
+                                    <span class="text-xs text-gray-500">${news.views} views</span>
+                                    ${news.featured ? '<span class="text-xs px-2 py-1 bg-red-100 text-red-800 rounded-full">UTAMA</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-newspaper text-4xl mb-4 opacity-50"></i>
+                            <p>Belum ada berita terbaru</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading recent news:', error);
+                document.getElementById('recentNews').innerHTML = `
+                    <div class="text-center py-8 text-red-500">
+                        <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                        <p>Error loading recent news: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('Loading simple admin test...');
+            await loadDashboardStats();
+            await loadAuthorsTable();
+            await loadRecentNews();
+        });
+    </script>
+</body>
+</html>

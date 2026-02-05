@@ -149,6 +149,10 @@
         .hero-gradient { 
             background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #0ea5e9 100%); 
         }
+        .bg-pattern-dots {
+            background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
         .loading-screen { 
             position: fixed; 
             top: 0; 
@@ -208,14 +212,19 @@
                 </div>
                 
                 <!-- Navigation Desktop dengan ARIA -->
-                <nav class="hidden md:flex space-x-8" role="navigation" aria-label="Main navigation">
-                    <a href="#beranda" class="text-bmkg-blue font-medium hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1" aria-current="page">Beranda</a>
-                    <a href="#gempa" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Gempa Bumi</a>
-                    <a href="#tsunami" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Tsunami</a>
-                    <a href="#magnet" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Magnet Bumi</a>
-                    <a href="#berita" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Berita</a>
-                    <a href="#kontak" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Kontak</a>
-                </nav>
+                <div class="flex items-center space-x-6">
+                    <nav class="hidden md:flex space-x-8" role="navigation" aria-label="Main navigation">
+                        <a href="#beranda" class="text-bmkg-blue font-medium hover:text-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1" aria-current="page">Beranda</a>
+                        <a href="/berita" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Berita</a>
+                        <a href="#gempa" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Gempa Bumi</a>
+                        <a href="#tsunami" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Tsunami</a>
+                        <a href="#magnet" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Magnet Bumi</a>                    
+                        <a href="tanda-waktu.html" class="text-slate-600 hover:text-bmkg-blue transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1">Tanda Waktu</a>
+                    </nav>
+                    
+                    <!-- BMKG Clock Container -->
+                    <div id="bmkg-clock-container" class="bmkg-clock-container"></div>
+                </div>
                 
                 <!-- Action Buttons dengan ARIA Labels -->
                 <div class="flex items-center space-x-3">
@@ -246,18 +255,39 @@
                 <a href="#tsunami" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">Tsunami</a>
                 <a href="#magnet" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">Magnet Bumi</a>
                 <a href="#berita" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">Berita</a>
-                <a href="#kontak" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">Kontak</a>
+                <a href="tanda-waktu.html" class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">Tanda Waktu</a>
             </div>
         </div>
     </header>
 
+    <!-- Office Building Photo Section -->
+    <section class="relative w-full h-64 md:h-80 lg:h-96 overflow-hidden">
+        <img 
+            src="images/gedung1.jpg" 
+            alt="Gedung Stasiun Geofisika Mataram - BMKG NTB" 
+            class="w-full h-full object-cover"
+            loading="eager"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/20 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-8">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-2 drop-shadow-lg">
+                    Stasiun Geofisika Mataram
+                </h2>
+                <p class="text-sm md:text-base text-white/90 drop-shadow-md">
+                    Jl. Adisucipto No. 10, Rembiga, Kota Mataram, NTB 83115
+                </p>
+            </div>
+        </div>
+    </section>
+
     <!-- Main Content dengan Semantic HTML -->
-    <main id="main-content" role="main">
+    <main id="main-content" role="main"></main>
         <!-- Hero Section dengan optimasi LCP -->
         <section id="beranda" class="hero-gradient text-white py-16 relative overflow-hidden" aria-labelledby="hero-title">
             <!-- Background Pattern untuk visual enhancement -->
             <div class="absolute inset-0 opacity-10">
-                <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.1"><circle cx="30" cy="30" r="2"/></g></svg>'); background-size: 60px 60px;"></div>
+                <div class="absolute inset-0 bg-pattern-dots"></div>
             </div>
             
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -649,6 +679,7 @@
     </footer>
 
     <!-- JavaScript dengan optimasi loading -->
+    <script src="bmkg-clock.js" defer></script>
     <script src="script.js" defer></script>
     <script>
         // Critical JavaScript untuk Core Web Vitals

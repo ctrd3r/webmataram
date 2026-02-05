@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Quick Cache Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .test { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        button { padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #2563eb; }
+        .result { margin-top: 15px; padding: 15px; background: #f8fafc; border-radius: 5px; font-family: monospace; }
+        .success { color: #10b981; font-weight: bold; }
+        .error { color: #ef4444; font-weight: bold; }
+        pre { background: #1e293b; color: #e2e8f0; padding: 15px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>⚡ Quick Cache Manager Test</h1>
+    
+    <div class="test">
+        <h2>Test V2 (Ultra Simple)</h2>
+        <button onclick="testV2('stats')">Get Stats</button>
+        <button onclick="testV2('clear-expired')">Clear Expired</button>
+        <button onclick="testV2('clear-news')">Clear News</button>
+        <button onclick="testV2('clear')">Clear All</button>
+        <div id="resultV2" class="result"></div>
+    </div>
+    
+    <div class="test">
+        <h2>Direct Link Test</h2>
+        <p>Open these links in new tab to see raw JSON:</p>
+        <a href="cache_manager_v2.php?action=stats" target="_blank">cache_manager_v2.php?action=stats</a><br>
+        <a href="cache_manager_v2.php?action=clear-expired" target="_blank">cache_manager_v2.php?action=clear-expired</a>
+    </div>
+
+    <script>
+        async function testV2(action) {
+            const resultDiv = document.getElementById('resultV2');
+            resultDiv.innerHTML = '<p>⏳ Loading...</p>';
+            
+            try {
+                const url = `cache_manager_v2.php?action=${action}`;
+                console.log('Fetching:', url);
+                
+                const response = await fetch(url);
+                console.log('Status:', response.status);
+                
+                const text = await response.text();
+                console.log('Response:', text);
+                
+                if (text.trim() === '') {
+                    resultDiv.innerHTML = '<p class="error">❌ EMPTY RESPONSE</p><p>File might not be uploaded to server!</p>';
+                    return;
+                }
+                
+                const data = JSON.parse(text);
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ SUCCESS!</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <p class="error">❌ ${data.message}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ ERROR: ${error.message}</p>
+                    <p>This usually means:</p>
+                    <ul>
+                        <li>File not uploaded to server</li>
+                        <li>PHP syntax error</li>
+                        <li>Server configuration issue</li>
+                    </ul>
+                `;
+                console.error('Error:', error);
+            }
+        }
+        
+        // Auto-test on load
+        window.onload = () => {
+            testV2('stats');
+        };
+    </script>
+</body>
+</html>

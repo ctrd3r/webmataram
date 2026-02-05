@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">Detail Berita - BMKG</title>
+    <meta name="description" id="pageDescription" content="Detail berita dari BMKG">
+    <meta name="keywords" id="pageKeywords" content="bmkg, berita, meteorologi">
+    <meta name="author" id="pageAuthor" content="BMKG">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" id="pageCanonical" href="">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:site_name" content="BMKG News">
+    <meta property="og:title" id="ogTitle" content="Detail Berita - BMKG">
+    <meta property="og:description" id="ogDescription" content="Detail berita dari BMKG">
+    <meta property="og:image" id="ogImage" content="images/placeholder-news.jpg">
+    <meta property="og:type" content="article">
+    <meta property="og:url" id="ogUrl" content="">
+    <meta property="og:locale" content="id_ID">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@infoBMKG">
+    <meta name="twitter:title" id="twitterTitle" content="Detail Berita - BMKG">
+    <meta name="twitter:description" id="twitterDescription" content="Detail berita dari BMKG">
+    <meta name="twitter:image" id="twitterImage" content="images/placeholder-news.jpg">
+    
+    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <img src="images/bmkg-logo.png" alt="Logo BMKG" class="h-12 w-12" onerror="this.style.display='none'">
+                    <div>
+                        <h1 class="text-2xl font-bold">BMKG News</h1>
+                        <p class="text-blue-200 text-sm">Berita Meteorologi, Klimatologi & Geofisika</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="hover:text-blue-200 transition-colors">Beranda</a>
+                    <a href="gempabumi.html" class="hover:text-blue-200 transition-colors">Gempa Bumi</a>
+                    <a href="tsunami.html" class="hover:text-blue-200 transition-colors">Tsunami</a>
+                    <a href="berita.html" class="hover:text-blue-200 transition-colors">Berita</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-3">
+            <ol class="flex items-center space-x-2 text-sm text-gray-600">
+                <li><a href="index.html" class="hover:text-blue-600">Beranda</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li><a href="berita.html" class="hover:text-blue-600">Berita</a></li>
+                <li><span class="mx-2">/</span></li>
+                <li id="breadcrumbCategory" class="text-gray-400">Loading...</li>
+                <li><span class="mx-2">/</span></li>
+                <li id="breadcrumbTitle" class="text-gray-400">Loading...</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Loading State -->
+        <div id="loadingState" class="text-center py-12">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p class="mt-4 text-gray-600">Memuat berita...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="text-center py-12 hidden">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-8 max-w-md mx-auto">
+                <i class="fas fa-exclamation-triangle text-red-500 text-4xl mb-4"></i>
+                <h2 class="text-xl font-semibold text-red-800 mb-2">Berita Tidak Ditemukan</h2>
+                <p class="text-red-600 mb-4">Maaf, berita yang Anda cari tidak dapat ditemukan.</p>
+                <a href="berita.html" class="bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                    Kembali ke Berita
+                </a>
+            </div>
+        </div>
+
+        <!-- Article Content -->
+        <article id="articleContent" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Main Article -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <!-- Article Header -->
+                        <div class="relative">
+                            <img id="articleImage" data-src="" alt="" loading="lazy" class="w-full h-64 md:h-96 object-cover lazy-image">
+                            <div class="absolute top-4 left-4">
+                                <span id="articleCategory" class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    Loading...
+                                </span>
+                            </div>
+                            <div class="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white px-3 py-1 rounded-full text-sm">
+                                <i class="fas fa-eye mr-1"></i>
+                                <span id="articleViews">0</span> views
+                            </div>
+                        </div>
+
+                        <!-- Article Body -->
+                        <div class="p-6 md:p-8">
+                            <div class="mb-4">
+                                <h1 id="articleTitle" class="text-2xl md:text-3xl font-bold text-gray-800 mb-4">
+                                    Loading...
+                                </h1>
+                                
+                                <div class="flex flex-wrap items-center text-sm text-gray-600 mb-4">
+                                    <div class="flex items-center mr-6 mb-2">
+                                        <i class="fas fa-user mr-2"></i>
+                                        <span id="articleAuthor">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center mr-6 mb-2">
+                                        <i class="fas fa-calendar mr-2"></i>
+                                        <span id="articleDate">Loading...</span>
+                                    </div>
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas fa-clock mr-2"></i>
+                                        <span id="readingTime">5 menit baca</span>
+                                    </div>
+                                </div>
+
+                                <!-- Article Summary -->
+                                <div id="articleSummary" class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                                    <p class="text-blue-800 font-medium">Loading...</p>
+                                </div>
+                            </div>
+
+                            <!-- Article Content -->
+                            <div id="articleBody" class="prose prose-lg max-w-none">
+                                <p>Loading article content...</p>
+                            </div>
+
+                            <!-- Tags -->
+                            <div id="articleTags" class="mt-8 pt-6 border-t border-gray-200">
+                                <h3 class="text-sm font-semibold text-gray-600 mb-3">Tags:</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <!-- Tags will be loaded here -->
+                                </div>
+                            </div>
+
+                            <!-- Share Buttons -->
+                            <div class="mt-8 pt-6 border-t border-gray-200">
+                                <h3 class="text-sm font-semibold text-gray-600 mb-3">Bagikan:</h3>
+                                <div class="flex space-x-4">
+                                    <button onclick="shareToFacebook()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                        <i class="fab fa-facebook-f mr-2"></i>Facebook
+                                    </button>
+                                    <button onclick="shareToTwitter()" class="bg-blue-400 text-white px-4 py-2 rounded-lg hover:bg-blue-500 transition-colors">
+                                        <i class="fab fa-twitter mr-2"></i>Twitter
+                                    </button>
+                                    <button onclick="shareToWhatsApp()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                        <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                                    </button>
+                                    <button onclick="copyLink()" class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                                        <i class="fas fa-link mr-2"></i>Copy Link
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comments Section -->
+                    <div id="commentsSection" class="bg-white rounded-lg shadow-lg mt-8 p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Komentar</h3>
+                        
+                        <!-- Comment Form -->
+                        <form id="commentForm" class="mb-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <input type="text" id="commentName" placeholder="Nama Anda" required
+                                       class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <input type="email" id="commentEmail" placeholder="Email Anda" required
+                                       class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                            <textarea id="commentText" placeholder="Tulis komentar Anda..." required rows="4"
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4"></textarea>
+                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                Kirim Komentar
+                            </button>
+                        </form>
+
+                        <!-- Comments List -->
+                        <div id="commentsList">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="lg:col-span-1">
+                    <!-- Related News -->
+                    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Berita Terkait</h3>
+                        <div id="relatedNews" class="space-y-4">
+                            <!-- Related news will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Popular News -->
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-6">Berita Populer</h3>
+                        <div id="popularNews" class="space-y-4">
+                            <!-- Popular news will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">BMKG</h3>
+                    <p class="text-gray-300">Badan Meteorologi, Klimatologi, dan Geofisika</p>
+                    <p class="text-gray-300">Memberikan informasi cuaca, iklim, dan gempa bumi terpercaya</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Layanan</h3>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="gempabumi.html" class="hover:text-white">Info Gempa Bumi</a></li>
+                        <li><a href="tsunami.html" class="hover:text-white">Peringatan Tsunami</a></li>
+                        <li><a href="berita.html" class="hover:text-white">Berita Terkini</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Kontak</h3>
+                    <p class="text-gray-300">Website: bmkg.go.id</p>
+                    <p class="text-gray-300">Email: info@bmkg.go.id</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 BMKG. Hak cipta dilindungi undang-undang.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script src="seo-helper.js"></script>
+    <script src="lazy-load.js"></script>
+    <script src="detail-berita.js"></script>
+</body>
+</html>

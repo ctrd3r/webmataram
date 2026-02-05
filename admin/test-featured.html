@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Featured News - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Test Featured News Functions</h1>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">API Tests</h2>
+            <div class="space-y-4">
+                <button onclick="testAPI()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Test API Connection
+                </button>
+                <div id="apiResult" class="mt-4 p-4 bg-gray-100 rounded hidden">
+                    <pre id="apiOutput"></pre>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-lg font-semibold mb-4">Current Featured News</h2>
+            <button onclick="loadCurrentFeaturedNews()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 mb-4">
+                Load Current Featured
+            </button>
+            <div id="currentFeaturedNews" class="border p-4 rounded">
+                <!-- Will be populated -->
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-lg font-semibold mb-4">All News List</h2>
+            <button onclick="loadFeaturedNewsList()" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 mb-4">
+                Load News List
+            </button>
+            
+            <div class="mb-4 flex gap-4">
+                <input type="text" id="featuredNewsSearch" placeholder="Search..." class="px-3 py-2 border rounded">
+                <select id="featuredCategoryFilter" class="px-3 py-2 border rounded">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            
+            <div id="featuredNewsTable" class="border p-4 rounded overflow-auto">
+                <!-- Will be populated -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            console.log('Testing API connection...');
+            const resultDiv = document.getElementById('apiResult');
+            const outputPre = document.getElementById('apiOutput');
+            
+            try {
+                resultDiv.classList.remove('hidden');
+                outputPre.textContent = 'Testing API...';
+                
+                // Test get news
+                const response = await fetch('../api/get_news.php?limit=3');
+                const result = await response.json();
+                
+                outputPre.textContent = JSON.stringify(result, null, 2);
+                console.log('API test result:', result);
+                
+            } catch (error) {
+                outputPre.textContent = 'Error: ' + error.message;
+                console.error('API test error:', error);
+            }
+        }
+        
+        // Copy the admin functions here for testing
+        async function loadCurrentFeaturedNews() {
+            console.log('Loading current featured news...');
+            try {
+                const response = await fetch('../api/get_news.php?featured=true&limit=1');
+                const result = await response.json();
+                
+                console.log('Featured news response:', result);
+                
+                const container = document.getElementById('currentFeaturedNews');
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    const news = result.data[0];
+                    container.innerHTML = `
+                        <div class="border border-red-200 bg-red-50 rounded-lg p-4">
+                            <div class="flex items-start space-x-4">
+                                <img src="../${news.gambar_url}" alt="${news.judul}" 
+                                     class="w-24 h-24 object-cover rounded-lg"
+                                     onerror="this.src='../images/placeholder-news.jpg'">
+                                <div class="flex-1">
+                                    <span class="bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold mb-2 inline-block">
+                                        BERITA UTAMA
+                                    </span>
+                                    <h3 class="font-semibold text-gray-800 mb-2">${news.judul}</h3>
+                                    <div class="text-sm text-gray-600 mb-2">
+                                        <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded mr-2">${news.kategori}</span>
+                                        <span>${news.tanggal_publish_formatted}</span>
+                                        <span class="mx-2">•</span>
+                                        <span>${news.views} views</span>
+                                    </div>
+                                    <p class="text-gray-700 text-sm">${news.ringkasan || 'Tidak ada ringkasan'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="border border-gray-200 bg-gray-50 rounded-lg p-8 text-center">
+                            <i class="fas fa-info-circle text-4xl text-gray-400 mb-4"></i>
+                            <h3 class="text-lg font-medium text-gray-700 mb-2">Belum Ada Berita Utama</h3>
+                            <p class="text-gray-600">Pilih salah satu berita di bawah untuk dijadikan berita utama.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading current featured news:', error);
+                const container = document.getElementById('currentFeaturedNews');
+                container.innerHTML = `
+                    <div class="border border-red-200 bg-red-50 rounded-lg p-4 text-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-2"></i>
+                        <p class="text-red-600">Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function loadFeaturedNewsList() {
+            console.log('Loading featured news list...');
+            try {
+                const searchTerm = document.getElementById('featuredNewsSearch')?.value || '';
+                const category = document.getElementById('featuredCategoryFilter')?.value || '';
+                
+                let url = '../api/get_news.php?limit=10';
+                if (searchTerm) url += `&search=${encodeURIComponent(searchTerm)}`;
+                if (category) url += `&category=${encodeURIComponent(category)}`;
+                
+                console.log('Fetching from URL:', url);
+                
+                const response = await fetch(url);
+                const result = await response.json();
+                
+                console.log('News list response:', result);
+                
+                const container = document.getElementById('featuredNewsTable');
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    container.innerHTML = `
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Berita</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                ${result.data.map(news => `
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4">
+                                            <div class="flex items-center">
+                                                <img src="../${news.gambar_url}" alt="${news.judul}" 
+                                                     class="w-12 h-12 object-cover rounded-lg mr-4"
+                                                     onerror="this.src='../images/placeholder-news.jpg'">
+                                                <div>
+                                                    <div class="text-sm font-medium text-gray-900">${news.judul}</div>
+                                                    <div class="text-sm text-gray-500">${news.kategori} • ${news.views} views</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            ${news.featured ? 
+                                                '<span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">UTAMA</span>' : 
+                                                '<span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-800 rounded-full">BIASA</span>'
+                                            }
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            ${news.featured ? 
+                                                `<button onclick="testRemoveFeatured(${news.id_berita})" class="text-gray-600 hover:text-gray-900">
+                                                    <i class="fas fa-times mr-1"></i>Hapus Utama
+                                                </button>` :
+                                                `<button onclick="testSetFeatured(${news.id_berita})" class="text-yellow-600 hover:text-yellow-900">
+                                                    <i class="fas fa-star mr-1"></i>Jadikan Utama
+                                                </button>`
+                                            }
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    container.innerHTML = `
+                        <div class="text-center py-8">
+                            <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                            <p class="text-gray-600">Tidak ada berita ditemukan</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading featured news list:', error);
+                const container = document.getElementById('featuredNewsTable');
+                container.innerHTML = `
+                    <div class="text-center py-8">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-2xl mb-2"></i>
+                        <p class="text-red-600">Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        async function testSetFeatured(newsId) {
+            console.log('Testing set featured for news ID:', newsId);
+            try {
+                const response = await fetch('../api/manage_news.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'set_featured',
+                        id_berita: newsId
+                    })
+                });
+                
+                const result = await response.json();
+                console.log('Set featured result:', result);
+                
+                if (result.success) {
+                    alert('Berita berhasil dijadikan utama!');
+                    loadCurrentFeaturedNews();
+                    loadFeaturedNewsList();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error setting featured:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        async function testRemoveFeatured(newsId) {
+            console.log('Testing remove featured for news ID:', newsId);
+            try {
+                const response = await fetch('../api/manage_news.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'remove_featured',
+                        id_berita: newsId
+                    })
+                });
+                
+                const result = await response.json();
+                console.log('Remove featured result:', result);
+                
+                if (result.success) {
+                    alert('Status berita utama berhasil dihapus!');
+                    loadCurrentFeaturedNews();
+                    loadFeaturedNewsList();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error removing featured:', error);
+                alert('Error: ' + error.message);
+            }
+        }
+        
+        // Auto-run tests on load
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Test page loaded');
+            testAPI();
+        });
+    </script>
+</body>
+</html>

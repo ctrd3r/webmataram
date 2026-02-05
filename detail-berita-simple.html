@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Berita - BMKG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-4">Test Page - No SEO</h1>
+        <div id="content">Loading...</div>
+    </div>
+
+    <script>
+        // Simple test without SEO
+        setTimeout(() => {
+            document.getElementById('content').innerHTML = `
+                <h2>Gempa Bumi Magnitudo 5.2 Guncang Jawa Barat</h2>
+                <p>Badan Meteorologi, Klimatologi, dan Geofisika (BMKG) melaporkan terjadinya gempa bumi dengan magnitudo 5.2 yang mengguncang wilayah Jawa Barat pada pukul 08:30 WIB hari ini.</p>
+                <p><strong>If you see this, JavaScript is working!</strong></p>
+            `;
+        }, 1000);
+    </script>
+</body>
+</html>

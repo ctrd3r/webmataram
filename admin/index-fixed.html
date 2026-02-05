@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - BMKG News (FIXED)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <i class="fas fa-newspaper text-2xl"></i>
+                    <div>
+                        <h1 class="text-xl font-bold">BMKG News Admin (FIXED)</h1>
+                        <p class="text-blue-200 text-sm">Content Management System</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm">Selamat datang, <span id="adminName">Admin</span></span>
+                    <button onclick="logout()" class="bg-blue-700 hover:bg-blue-800 px-4 py-2 rounded text-sm">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-white shadow-lg min-h-screen">
+            <nav class="p-4">
+                <ul class="space-y-2">
+                    <li>
+                        <a href="#dashboard" 
+                           class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600 bg-blue-100 text-blue-600">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#news" 
+                           class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-newspaper"></i>
+                            <span>Kelola Berita</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#featured" 
+                           class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-star"></i>
+                            <span>Berita Utama</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#categories" 
+                           class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-tags"></i>
+                            <span>Kategori</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#authors" 
+                           class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-users"></i>
+                            <span>Penulis</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#comments" 
+                           class="nav-link flex items-center space-x-3 p-3 rounded-lg hover:bg-blue-50 text-gray-700 hover:text-blue-600">
+                            <i class="fas fa-comments"></i>
+                            <span>Komentar</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="content-section">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+                    <p class="text-gray-600">Ringkasan statistik sistem berita BMKG</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                                <i class="fas fa-newspaper text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Total Berita</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="totalNews">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-green-100 text-green-600">
+                                <i class="fas fa-eye text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Total Views</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="totalViews">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-tags text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Kategori</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="totalCategories">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-center">
+                            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                                <i class="fas fa-comments text-xl"></i>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-600">Komentar</p>
+                                <p class="text-2xl font-semibold text-gray-900" id="totalComments">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent News -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Berita Terbaru</h3>
+                    </div>
+                    <div class="p-6">
+                        <div id="recentNews" class="space-y-4">
+                            <div class="text-center py-4">
+                                <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                                <p class="text-gray-500 mt-2">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News Management Section -->
+            <section id="news" class="content-section hidden">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Kelola Berita</h2>
+                            <p class="text-gray-600">Tambah, edit, dan hapus berita</p>
+                        </div>
+                        <button onclick="showAddNewsForm()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-plus mr-2"></i>Tambah Berita
+                        </button>
+                    </div>
+                </div>
+
+                <!-- News List -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <div id="newsTable" class="overflow-x-auto">
+                            <!-- News table will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured News Section -->
+            <section id="featured" class="content-section hidden">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Berita Utama</h2>
+                    <p class="text-gray-600">Kelola berita yang ditampilkan sebagai berita utama</p>
+                </div>
+
+                <!-- Current Featured News -->
+                <div class="bg-white rounded-lg shadow mb-6">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800 flex items-center">
+                            <i class="fas fa-star text-yellow-500 mr-2"></i>
+                            Berita Utama Saat Ini
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div id="currentFeaturedNews">
+                            <div class="text-center py-4">
+                                <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                                <p class="text-gray-500 mt-2">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All News for Featured Selection -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <h3 class="text-lg font-semibold text-gray-800">Pilih Berita Utama</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="mb-4 flex flex-col md:flex-row gap-4">
+                            <input type="text" id="featuredNewsSearch" placeholder="Cari berita..." 
+                                   class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <select id="featuredCategoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">Semua Kategori</option>
+                            </select>
+                            <button onclick="loadFeaturedNewsList()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                <i class="fas fa-search mr-2"></i>Cari
+                            </button>
+                        </div>
+                        
+                        <div id="featuredNewsTable" class="overflow-x-auto">
+                            <div class="text-center py-4">
+                                <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                                <p class="text-gray-500 mt-2">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section id="categories" class="content-section hidden">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Kategori</h2>
+                            <p class="text-gray-600">Kelola kategori berita</p>
+                        </div>
+                        <button onclick="showAddCategoryForm()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-plus mr-2"></i>Tambah Kategori
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <div id="categoriesTable">
+                            <!-- Categories table will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Authors Section -->
+            <section id="authors" class="content-section hidden">
+                <div class="mb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">Penulis</h2>
+                            <p class="text-gray-600">Kelola data penulis</p>
+                        </div>
+                        <button onclick="showAddAuthorForm()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            <i class="fas fa-plus mr-2"></i>Tambah Penulis
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <div id="authorsTable">
+                            <div class="text-center py-4">
+                                <i class="fas fa-spinner fa-spin text-2xl text-gray-400"></i>
+                                <p class="text-gray-500 mt-2">Loading...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comments Section -->
+            <section id="comments" class="content-section hidden">
+                <div class="mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">Komentar</h2>
+                    <p class="text-gray-600">Moderasi komentar pengunjung</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <div id="commentsTable">
+                            <!-- Comments table will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Load the fixed admin script -->
+    <script src="admin-fixed.js"></script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Berita</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #2563eb;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f9fafb;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            border-color: #10b981;
+            background: #d1fae5;
+        }
+        .error {
+            border-color: #ef4444;
+            background: #fee2e2;
+        }
+        h2 {
+            margin-top: 0;
+            color: #1f2937;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.success {
+            background: #10b981;
+            color: white;
+        }
+        .status.error {
+            background: #ef4444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test API Berita</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Get All News</h2>
+        <button onclick="testGetNews()">Test Get News</button>
+        <div id="result1" class="result" style="display:none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Get Featured News</h2>
+        <button onclick="testGetFeaturedNews()">Test Featured News</button>
+        <div id="result2" class="result" style="display:none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Get Categories</h2>
+        <button onclick="testGetCategories()">Test Categories</button>
+        <div id="result3" class="result" style="display:none;"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 4: Get News Detail</h2>
+        <button onclick="testGetNewsDetail()">Test News Detail</button>
+        <div id="result4" class="result" style="display:none;"></div>
+    </div>
+
+    <script>
+        async function testGetNews() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'Loading...';
+            
+            try {
+                const response = await fetch('api/get_news.php?page=1&limit=6');
+                const data = await response.json();
+                
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                
+                document.querySelector('#result1').previousElementSibling.innerHTML = 
+                    'Test 1: Get All News <span class="status ' + (data.success ? 'success' : 'error') + '">' + 
+                    (data.success ? '✓ SUCCESS' : '✗ FAILED') + '</span>';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Error: ' + error.message;
+                
+                document.querySelector('#result1').previousElementSibling.innerHTML = 
+                    'Test 1: Get All News <span class="status error">✗ FAILED</span>';
+            }
+        }
+        
+        async function testGetFeaturedNews() {
+            const resultDiv = document.getElementById('result2');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'Loading...';
+            
+            try {
+                const response = await fetch('api/get_news.php?featured=true&limit=1');
+                const data = await response.json();
+                
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                
+                document.querySelector('#result2').previousElementSibling.innerHTML = 
+                    'Test 2: Get Featured News <span class="status ' + (data.success ? 'success' : 'error') + '">' + 
+                    (data.success ? '✓ SUCCESS' : '✗ FAILED') + '</span>';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Error: ' + error.message;
+                
+                document.querySelector('#result2').previousElementSibling.innerHTML = 
+                    'Test 2: Get Featured News <span class="status error">✗ FAILED</span>';
+            }
+        }
+        
+        async function testGetCategories() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'Loading...';
+            
+            try {
+                const response = await fetch('api/get_categories.php');
+                const data = await response.json();
+                
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                
+                document.querySelector('#result3').previousElementSibling.innerHTML = 
+                    'Test 3: Get Categories <span class="status ' + (data.success ? 'success' : 'error') + '">' + 
+                    (data.success ? '✓ SUCCESS' : '✗ FAILED') + '</span>';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Error: ' + error.message;
+                
+                document.querySelector('#result3').previousElementSibling.innerHTML = 
+                    'Test 3: Get Categories <span class="status error">✗ FAILED</span>';
+            }
+        }
+        
+        async function testGetNewsDetail() {
+            const resultDiv = document.getElementById('result4');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result';
+            resultDiv.textContent = 'Loading...';
+            
+            try {
+                const response = await fetch('api/get_news_detail.php?slug=gempa-bumi-magnitudo-52-guncang-jawa-barat');
+                const data = await response.json();
+                
+                resultDiv.className = 'result ' + (data.success ? 'success' : 'error');
+                resultDiv.textContent = JSON.stringify(data, null, 2);
+                
+                document.querySelector('#result4').previousElementSibling.innerHTML = 
+                    'Test 4: Get News Detail <span class="status ' + (data.success ? 'success' : 'error') + '">' + 
+                    (data.success ? '✓ SUCCESS' : '✗ FAILED') + '</span>';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = 'Error: ' + error.message;
+                
+                document.querySelector('#result4').previousElementSibling.innerHTML = 
+                    'Test 4: Get News Detail <span class="status error">✗ FAILED</span>';
+            }
+        }
+    </script>
+</body>
+</html>

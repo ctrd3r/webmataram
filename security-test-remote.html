@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Test - BMKG News (Remote)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center">🔒 Security Test - BMKG News</h1>
+        <div class="text-center mb-6">
+            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                Testing: <strong>http://10.21.224.146/</strong>
+            </span>
+        </div>
+        
+        <!-- Test Controls -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Security Tests</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <button onclick="testDebugFiles()" class="bg-red-600 text-white p-3 rounded-lg hover:bg-red-700">
+                    <i class="fas fa-bug text-xl mb-2"></i>
+                    <div class="text-sm">Debug Files</div>
+                </button>
+                
+                <button onclick="testAPIEndpoints()" class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">
+                    <i class="fas fa-code text-xl mb-2"></i>
+                    <div class="text-sm">API Security</div>
+                </button>
+                
+                <button onclick="testDirectoryListing()" class="bg-purple-600 text-white p-3 rounded-lg hover:bg-purple-700">
+                    <i class="fas fa-folder-open text-xl mb-2"></i>
+                    <div class="text-sm">Directory Listing</div>
+                </button>
+                
+                <button onclick="testHeaders()" class="bg-green-600 text-white p-3 rounded-lg hover:bg-green-700">
+                    <i class="fas fa-shield-alt text-xl mb-2"></i>
+                    <div class="text-sm">Security Headers</div>
+                </button>
+                
+                <button onclick="testSQLInjection()" class="bg-yellow-600 text-white p-3 rounded-lg hover:bg-yellow-700">
+                    <i class="fas fa-database text-xl mb-2"></i>
+                    <div class="text-sm">SQL Injection</div>
+                </button>
+                
+                <button onclick="testXSS()" class="bg-orange-600 text-white p-3 rounded-lg hover:bg-orange-700">
+                    <i class="fas fa-exclamation-triangle text-xl mb-2"></i>
+                    <div class="text-sm">XSS Test</div>
+                </button>
+                
+                <button onclick="testFileUpload()" class="bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700">
+                    <i class="fas fa-upload text-xl mb-2"></i>
+                    <div class="text-sm">File Upload</div>
+                </button>
+                
+                <button onclick="runAllTests()" class="bg-gray-800 text-white p-3 rounded-lg hover:bg-gray-900">
+                    <i class="fas fa-play text-xl mb-2"></i>
+                    <div class="text-sm">Run All Tests</div>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Test Results</h2>
+            <div id="testResults" class="space-y-4">
+                <div class="text-gray-500 text-center py-8">
+                    <i class="fas fa-play-circle text-4xl mb-4"></i>
+                    <p>Click a test button to start security testing</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Score -->
+        <div id="securityScore" class="mt-6 bg-white rounded-lg shadow p-6 hidden">
+            <h2 class="text-xl font-semibold mb-4">Security Score</h2>
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-3xl font-bold" id="scoreValue">0</div>
+                    <div class="text-gray-600">out of 10</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-lg font-semibold" id="scoreLevel">Unknown</div>
+                    <div class="text-sm text-gray-600" id="scoreDescription">No tests completed</div>
+                </div>
+            </div>
+            <div class="mt-4">
+                <div class="bg-gray-200 rounded-full h-4">
+                    <div id="scoreBar" class="bg-blue-600 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://10.21.224.146';
+        let testResults = [];
+        
+        function addResult(test, status, message, details = '') {
+            const resultsDiv = document.getElementById('testResults');
+            
+            // Clear placeholder if first result
+            if (testResults.length === 0) {
+                resultsDiv.innerHTML = '';
+            }
+            
+            const resultDiv = document.createElement('div');
+            const statusClass = status === 'PASS' ? 'bg-green-100 border-green-400 text-green-700' :
+                               status === 'FAIL' ? 'bg-red-100 border-red-400 text-red-700' :
+                               'bg-yellow-100 border-yellow-400 text-yellow-700';
+            
+            const statusIcon = status === 'PASS' ? 'fa-check-circle' :
+                              status === 'FAIL' ? 'fa-times-circle' :
+                              'fa-exclamation-circle';
+            
+            resultDiv.className = `border-l-4 p-4 ${statusClass}`;
+            resultDiv.innerHTML = `
+                <div class="flex items-start">
+                    <i class="fas ${statusIcon} text-xl mr-3 mt-1"></i>
+                    <div class="flex-1">
+                        <div class="font-semibold">${test}: ${status}</div>
+                        <div class="text-sm mt-1">${message}</div>
+                        ${details ? `<div class="text-xs mt-2 font-mono bg-gray-100 p-2 rounded">${details}</div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.appendChild(resultDiv);
+            testResults.push({ test, status, message });
+            
+            updateSecurityScore();
+        }
+        
+        function updateSecurityScore() {
+            const totalTests = testResults.length;
+            const passedTests = testResults.filter(r => r.status === 'PASS').length;
+            const score = totalTests > 0 ? Math.round((passedTests / totalTests) * 10) : 0;
+            
+            document.getElementById('scoreValue').textContent = score;
+            document.getElementById('scoreBar').style.width = `${score * 10}%`;
+            
+            let level, description, barColor;
+            if (score >= 8) {
+                level = 'EXCELLENT';
+                description = 'Very secure';
+                barColor = 'bg-green-600';
+            } else if (score >= 6) {
+                level = 'GOOD';
+                description = 'Reasonably secure';
+                barColor = 'bg-blue-600';
+            } else if (score >= 4) {
+                level = 'FAIR';
+                description = 'Some security issues';
+                barColor = 'bg-yellow-600';
+            } else {
+                level = 'POOR';
+                description = 'Major security issues';
+                barColor = 'bg-red-600';
+            }
+            
+            document.getElementById('scoreLevel').textContent = level;
+            document.getElementById('scoreDescription').textContent = description;
+            document.getElementById('scoreBar').className = `${barColor} h-4 rounded-full transition-all duration-500`;
+            document.getElementById('securityScore').classList.remove('hidden');
+        }
+        
+        async function testDebugFiles() {
+            addResult('Debug Files Test', 'INFO', 'Testing for exposed debug files...');
+            
+            const debugFiles = [
+                '/test-comments-api.html',
+                '/test-news-api.html',
+                '/debug-admin-featured.html',
+                '/admin/debug-sections.html',
+                '/admin/test-all-sections.html',
+                '/api/test_info.php',
+                '/api/debug_news_query.php',
+                '/api/check_config.php'
+            ];
+            
+            let exposedFiles = [];
+            
+            for (const file of debugFiles) {
+                try {
+                    const response = await fetch(BASE_URL + file, { method: 'HEAD' });
+                    if (response.ok) {
+                        exposedFiles.push(file);
+                    }
+                } catch (e) {
+                    // File not accessible (good)
+                }
+            }
+            
+            if (exposedFiles.length === 0) {
+                addResult('Debug Files', 'PASS', 'No debug files exposed', 'All test/debug files properly removed');
+            } else {
+                addResult('Debug Files', 'FAIL', `${exposedFiles.length} debug files still exposed`, 
+                         'Exposed files: ' + exposedFiles.join(', '));
+            }
+        }
+        
+        async function testAPIEndpoints() {
+            addResult('API Security Test', 'INFO', 'Testing API endpoint security...');
+            
+            const apiTests = [
+                { url: '/api/get_news.php', expected: 200 },
+                { url: '/api/get_categories.php', expected: 200 },
+                { url: '/api/get_comments.php', expected: 200 },
+                { url: '/api/auth.php', expected: 400 }, // Should require action parameter
+            ];
+            
+            let passedTests = 0;
+            let details = [];
+            
+            for (const test of apiTests) {
+                try {
+                    const response = await fetch(BASE_URL + test.url);
+                    if (response.status === test.expected) {
+                        passedTests++;
+                        details.push(`✓ ${test.url}: ${response.status}`);
+                    } else {
+                        details.push(`✗ ${test.url}: ${response.status} (expected ${test.expected})`);
+                    }
+                } catch (e) {
+                    details.push(`✗ ${test.url}: Error - ${e.message}`);
+                }
+            }
+            
+            if (passedTests === apiTests.length) {
+                addResult('API Endpoints', 'PASS', 'All API endpoints responding correctly', details.join('\n'));
+            } else {
+                addResult('API Endpoints', 'WARN', `${passedTests}/${apiTests.length} API tests passed`, details.join('\n'));
+            }
+        }
+        
+        async function testDirectoryListing() {
+            addResult('Directory Listing Test', 'INFO', 'Testing for directory listing vulnerabilities...');
+            
+            const directories = [
+                '/api/',
+                '/admin/',
+                '/images/',
+                '/database/',
+                '/config/'
+            ];
+            
+            let vulnerableDirectories = [];
+            
+            for (const dir of directories) {
+                try {
+                    const response = await fetch(BASE_URL + dir);
+                    const text = await response.text();
+                    
+                    // Check for directory listing indicators
+                    if (text.includes('Index of') || text.includes('Directory Listing') || 
+                        text.includes('<title>Index of') || text.includes('Parent Directory')) {
+                        vulnerableDirectories.push(dir);
+                    }
+                } catch (e) {
+                    // Directory not accessible (good)
+                }
+            }
+            
+            if (vulnerableDirectories.length === 0) {
+                addResult('Directory Listing', 'PASS', 'No directory listing vulnerabilities found');
+            } else {
+                addResult('Directory Listing', 'FAIL', `${vulnerableDirectories.length} directories expose listing`, 
+                         'Vulnerable directories: ' + vulnerableDirectories.join(', '));
+            }
+        }
+        
+        async function testHeaders() {
+            addResult('Security Headers Test', 'INFO', 'Testing for security headers...');
+            
+            try {
+                const response = await fetch(BASE_URL + '/api/get_news.php');
+                const headers = response.headers;
+                
+                const securityHeaders = {
+                    'X-Content-Type-Options': 'nosniff',
+                    'X-Frame-Options': ['DENY', 'SAMEORIGIN'],
+                    'X-XSS-Protection': '1; mode=block',
+                    'Strict-Transport-Security': null, // Optional for HTTPS
+                    'Content-Security-Policy': null // Optional
+                };
+                
+                let presentHeaders = [];
+                let missingHeaders = [];
+                
+                for (const [header, expectedValue] of Object.entries(securityHeaders)) {
+                    const headerValue = headers.get(header);
+                    if (headerValue) {
+                        if (Array.isArray(expectedValue)) {
+                            if (expectedValue.some(val => headerValue.includes(val))) {
+                                presentHeaders.push(header);
+                            } else {
+                                missingHeaders.push(`${header} (wrong value: ${headerValue})`);
+                            }
+                        } else {
+                            presentHeaders.push(header);
+                        }
+                    } else if (expectedValue !== null) {
+                        missingHeaders.push(header);
+                    }
+                }
+                
+                if (missingHeaders.length === 0) {
+                    addResult('Security Headers', 'PASS', 'All important security headers present', 
+                             'Present: ' + presentHeaders.join(', '));
+                } else {
+                    addResult('Security Headers', 'WARN', `${missingHeaders.length} security headers missing`, 
+                             'Missing: ' + missingHeaders.join(', '));
+                }
+                
+            } catch (e) {
+                addResult('Security Headers', 'FAIL', 'Could not test headers', e.message);
+            }
+        }
+        
+        async function testSQLInjection() {
+            addResult('SQL Injection Test', 'INFO', 'Testing for SQL injection vulnerabilities...');
+            
+            const sqlPayloads = [
+                "' OR '1'='1",
+                "'; DROP TABLE users; --",
+                "' UNION SELECT 1,2,3 --",
+                "1' AND 1=1 --"
+            ];
+            
+            let vulnerabilities = [];
+            
+            for (const payload of sqlPayloads) {
+                try {
+                    const response = await fetch(BASE_URL + `/api/get_news.php?search=${encodeURIComponent(payload)}`);
+                    const result = await response.json();
+                    
+                    // Check for SQL error messages
+                    if (result.message && (
+                        result.message.includes('SQL') || 
+                        result.message.includes('mysql') || 
+                        result.message.includes('syntax error')
+                    )) {
+                        vulnerabilities.push(payload);
+                    }
+                } catch (e) {
+                    // Error in parsing JSON might indicate SQL error
+                }
+            }
+            
+            if (vulnerabilities.length === 0) {
+                addResult('SQL Injection', 'PASS', 'No SQL injection vulnerabilities detected');
+            } else {
+                addResult('SQL Injection', 'FAIL', `Potential SQL injection found`, 
+                         'Vulnerable payloads: ' + vulnerabilities.join(', '));
+            }
+        }
+        
+        async function testXSS() {
+            addResult('XSS Test', 'INFO', 'Testing for Cross-Site Scripting vulnerabilities...');
+            
+            const xssPayloads = [
+                '<script>alert("XSS")</script>',
+                '"><script>alert("XSS")</script>',
+                'javascript:alert("XSS")',
+                '<img src=x onerror=alert("XSS")>'
+            ];
+            
+            let vulnerabilities = [];
+            
+            for (const payload of xssPayloads) {
+                try {
+                    const response = await fetch(BASE_URL + `/api/get_news.php?search=${encodeURIComponent(payload)}`);
+                    const text = await response.text();
+                    
+                    // Check if payload is reflected unescaped
+                    if (text.includes(payload) && !text.includes(encodeURIComponent(payload))) {
+                        vulnerabilities.push(payload);
+                    }
+                } catch (e) {
+                    // Continue testing
+                }
+            }
+            
+            if (vulnerabilities.length === 0) {
+                addResult('XSS Protection', 'PASS', 'No XSS vulnerabilities detected');
+            } else {
+                addResult('XSS Protection', 'FAIL', `Potential XSS vulnerabilities found`, 
+                         'Vulnerable payloads: ' + vulnerabilities.length);
+            }
+        }
+        
+        async function testFileUpload() {
+            addResult('File Upload Test', 'INFO', 'Testing file upload security...');
+            
+            // Test if upload endpoint exists and is accessible
+            try {
+                const response = await fetch(BASE_URL + '/api/upload_image.php', { method: 'POST' });
+                
+                if (response.status === 404) {
+                    addResult('File Upload', 'PASS', 'Upload endpoint not exposed or properly protected');
+                } else {
+                    const result = await response.json();
+                    if (result.message && result.message.includes('No file uploaded')) {
+                        addResult('File Upload', 'WARN', 'Upload endpoint exists but requires proper validation');
+                    } else {
+                        addResult('File Upload', 'PASS', 'Upload endpoint properly secured');
+                    }
+                }
+            } catch (e) {
+                addResult('File Upload', 'PASS', 'Upload endpoint not accessible');
+            }
+        }
+        
+        async function runAllTests() {
+            // Clear previous results
+            testResults = [];
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('securityScore').classList.add('hidden');
+            
+            addResult('Security Audit', 'INFO', 'Starting comprehensive security test...');
+            
+            // Run all tests sequentially
+            await testDebugFiles();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testAPIEndpoints();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testDirectoryListing();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testHeaders();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testSQLInjection();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testXSS();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testFileUpload();
+            
+            addResult('Security Audit', 'INFO', 'All security tests completed');
+        }
+        
+        // Auto-run all tests on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(runAllTests, 1000);
+        });
+    </script>
+</body>
+</html>

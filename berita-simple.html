@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Berita Terkini - BMKG News</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <h1 class="text-2xl font-bold">BMKG News</h1>
+                        <p class="text-blue-200 text-sm">Berita Meteorologi, Klimatologi & Geofisika</p>
+                    </div>
+                </div>
+                <nav class="hidden md:flex space-x-6">
+                    <a href="index.html" class="hover:text-blue-200 transition-colors">Beranda</a>
+                    <a href="gempabumi.html" class="hover:text-blue-200 transition-colors">Gempa Bumi</a>
+                    <a href="tsunami.html" class="hover:text-blue-200 transition-colors">Tsunami</a>
+                    <a href="berita.html" class="text-blue-200 font-semibold">Berita</a>
+                    <a href="tanda-waktu.html" class="hover:text-blue-200 transition-colors">Tanda Waktu</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Filter dan Search -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div class="flex flex-col md:flex-row gap-4 flex-1">
+                    <input type="text" id="searchInput" placeholder="Cari berita..." 
+                           class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <select id="categoryFilter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Semua Kategori</option>
+                    </select>
+                </div>
+                <button onclick="searchNews()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Cari
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Layout with Sidebar -->
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <!-- Main Content Area -->
+            <div class="lg:col-span-3">
+                <!-- Featured News -->
+                <section class="mb-12">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">Berita Utama</h2>
+                    <div id="featuredNews" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-gray-100 rounded-lg p-8 text-center">
+                            <i class="fas fa-spinner fa-spin text-2xl text-blue-600 mb-2"></i>
+                            <p class="text-gray-600">Memuat berita utama...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Latest News -->
+                <section>
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Berita Terbaru</h2>
+                        <select id="sortOrder" onchange="loadNews()" class="px-3 py-1 border border-gray-300 rounded">
+                            <option value="newest">Terbaru</option>
+                            <option value="oldest">Terlama</option>
+                            <option value="popular">Terpopuler</option>
+                        </select>
+                    </div>
+                    
+                    <div id="newsList" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-gray-100 rounded-lg p-8 text-center">
+                            <i class="fas fa-spinner fa-spin text-2xl text-blue-600 mb-2"></i>
+                            <p class="text-gray-600">Memuat berita...</p>
+                        </div>
+                    </div>
+
+                    <!-- Loading indicator -->
+                    <div id="loadingIndicator" class="text-center py-8 hidden">
+                        <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <p class="mt-2 text-gray-600">Memuat berita...</p>
+                    </div>
+
+                    <!-- Load more button -->
+                    <div class="text-center mt-8">
+                        <button id="loadMoreBtn" onclick="loadMoreNews()" 
+                                class="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                            Muat Lebih Banyak
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="lg:col-span-1">
+                <!-- Quick Navigation Widget -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">
+                        <i class="fas fa-compass text-blue-600 mr-2"></i>
+                        Navigasi Cepat
+                    </h3>
+                    <nav class="space-y-2">
+                        <a href="index.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
+                            <i class="fas fa-home w-5 mr-3 text-blue-500"></i>
+                            <span>Beranda</span>
+                        </a>
+                        <a href="gempabumi.html" class="flex items-center p-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-colors">
+                            <i class="fas fa-mountain w-5 mr-3 text-red-500"></i>
+                            <span>Info Gempa Bumi</span>
+                        </a>
+                        <a href="berita.html" class="flex items-center p-2 bg-blue-50 text-blue-600 rounded-lg">
+                            <i class="fas fa-newspaper w-5 mr-3 text-blue-600"></i>
+                            <span class="font-semibold">Berita Terkini</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Popular News Widget -->
+                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2">
+                        <i class="fas fa-fire text-orange-500 mr-2"></i>
+                        Berita Populer
+                    </h3>
+                    <div id="popularNews" class="space-y-4">
+                        <div class="text-center py-4 text-gray-500">
+                            <i class="fas fa-spinner fa-spin text-xl mb-2"></i>
+                            <p class="text-sm">Memuat...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weather Info Widget -->
+                <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md p-6 text-white">
+                    <h3 class="text-lg font-bold mb-4 flex items-center">
+                        <i class="fas fa-cloud-sun mr-2"></i>
+                        Info Cuaca Terkini
+                    </h3>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold mb-2">28°C</div>
+                        <div class="text-sm opacity-90 mb-2">Cerah</div>
+                        <div class="text-xs opacity-75">Mataram, NTB</div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Simple JavaScript -->
+    <script>
+        console.log('Starting simple berita page...');
+        
+        // Simple news manager
+        class SimpleBeritaManager {
+            constructor() {
+                this.init();
+            }
+            
+            async init() {
+                console.log('Initializing SimpleBeritaManager...');
+                await this.loadNews();
+                await this.loadFeaturedNews();
+                await this.loadPopularNews();
+            }
+            
+            async loadNews() {
+                try {
+                    console.log('Loading news...');
+                    const response = await fetch('api/get_news.php?limit=6');
+                    const result = await response.json();
+                    
+                    if (result.success && result.data) {
+                        this.renderNews(result.data);
+                    } else {
+                        throw new Error(result.message || 'Failed to load news');
+                    }
+                } catch (error) {
+                    console.error('Error loading news:', error);
+                    document.getElementById('newsList').innerHTML = `
+                        <div class="col-span-full bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                            <p class="text-red-600">Gagal memuat berita: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            async loadFeaturedNews() {
+                try {
+                    console.log('Loading featured news...');
+                    const response = await fetch('api/get_news.php?featured=true&limit=1');
+                    const result = await response.json();
+                    
+                    if (result.success && result.data && result.data.length > 0) {
+                        this.renderFeaturedNews(result.data);
+                    } else {
+                        document.getElementById('featuredNews').innerHTML = `
+                            <div class="bg-gray-100 rounded-lg p-8 text-center">
+                                <i class="fas fa-newspaper text-4xl text-gray-400 mb-4"></i>
+                                <p class="text-gray-600">Belum ada berita utama</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error loading featured news:', error);
+                }
+            }
+            
+            async loadPopularNews() {
+                try {
+                    console.log('Loading popular news...');
+                    const response = await fetch('api/get_news.php?sort=popular&limit=5');
+                    const result = await response.json();
+                    
+                    if (result.success && result.data && result.data.length > 0) {
+                        this.renderPopularNews(result.data);
+                    } else {
+                        document.getElementById('popularNews').innerHTML = `
+                            <div class="text-center py-4 text-gray-500">
+                                <i class="fas fa-newspaper text-2xl mb-2 opacity-50"></i>
+                                <p class="text-sm">Belum ada berita populer</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error loading popular news:', error);
+                }
+            }
+            
+            renderNews(news) {
+                const container = document.getElementById('newsList');
+                container.innerHTML = news.map(item => `
+                    <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                        <div class="relative">
+                            <img src="${item.gambar_url}" alt="${item.judul}" class="w-full h-48 object-cover" 
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkJlcml0YSBCTU1HPC90ZXh0Pjwvc3ZnPg=='">
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
+                                    ${item.kategori}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">
+                                <a href="${item.detail_url}" class="hover:text-blue-600 transition-colors">
+                                    ${item.judul}
+                                </a>
+                            </h3>
+                            <p class="text-gray-600 text-sm mb-3">${item.ringkasan || 'Tidak ada ringkasan'}</p>
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>${item.tanggal_publish_formatted}</span>
+                                <span>${item.views} views</span>
+                            </div>
+                        </div>
+                    </article>
+                `).join('');
+            }
+            
+            renderFeaturedNews(news) {
+                const container = document.getElementById('featuredNews');
+                container.innerHTML = news.map(item => `
+                    <article class="bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="relative">
+                            <img src="${item.gambar_url}" alt="${item.judul}" class="w-full h-64 object-cover"
+                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1NiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkJlcml0YSBVdGFtYTwvdGV4dD48L3N2Zz4='" >
+                            <div class="absolute top-4 left-4">
+                                <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                    UTAMA
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="text-xl font-bold text-gray-800 mb-3">
+                                <a href="${item.detail_url}" class="hover:text-blue-600 transition-colors">
+                                    ${item.judul}
+                                </a>
+                            </h3>
+                            <p class="text-gray-600 mb-4">${item.ringkasan || 'Tidak ada ringkasan'}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-gray-500">${item.tanggal_publish_formatted}</span>
+                                <span class="text-sm text-gray-500">${item.views} views</span>
+                            </div>
+                        </div>
+                    </article>
+                `).join('');
+            }
+            
+            renderPopularNews(news) {
+                const container = document.getElementById('popularNews');
+                container.innerHTML = news.map((item, index) => `
+                    <div class="flex items-start space-x-3 pb-3 ${index < news.length - 1 ? 'border-b border-gray-100' : ''}">
+                        <div class="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                            ${index + 1}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-sm font-medium text-gray-800 mb-1">
+                                <a href="${item.detail_url}" class="hover:text-blue-600 transition-colors">
+                                    ${item.judul}
+                                </a>
+                            </h4>
+                            <div class="text-xs text-gray-500">${item.views} views</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // Global functions
+        function searchNews() {
+            console.log('Search function called');
+        }
+        
+        function loadNews() {
+            console.log('Load news function called');
+        }
+        
+        function loadMoreNews() {
+            console.log('Load more news function called');
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing...');
+            window.simpleBeritaManager = new SimpleBeritaManager();
+        });
+    </script>
+</body>
+</html>
