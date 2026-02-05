@@ -328,6 +328,42 @@
             </div>
         </section>
 
+        <!-- Featured News Section - 2 Kolom Random -->
+        <section class="bg-gradient-to-b from-slate-50 to-white dark:from-slate-800 dark:to-slate-900 py-12 border-b border-slate-200 dark:border-slate-700" aria-labelledby="featured-news-title">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 id="featured-news-title" class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Berita Terbaru</h3>
+                        <p class="text-slate-600 dark:text-slate-400">Informasi terkini dari Stasiun Geofisika Mataram</p>
+                    </div>
+                    <a href="/berita" class="inline-flex items-center gap-2 px-4 py-2 text-bmkg-blue dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors font-medium">
+                        Lihat Semua
+                        <span class="material-symbols-outlined text-lg" aria-hidden="true">arrow_forward</span>
+                    </a>
+                </div>
+                
+                <div id="featured-news-container" class="grid grid-cols-1 md:grid-cols-2 gap-6" role="list">
+                    <!-- Loading Skeleton -->
+                    <div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md animate-pulse" role="listitem">
+                        <div class="h-48 bg-slate-200 dark:bg-slate-700"></div>
+                        <div class="p-6">
+                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded mb-3 w-3/4"></div>
+                            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
+                            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md animate-pulse" role="listitem">
+                        <div class="h-48 bg-slate-200 dark:bg-slate-700"></div>
+                        <div class="p-6">
+                            <div class="h-4 bg-slate-200 dark:bg-slate-700 rounded mb-3 w-3/4"></div>
+                            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded mb-2"></div>
+                            <div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-5/6"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Status Live dengan API Integration -->
         <section class="bg-white dark:bg-slate-900 py-8 border-b border-slate-200 dark:border-slate-700" aria-labelledby="status-title">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -680,6 +716,7 @@
 
     <!-- JavaScript dengan optimasi loading -->
     <script src="bmkg-clock.js" defer></script>
+    <script src="featured-news.js" defer></script>
     <script src="script.js" defer></script>
     <script>
         // Critical JavaScript untuk Core Web Vitals
