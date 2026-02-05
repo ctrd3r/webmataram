@@ -5,8 +5,8 @@
 // Database Configuration
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'db_berita');
-define('DB_USER', 'bmkg_user'); // Username database
-define('DB_PASS', 'bmkg_pass_2024'); // Password database
+define('DB_USER', 'root'); // Username database
+define('DB_PASS', ''); // Password database
 define('DB_CHARSET', 'utf8mb4');
 
 // Timezone
