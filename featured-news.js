@@ -104,7 +104,7 @@ function createNewsCard(item) {
                         <time datetime="${item.tanggal_publikasi || item.created_at}">${date}</time>
                     </div>
                     
-                    <a href="/detail-berita.html?slug=${slug}" class="inline-flex items-center gap-1 text-bmkg-blue hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm transition-colors">
+                    <a href="detail-berita.html?slug=${slug}" class="inline-flex items-center gap-1 text-bmkg-blue hover:text-blue-700 dark:hover:text-blue-300 font-semibold text-sm transition-colors">
                         Baca Selengkapnya
                         <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" aria-hidden="true">arrow_forward</span>
                     </a>
