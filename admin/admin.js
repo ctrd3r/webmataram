@@ -705,7 +705,106 @@ function editAuthor(authorId) {
 }
 
 function showAddNewsForm() {
-    showNotification('Fitur tambah berita akan segera tersedia', 'info');
+    const modal = document.createElement('div');
+    modal.id = 'addNewsModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
+            <div class="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">Tambah Berita Baru</h2>
+                <button onclick="document.getElementById('addNewsModal').remove()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="addNewsForm" class="p-6 space-y-4">
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Judul Berita *</label>
+                    <input type="text" id="newsTitle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Kategori *</label>
+                    <select id="newsCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="1">Gempa Bumi</option>
+                        <option value="2">Cuaca</option>
+                        <option value="3">Tsunami</option>
+                        <option value="4">Iklim</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Isi Berita *</label>
+                    <textarea id="newsContent" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="6" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Gambar Utama</label>
+                    <input type="text" id="newsImage" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama file gambar">
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Status</label>
+                    <select id="newsStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="draft">Draft</option>
+                        <option value="publish">Publish</option>
+                    </select>
+                </div>
+                
+                <div class="flex gap-4 pt-4">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold">
+                        <i class="fas fa-save mr-2"></i>Simpan Berita
+                    </button>
+                    <button type="button" onclick="document.getElementById('addNewsModal').remove()" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 font-semibold">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Handle form submission
+    document.getElementById('addNewsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const newsData = {
+            judul: document.getElementById('newsTitle').value,
+            id_kategori: document.getElementById('newsCategory').value,
+            isi_berita: document.getElementById('newsContent').value,
+            gambar: document.getElementById('newsImage').value,
+            status: document.getElementById('newsStatus').value,
+            id_penulis: 1
+        };
+        
+        try {
+            const response = await fetch('/api/manage_news.php?action=add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newsData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Berita berhasil ditambahkan!', 'success');
+                document.getElementById('addNewsModal').remove();
+                // Reload news list
+                if (window.adminPanel) {
+                    window.adminPanel.loadNewsPage();
+                }
+            } else {
+                showNotification('Error: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Gagal menambahkan berita: ' + error.message, 'error');
+        }
+    });
 }
 
 function showAddCategoryForm() {
