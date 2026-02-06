@@ -1094,7 +1094,252 @@ function loadCommentsPage(page) {
 }
 
 function showAddNewsForm() {
-    showNotification('Fitur tambah berita akan segera tersedia', 'info');
+    const modal = document.createElement('div');
+    modal.id = 'addNewsModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto';
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 my-8">
+            <div class="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">Tambah Berita Baru</h2>
+                <button onclick="document.getElementById('addNewsModal').remove()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="addNewsForm" class="p-6 space-y-4 max-h-96 overflow-y-auto">
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Judul Berita *</label>
+                    <input type="text" id="newsTitle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Kategori *</label>
+                    <select id="newsCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="1">Gempa Bumi</option>
+                        <option value="2">Cuaca</option>
+                        <option value="3">Tsunami</option>
+                        <option value="4">Iklim</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Isi Berita *</label>
+                    <textarea id="newsContent" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Gambar Utama (Upload & Kompresi Otomatis)</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors" id="imageDropZone">
+                        <input type="file" id="newsImageFile" class="hidden" accept="image/*">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-600">Drag & drop gambar atau klik untuk upload</p>
+                        <p class="text-xs text-gray-500 mt-1">JPG, PNG, WebP (Max 10MB)</p>
+                    </div>
+                    
+                    <!-- Image Preview -->
+                    <div id="imagePreviewContainer" class="mt-4 hidden">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-start mb-3">
+                                <h4 class="font-semibold text-gray-700">Preview Gambar</h4>
+                                <button type="button" onclick="removeImagePreview()" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <img id="imagePreview" src="" alt="Preview" class="max-w-full h-auto rounded-lg mb-3">
+                            <div id="imageStats" class="text-sm text-gray-600 space-y-1">
+                                <p><strong>Nama File:</strong> <span id="fileName">-</span></p>
+                                <p><strong>Ukuran Asli:</strong> <span id="originalSize">-</span></p>
+                                <p><strong>Ukuran Terkompresi:</strong> <span id="compressedSize">-</span></p>
+                                <p><strong>Penghematan:</strong> <span id="savings" class="text-green-600 font-semibold">-</span></p>
+                                <p><strong>Dimensi:</strong> <span id="dimensions">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Progress -->
+                    <div id="uploadProgressContainer" class="mt-4 hidden">
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                <div id="uploadProgress" class="bg-blue-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                            <span id="uploadPercentage" class="text-sm text-gray-600">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Status</label>
+                    <select id="newsStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="draft">Draft</option>
+                        <option value="publish">Publish</option>
+                    </select>
+                </div>
+                
+                <div class="flex gap-4 pt-4 border-t">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold">
+                        <i class="fas fa-save mr-2"></i>Simpan Berita
+                    </button>
+                    <button type="button" onclick="document.getElementById('addNewsModal').remove()" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 font-semibold">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Setup image upload
+    const dropZone = document.getElementById('imageDropZone');
+    const fileInput = document.getElementById('newsImageFile');
+    let uploadedImageUrl = '';
+    
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleImageUpload(files[0]);
+        }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleImageUpload(e.target.files[0]);
+        }
+    });
+    
+    async function handleImageUpload(file) {
+        // Validate file
+        if (!file.type.startsWith('image/')) {
+            showNotification('File harus berupa gambar', 'error');
+            return;
+        }
+        
+        if (file.size > 10 * 1024 * 1024) {
+            showNotification('Ukuran file maksimal 10MB', 'error');
+            return;
+        }
+        
+        // Show progress
+        document.getElementById('uploadProgressContainer').classList.remove('hidden');
+        
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('prefix', 'news');
+        
+        try {
+            const xhr = new XMLHttpRequest();
+            
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    document.getElementById('uploadProgress').style.width = percentComplete + '%';
+                    document.getElementById('uploadPercentage').textContent = Math.round(percentComplete) + '%';
+                }
+            });
+            
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    const result = JSON.parse(xhr.responseText);
+                    
+                    if (result.success) {
+                        uploadedImageUrl = result.data.filename;
+                        
+                        // Show preview
+                        const previewContainer = document.getElementById('imagePreviewContainer');
+                        document.getElementById('imagePreview').src = '../' + result.data.url;
+                        document.getElementById('fileName').textContent = result.data.filename;
+                        document.getElementById('originalSize').textContent = result.data.original_size;
+                        document.getElementById('compressedSize').textContent = result.data.optimized_size;
+                        document.getElementById('savings').textContent = result.data.savings;
+                        document.getElementById('dimensions').textContent = result.data.dimensions.width + 'x' + result.data.dimensions.height;
+                        
+                        previewContainer.classList.remove('hidden');
+                        document.getElementById('uploadProgressContainer').classList.add('hidden');
+                        
+                        showNotification('Gambar berhasil diupload dan dikompres!', 'success');
+                    } else {
+                        showNotification('Error: ' + result.message, 'error');
+                        document.getElementById('uploadProgressContainer').classList.add('hidden');
+                    }
+                } else {
+                    showNotification('Gagal upload gambar', 'error');
+                    document.getElementById('uploadProgressContainer').classList.add('hidden');
+                }
+            });
+            
+            xhr.addEventListener('error', () => {
+                showNotification('Error upload gambar', 'error');
+                document.getElementById('uploadProgressContainer').classList.add('hidden');
+            });
+            
+            xhr.open('POST', '../api/upload_image.php');
+            xhr.send(formData);
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Gagal upload gambar: ' + error.message, 'error');
+            document.getElementById('uploadProgressContainer').classList.add('hidden');
+        }
+    }
+    
+    // Handle form submission
+    document.getElementById('addNewsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const newsData = {
+            judul: document.getElementById('newsTitle').value,
+            id_kategori: document.getElementById('newsCategory').value,
+            isi_berita: document.getElementById('newsContent').value,
+            gambar: uploadedImageUrl,
+            status: document.getElementById('newsStatus').value,
+            id_penulis: 1
+        };
+        
+        try {
+            const response = await fetch('../api/manage_news.php?action=add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newsData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Berita berhasil ditambahkan!', 'success');
+                document.getElementById('addNewsModal').remove();
+                // Reload news list
+                if (window.adminPanel) {
+                    window.adminPanel.loadNewsPage();
+                }
+            } else {
+                showNotification('Error: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Gagal menambahkan berita: ' + error.message, 'error');
+        }
+    });
+}
+
+function removeImagePreview() {
+    document.getElementById('imagePreviewContainer').classList.add('hidden');
+    document.getElementById('newsImageFile').value = '';
 }
 
 function showAddCategoryForm() {
