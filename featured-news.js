@@ -8,13 +8,15 @@ async function loadFeaturedNews() {
     
     try {
         // Fetch berita terbaru dari API
-        const response = await fetch('/api/get_news.php?limit=10&sort=terbaru');
+        const response = await fetch('/api/get_news.php?limit=10&sort=newest');
         
         if (!response.ok) {
             throw new Error(`API Error: ${response.status}`);
         }
         
         const data = await response.json();
+        
+        console.log('Featured News API Response:', data);
         
         if (!data.success || !data.data || data.data.length === 0) {
             container.innerHTML = `
@@ -29,6 +31,8 @@ async function loadFeaturedNews() {
         const news = data.data;
         const randomNews = getRandomNews(news, 2);
         
+        console.log('Random News Selected:', randomNews);
+        
         // Render berita
         container.innerHTML = randomNews.map(item => createNewsCard(item)).join('');
         
@@ -37,6 +41,7 @@ async function loadFeaturedNews() {
         container.innerHTML = `
             <div class="col-span-1 md:col-span-2 text-center py-12">
                 <p class="text-red-600 dark:text-red-400">Gagal memuat berita. Silakan coba lagi.</p>
+                <p class="text-sm text-slate-500 mt-2">${error.message}</p>
             </div>
         `;
     }
@@ -54,10 +59,10 @@ function getRandomNews(array, count) {
  * Buat card berita
  */
 function createNewsCard(item) {
-    const imageUrl = item.gambar || '/images/placeholder.jpg';
+    const imageUrl = item.gambar_url || item.gambar_utama || '/images/placeholder-news.jpg';
     const title = item.judul || 'Berita Tanpa Judul';
-    const excerpt = item.konten ? truncateText(item.konten, 120) : 'Tidak ada deskripsi';
-    const date = formatDate(item.tanggal_publikasi || item.created_at);
+    const excerpt = item.ringkasan ? truncateText(item.ringkasan, 120) : 'Tidak ada deskripsi';
+    const date = formatDate(item.tanggal_publish || item.tanggal_publikasi || item.created_at);
     const slug = item.slug || '#';
     const category = item.kategori || 'Umum';
     
@@ -70,7 +75,7 @@ function createNewsCard(item) {
                     alt="${title}"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
-                    onerror="this.src='/images/placeholder.jpg'"
+                    onerror="this.src='/images/placeholder-news.jpg'"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 
