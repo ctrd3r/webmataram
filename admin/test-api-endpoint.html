@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API Endpoint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6">Test API Endpoint</h1>
+        
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">Test News Detail API</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block font-semibold text-gray-700 mb-2">News ID:</label>
+                    <input type="number" id="newsId" class="w-full px-4 py-2 border border-gray-300 rounded-lg" value="1" min="1">
+                </div>
+                <button onclick="testAPI()" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 font-semibold">
+                    <i class="fas fa-flask mr-2"></i>Test API
+                </button>
+            </div>
+        </div>
+
+        <div id="results" class="bg-white rounded-lg shadow-lg p-6 hidden">
+            <h2 class="text-xl font-semibold mb-4">API Response</h2>
+            <div class="bg-gray-50 p-4 rounded-lg overflow-auto max-h-96">
+                <pre id="responseText" class="text-sm text-gray-800"></pre>
+            </div>
+        </div>
+
+        <div id="errorResults" class="bg-red-50 border border-red-200 rounded-lg p-6 mt-6 hidden">
+            <h2 class="text-xl font-semibold text-red-800 mb-4">Error</h2>
+            <div id="errorText" class="text-red-700"></div>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI() {
+            const newsId = document.getElementById('newsId').value;
+            
+            if (!newsId) {
+                showError('Please enter a News ID');
+                return;
+            }
+
+            console.log('Testing API for news ID:', newsId);
+            
+            try {
+                const url = `../api/manage_news.php?action=detail&id=${newsId}`;
+                console.log('Fetching from:', url);
+                
+                const response = await fetch(url);
+                console.log('Response status:', response.status);
+                
+                const result = await response.json();
+                console.log('Response data:', result);
+                
+                document.getElementById('errorResults').classList.add('hidden');
+                document.getElementById('results').classList.remove('hidden');
+                document.getElementById('responseText').textContent = JSON.stringify(result, null, 2);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Error: ' + error.message);
+            }
+        }
+
+        function showError(message) {
+            document.getElementById('results').classList.add('hidden');
+            document.getElementById('errorResults').classList.remove('hidden');
+            document.getElementById('errorText').textContent = message;
+        }
+    </script>
+</body>
+</html>

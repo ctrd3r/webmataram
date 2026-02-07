@@ -2,15 +2,43 @@
 // Konfigurasi Database untuk Sistem Berita BMKG
 // File: api/config.php
 
-// Database Configuration
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'db_berita');
-define('DB_USER', 'root'); // Username database
-define('DB_PASS', ''); // Password database
+// Load .env file if exists
+$env_file = dirname(__DIR__) . '/.env';
+if (file_exists($env_file)) {
+    $env_lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($env_lines as $line) {
+        // Skip comments
+        if (strpos(trim($line), '#') === 0) {
+            continue;
+        }
+        
+        // Parse key=value
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+            
+            // Remove quotes if present
+            if ((strpos($value, '"') === 0 && strrpos($value, '"') === strlen($value) - 1) ||
+                (strpos($value, "'") === 0 && strrpos($value, "'") === strlen($value) - 1)) {
+                $value = substr($value, 1, -1);
+            }
+            
+            // Set environment variable
+            putenv("$key=$value");
+        }
+    }
+}
+
+// Database Configuration - Read from .env or use defaults
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_NAME', getenv('DB_NAME') ?: 'db_berita');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
 define('DB_CHARSET', 'utf8mb4');
 
 // Timezone
-date_default_timezone_set('Asia/Jakarta');
+date_default_timezone_set(getenv('APP_TIMEZONE') ?: 'Asia/Jakarta');
 
 // Error Reporting (set to 0 in production)
 // Note: Don't set display_errors here, let each API file control it

@@ -15,12 +15,27 @@ build/
 .env.test.local
 .env.production.local
 
+# Ignore any other env variants or backups
+.env.*
+.env.backup
+!.env.example
+
 # IDE files
 .vscode/settings.json
 .idea/
 *.swp
 *.swo
 *~
+
+# PHP / Composer
+/vendor/
+/composer.lock
+
+# Uploads and runtime data (do not store user uploads in repo)
+/uploads/
+/images/news/
+/logs/
+/tmp/
 
 # OS generated files
 .DS_Store
@@ -34,6 +49,15 @@ Thumbs.db
 # Logs
 logs
 *.log
+
+# Python
+__pycache__/
+*.py[cod]
+.Python
+venv/
+env/
+.venv/
+.pytest_cache/
 
 # Temporary files
 tmp/
@@ -69,3 +93,11 @@ coverage/
 
 # Editor temporary files
 *.tmp
+
+# Secrets and keys
+*.pem
+*.key
+
+# Other
+.DS_Store
+Thumbs.db

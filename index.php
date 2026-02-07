@@ -1,8 +1,33 @@
 <?php
 require 'function.php';
-$result = mysqli_query($conn, "SELECT * FROM infogempa ORDER BY id DESC LIMIT 1");
-$result2 = mysqli_query($conn, "SELECT * FROM gempanew  ORDER BY id DESC LIMIT 1");
-$result3 = mysqli_query($conn, "SELECT * FROM kemitraan ORDER BY id DESC LIMIT 3");
+
+// Fetch small result sets into arrays so the page works even when DB is down.
+$infogempa = [];
+$gempanew = [];
+$kemitraanRows = [];
+
+if (isset($conn) && $conn) {
+  $res = mysqli_query($conn, "SELECT * FROM infogempa ORDER BY id DESC LIMIT 1");
+  if ($res) {
+    while ($r = mysqli_fetch_assoc($res)) {
+      $infogempa[] = $r;
+    }
+  }
+
+  $res2 = mysqli_query($conn, "SELECT * FROM gempanew ORDER BY id DESC LIMIT 1");
+  if ($res2) {
+    while ($r = mysqli_fetch_assoc($res2)) {
+      $gempanew[] = $r;
+    }
+  }
+
+  $res3 = mysqli_query($conn, "SELECT * FROM kemitraan ORDER BY id DESC LIMIT 3");
+  if ($res3) {
+    while ($r = mysqli_fetch_assoc($res3)) {
+      $kemitraanRows[] = $r;
+    }
+  }
+}
 
 ?>
 <!DOCTYPE html>

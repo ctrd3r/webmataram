@@ -1,10 +1,32 @@
 <?php
-$conn = mysqli_connect("127.0.0.1", "root", "", "mataram");
+// Read DB credentials from environment variables where possible.
+// On hosting, set DB_HOST, DB_USER, DB_PASS, DB_NAME in the server environment or in a .env file.
+$dbHost = getenv('DB_HOST') ?: '127.0.0.1';
+$dbUser = getenv('DB_USER') ?: 'root';
+$dbPass = getenv('DB_PASS') ?: '';
+$dbName = getenv('DB_NAME') ?: 'mataram';
+
+$conn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName);
+if (!$conn) {
+    // Fail early and log; avoid showing DB errors to users in production
+    error_log('Database connection failed: ' . mysqli_connect_error());
+}
 
 function query($query)
 {
     global $conn;
+    // If there's no DB connection, return empty result set to avoid warnings
+    if (!$conn) {
+        error_log('query() called without a DB connection');
+        return [];
+    }
+
     $result2 = mysqli_query($conn, $query);
+    if ($result2 === false) {
+        error_log('DB query failed: ' . mysqli_error($conn) . ' -- SQL: ' . $query);
+        return [];
+    }
+
     $rows = [];
     while ($row = mysqli_fetch_assoc($result2)) {
         $rows[] = $row;

@@ -1033,13 +1033,319 @@ function showNotification(message, type = 'info') {
 }
 
 // Placeholder functions
-function editNews(newsId) {
-    showNotification(`Edit berita ID ${newsId} akan segera tersedia`, 'info');
+async function editNews(newsId) {
+    try {
+        // Fetch news data
+        const response = await fetch(`../api/manage_news.php?action=detail&id=${newsId}`);
+        const result = await response.json();
+        
+        if (!result.success || !result.data) {
+            showNotification('Gagal memuat data berita', 'error');
+            return;
+        }
+        
+        const news = result.data;
+        // Add gambar_url if not present
+        if (!news.gambar_url && news.gambar_utama) {
+            news.gambar_url = 'images/news/' + news.gambar_utama;
+        }
+        showEditNewsForm(news);
+    } catch (error) {
+        console.error('Error fetching news:', error);
+        showNotification('Gagal memuat data berita: ' + error.message, 'error');
+    }
+}
+
+function showEditNewsForm(news) {
+    const modal = document.createElement('div');
+    modal.id = 'editNewsModal';
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto';
+    modal.innerHTML = `
+        <div class="bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 my-8">
+            <div class="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-gray-800">Edit Berita</h2>
+                <button onclick="document.getElementById('editNewsModal').remove()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            
+            <form id="editNewsForm" class="p-6 space-y-4 max-h-96 overflow-y-auto">
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Judul Berita *</label>
+                    <input type="text" id="editNewsTitle" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="${news.judul || ''}" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Kategori *</label>
+                    <select id="editNewsCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="1" ${news.id_kategori == 1 ? 'selected' : ''}>Gempa Bumi</option>
+                        <option value="2" ${news.id_kategori == 2 ? 'selected' : ''}>Cuaca</option>
+                        <option value="3" ${news.id_kategori == 3 ? 'selected' : ''}>Tsunami</option>
+                        <option value="4" ${news.id_kategori == 4 ? 'selected' : ''}>Iklim</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Isi Berita *</label>
+                    <textarea id="editNewsContent" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="4" required>${news.isi_berita || ''}</textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Gambar Utama</label>
+                    
+                    <!-- Current Image -->
+                    ${news.gambar_url ? `
+                    <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+                        <p class="text-sm font-semibold text-gray-700 mb-2">Gambar Saat Ini:</p>
+                        <img src="../${news.gambar_url}" alt="${news.judul}" class="max-w-full h-auto rounded-lg" onerror="this.src='../images/placeholder-news.jpg'">
+                        <p class="text-xs text-gray-500 mt-2">${news.gambar_url}</p>
+                    </div>
+                    ` : ''}
+                    
+                    <!-- Upload Area -->
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-blue-500 transition-colors" id="editImageDropZone">
+                        <input type="file" id="editNewsImageFile" class="hidden" accept="image/*">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-2"></i>
+                        <p class="text-gray-600">Drag & drop gambar baru atau klik untuk upload</p>
+                        <p class="text-xs text-gray-500 mt-1">JPG, PNG, WebP (Max 10MB)</p>
+                    </div>
+                    
+                    <!-- New Image Preview -->
+                    <div id="editImagePreviewContainer" class="mt-4 hidden">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <div class="flex justify-between items-start mb-3">
+                                <h4 class="font-semibold text-gray-700">Gambar Baru</h4>
+                                <button type="button" onclick="removeEditImagePreview()" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <img id="editImagePreview" src="" alt="Preview" class="max-w-full h-auto rounded-lg mb-3">
+                            <div id="editImageStats" class="text-sm text-gray-600 space-y-1">
+                                <p><strong>Nama File:</strong> <span id="editFileName">-</span></p>
+                                <p><strong>Ukuran Asli:</strong> <span id="editOriginalSize">-</span></p>
+                                <p><strong>Ukuran Terkompresi:</strong> <span id="editCompressedSize">-</span></p>
+                                <p><strong>Penghematan:</strong> <span id="editSavings" class="text-green-600 font-semibold">-</span></p>
+                                <p><strong>Dimensi:</strong> <span id="editDimensions">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Upload Progress -->
+                    <div id="editUploadProgressContainer" class="mt-4 hidden">
+                        <div class="flex items-center gap-3">
+                            <div class="flex-1 bg-gray-200 rounded-full h-2">
+                                <div id="editUploadProgress" class="bg-blue-500 h-2 rounded-full transition-all" style="width: 0%"></div>
+                            </div>
+                            <span id="editUploadPercentage" class="text-sm text-gray-600">0%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="block font-semibold text-gray-700 mb-2">Status</label>
+                    <select id="editNewsStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="draft" ${news.status === 'draft' ? 'selected' : ''}>Draft</option>
+                        <option value="publish" ${news.status === 'publish' ? 'selected' : ''}>Publish</option>
+                    </select>
+                </div>
+                
+                <div class="flex gap-4 pt-4 border-t">
+                    <button type="submit" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-semibold">
+                        <i class="fas fa-save mr-2"></i>Update Berita
+                    </button>
+                    <button type="button" onclick="document.getElementById('editNewsModal').remove()" class="flex-1 bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 font-semibold">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Setup image upload
+    const dropZone = document.getElementById('editImageDropZone');
+    const fileInput = document.getElementById('editNewsImageFile');
+    let uploadedImageUrl = '';
+    
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+    
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+    
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleEditImageUpload(files[0]);
+        }
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleEditImageUpload(e.target.files[0]);
+        }
+    });
+    
+    async function handleEditImageUpload(file) {
+        // Validate file
+        if (!file.type.startsWith('image/')) {
+            showNotification('File harus berupa gambar', 'error');
+            return;
+        }
+        
+        if (file.size > 10 * 1024 * 1024) {
+            showNotification('Ukuran file maksimal 10MB', 'error');
+            return;
+        }
+        
+        // Show progress
+        document.getElementById('editUploadProgressContainer').classList.remove('hidden');
+        
+        const formData = new FormData();
+        formData.append('image', file);
+        formData.append('prefix', 'news');
+        
+        try {
+            const xhr = new XMLHttpRequest();
+            
+            xhr.upload.addEventListener('progress', (e) => {
+                if (e.lengthComputable) {
+                    const percentComplete = (e.loaded / e.total) * 100;
+                    document.getElementById('editUploadProgress').style.width = percentComplete + '%';
+                    document.getElementById('editUploadPercentage').textContent = Math.round(percentComplete) + '%';
+                }
+            });
+            
+            xhr.addEventListener('load', () => {
+                if (xhr.status === 200) {
+                    const result = JSON.parse(xhr.responseText);
+                    
+                    if (result.success) {
+                        uploadedImageUrl = result.data.filename;
+                        
+                        // Show preview
+                        const previewContainer = document.getElementById('editImagePreviewContainer');
+                        document.getElementById('editImagePreview').src = '../' + result.data.url;
+                        document.getElementById('editFileName').textContent = result.data.filename;
+                        document.getElementById('editOriginalSize').textContent = result.data.original_size;
+                        document.getElementById('editCompressedSize').textContent = result.data.optimized_size;
+                        document.getElementById('editSavings').textContent = result.data.savings;
+                        document.getElementById('editDimensions').textContent = result.data.dimensions.width + 'x' + result.data.dimensions.height;
+                        
+                        previewContainer.classList.remove('hidden');
+                        document.getElementById('editUploadProgressContainer').classList.add('hidden');
+                        
+                        showNotification('Gambar berhasil diupload dan dikompres!', 'success');
+                    } else {
+                        showNotification('Error: ' + result.message, 'error');
+                        document.getElementById('editUploadProgressContainer').classList.add('hidden');
+                    }
+                } else {
+                    showNotification('Gagal upload gambar', 'error');
+                    document.getElementById('editUploadProgressContainer').classList.add('hidden');
+                }
+            });
+            
+            xhr.addEventListener('error', () => {
+                showNotification('Error upload gambar', 'error');
+                document.getElementById('editUploadProgressContainer').classList.add('hidden');
+            });
+            
+            xhr.open('POST', '../api/upload_image.php');
+            xhr.send(formData);
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Gagal upload gambar: ' + error.message, 'error');
+            document.getElementById('editUploadProgressContainer').classList.add('hidden');
+        }
+    }
+    
+    // Handle form submission
+    document.getElementById('editNewsForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const newsData = {
+            id_berita: news.id_berita,
+            judul: document.getElementById('editNewsTitle').value,
+            id_kategori: document.getElementById('editNewsCategory').value,
+            isi_berita: document.getElementById('editNewsContent').value,
+            status: document.getElementById('editNewsStatus').value
+        };
+        
+        // Only include new image if uploaded
+        if (uploadedImageUrl) {
+            newsData.gambar = uploadedImageUrl;
+        }
+        
+        try {
+            const response = await fetch('../api/manage_news.php?action=update', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newsData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Berita berhasil diupdate!', 'success');
+                document.getElementById('editNewsModal').remove();
+                // Reload news list
+                if (window.adminPanel) {
+                    window.adminPanel.loadNewsTable();
+                }
+            } else {
+                showNotification('Error: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('Gagal mengupdate berita: ' + error.message, 'error');
+        }
+    });
+}
+
+function removeEditImagePreview() {
+    document.getElementById('editImagePreviewContainer').classList.add('hidden');
+    document.getElementById('editNewsImageFile').value = '';
 }
 
 function deleteNews(newsId) {
     if (confirm('Apakah Anda yakin ingin menghapus berita ini?')) {
-        showNotification(`Hapus berita ID ${newsId} akan segera tersedia`, 'info');
+        deleteNewsAPI(newsId);
+    }
+}
+
+async function deleteNewsAPI(newsId) {
+    try {
+        const response = await fetch(`../api/manage_news.php?action=delete&id=${newsId}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showNotification('Berita berhasil dihapus!', 'success');
+            // Reload news list
+            if (window.adminPanel) {
+                window.adminPanel.loadNewsTable();
+            }
+        } else {
+            showNotification('Error: ' + result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Gagal menghapus berita: ' + error.message, 'error');
     }
 }
 
@@ -1396,6 +1702,7 @@ window.removeFeaturedNews = removeFeaturedNews;
 window.loadFeaturedNewsList = loadFeaturedNewsList;
 window.editNews = editNews;
 window.deleteNews = deleteNews;
+window.deleteNewsAPI = deleteNewsAPI;
 window.editAuthor = editAuthor;
 window.editCategory = editCategory;
 window.deleteCategory = deleteCategory;
@@ -1408,6 +1715,7 @@ window.loadCommentsPage = loadCommentsPage;
 window.showAddNewsForm = showAddNewsForm;
 window.showAddCategoryForm = showAddCategoryForm;
 window.showAddAuthorForm = showAddAuthorForm;
+window.removeEditImagePreview = removeEditImagePreview;
 window.logout = logout;
 
 // Initialize admin panel when DOM is loaded
