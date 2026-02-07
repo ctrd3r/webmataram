@@ -4,11 +4,15 @@ require 'function.php';
 $jumlahData = count(query("SELECT * FROM kemitraan"));
 $jumlahHalaman = ceil($jumlahData / 3);
 if (isset($_GET["halaman"])) {
-    $halamanAktif = $_GET["halaman"];
+    $halamanAktif = (int) $_GET["halaman"];
 } else {
     $halamanAktif = 1;
 }
+$halamanAktif = max(1, $halamanAktif);
 $awalData = (3 * $halamanAktif) - 3;
+
+// Ensure numeric offset to prevent injection via GET
+$awalData = (int) $awalData;
 $result = mysqli_query($conn, "SELECT * FROM kemitraan ORDER BY id DESC LIMIT $awalData, 3");
 
 ?>

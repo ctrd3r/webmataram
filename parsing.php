@@ -26,9 +26,16 @@ echo $xmldata;
 $parameter1 = "Info Gempa Mag:" . $mag . ' ' . "SR," . ' ' . $tgl . ' ' . $ot . ' ' . "WIB," . ' ' . "Lok:" . $lat0 . ' ' . "LS," . $long . ' ' . "BT" . ' ' . $lok2 . ', Kedlmn:' . $h . ' ' . "Km ::BMKG";
 
 if (($lat0 < -7 && $lat0 > -14) && ($long > 113.5 && $long < 125) && $mag > 2.0) {
-  mysqli_query($conn, "INSERT INTO gempanew (id,tanggal, gempabumi,TIME2, OT, mag, lat, lon, depth,ket) VALUES 
-		('','$tgl', '$parameter1','', '$ot', '$mag', '$lat0', '$long', '$h', '')");
-  return mysqli_affected_rows($conn);
+  // Use prepared statement to insert parsed XML safely
+  $stmt = mysqli_prepare($conn, "INSERT INTO gempanew (tanggal, gempabumi, TIME2, OT, mag, lat, lon, depth, ket) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  if ($stmt) {
+    $emptyTime = '';
+    mysqli_stmt_bind_param($stmt, 'ssssdddds', $tgl, $parameter1, $emptyTime, $ot, $mag, $lat0, $long, $h, $emptyTime);
+    mysqli_stmt_execute($stmt);
+    $affected = mysqli_stmt_affected_rows($stmt);
+    mysqli_stmt_close($stmt);
+    return $affected;
+  }
 }
 
 

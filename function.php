@@ -58,13 +58,19 @@ function tambah($data)
     if (!$gambar) {
         return false;
     }
+    
+    // Use prepared statement
+    $stmt = mysqli_prepare($conn, "INSERT INTO infogempa (waktu, magnitudo, kedalaman, koordinat, lokasi, dirasakan, gambar) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt) {
+    // bind all as strings to avoid type issues from POST input
+    mysqli_stmt_bind_param($stmt, 'sssssss', $waktu, $magnitudo, $kedalaman, $koordinat, $lokasi, $dirasakan, $gambar);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
 
-    $query = "INSERT INTO infogempa 
-                VALUES
-                ('', '$waktu', '$magnitudo', '$kedalaman', '$koordinat', '$lokasi', '$dirasakan', '$gambar')";
-    mysqli_query($conn, $query);
-
-    return mysqli_affected_rows($conn);
+    return false;
 }
 function petir($data)
 {
@@ -87,13 +93,18 @@ function petir($data)
     if (!$gambar) {
         return false;
     }
+    
+    $stmt = mysqli_prepare($conn, "INSERT INTO infopetir (judul, kabBima, kabDompu, kabLU, bima, kabLobar, kabSumbawabarat, kabLoteng, kabLotim, mataram, sumbawa, gambar, narasi) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt) {
+    // bind all as strings
+    mysqli_stmt_bind_param($stmt, 'sssssssssssss', $judul, $kabBima, $kabDompu, $kabLU, $bima, $kabLobar, $kabsumbawabarat, $kabLoteng, $kabLotim, $mataram, $sumbawa, $gambar, $narasi);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
 
-    $query = "INSERT INTO infopetir 
-                VALUES
-                ('', '$judul', '$kabBima', '$kabDompu', '$kabLU', '$bima', '$kabLobar', '$kabsumbawabarat','$kabLoteng',' $kabLotim','$mataram ','$sumbawa','$gambar','$narasi')";
-    mysqli_query($conn, $query);
-
-    return mysqli_affected_rows($conn);
+    return false;
 }
 
 function profil($data)
@@ -107,13 +118,16 @@ function profil($data)
     if (!$gambar) {
         return false;
     }
+    $stmt = mysqli_prepare($conn, "INSERT INTO kepalastageof (nama, jabatan, gambar) VALUES (?, ?, ?)");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'sss', $nama, $jabatan, $gambar);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
 
-    $query = "INSERT INTO kepalastageof 
-                VALUES
-                ('', '$nama', '$jabatan', '$gambar')";
-    mysqli_query($conn, $query);
-
-    return mysqli_affected_rows($conn);
+    return false;
 }
 function waktu($data)
 {
@@ -127,12 +141,16 @@ function waktu($data)
         return false;
     }
 
-    $query = "INSERT INTO waktu
-                VALUES
-                ('', '$judul', '$gambar')";
-    mysqli_query($conn, $query);
+    $stmt = mysqli_prepare($conn, "INSERT INTO waktu (judul, gambar) VALUES (?, ?)");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'ss', $judul, $gambar);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
 
-    return mysqli_affected_rows($conn);
+    return false;
 }
 function kemitraan($data)
 {
@@ -146,12 +164,16 @@ function kemitraan($data)
         return false;
     }
     $waktu = $_POST["waktu"];
-    $query = "INSERT INTO kemitraan
-                VALUES
-                ('', '$judul', '$gambar', '$waktu')";
-    mysqli_query($conn, $query);
+    $stmt = mysqli_prepare($conn, "INSERT INTO kemitraan (judul, gambar, waktu) VALUES (?, ?, ?)");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'sss', $judul, $gambar, $waktu);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
 
-    return mysqli_affected_rows($conn);
+    return false;
 }
 function buletin($data)
 {
@@ -169,12 +191,17 @@ function buletin($data)
         return false;
     }
 
-    $query = "INSERT INTO buletin 
-                VALUES
-                ('', '$judul','$kategori','$dokumen', '$gambar')";
-    mysqli_query($conn, $query);
+    $stmt = mysqli_prepare($conn, "INSERT INTO buletin (judul, kategori, dokumen, gambar) VALUES (?, ?, ?, ?)");
+    if ($stmt) {
+    // bind as strings (kategori is accepted as string or id depending on schema)
+    mysqli_stmt_bind_param($stmt, 'ssss', $judul, $kategori, $dokumen, $gambar);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
 
-    return mysqli_affected_rows($conn);
+    return false;
 }
 function alat($data)
 {
@@ -193,12 +220,17 @@ function alat($data)
 
 
 
-    $query = "INSERT INTO alat 
-                VALUES
-                ('', '$merek', '$lat', '$long', '$lokasi', '$pemasangan', '$kategori', '$status','$x')";
-    mysqli_query($conn, $query);
+    $stmt = mysqli_prepare($conn, "INSERT INTO alat (merek, lat, lon, lokasi, pemasangan, kategori, status, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    if ($stmt) {
+    // bind as strings to simplify input handling
+    mysqli_stmt_bind_param($stmt, 'ssssssss', $merek, $lat, $long, $lokasi, $pemasangan, $kategori, $status, $x);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
 
-    return mysqli_affected_rows($conn);
+    return false;
 }
 function upload()
 {
@@ -311,35 +343,65 @@ function unggah()
 function hapus($id)
 {
     global $conn;
-    mysqli_query($conn, "DELETE FROM infogempa WHERE id = $id");
-
-    return mysqli_affected_rows($conn);
+    $stmt = mysqli_prepare($conn, "DELETE FROM infogempa WHERE id = ?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'i', $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
+    return false;
 }
 function hapusbuletin($id)
 {
     global $conn;
-    mysqli_query($conn, "DELETE FROM buletin WHERE id = $id");
-
-    return mysqli_affected_rows($conn);
+    $stmt = mysqli_prepare($conn, "DELETE FROM buletin WHERE id = ?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'i', $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
+    return false;
 }
 function hapuspetir($id)
 {
     global $conn;
-    mysqli_query($conn, "DELETE FROM infopetir WHERE id = $id");
-
-    return mysqli_affected_rows($conn);
+    $stmt = mysqli_prepare($conn, "DELETE FROM infopetir WHERE id = ?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'i', $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
+    return false;
 }
 function hapussejarah($id)
 {
     global $conn;
-    mysqli_query($conn, "DELETE FROM kepalastageof WHERE id = $id");
-
-    return mysqli_affected_rows($conn);
+    $stmt = mysqli_prepare($conn, "DELETE FROM kepalastageof WHERE id = ?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'i', $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
+    return false;
 }
 function hapuswaktu($id)
 {
     global $conn;
-    mysqli_query($conn, "DELETE FROM waktu WHERE id = $id");
-
-    return mysqli_affected_rows($conn);
+    $stmt = mysqli_prepare($conn, "DELETE FROM waktu WHERE id = ?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'i', $id);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
+    return false;
 }

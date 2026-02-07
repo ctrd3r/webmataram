@@ -311,5 +311,16 @@
     <div id="modalContainer"></div>
 
     <script src="admin-fixed.js"></script>
+    <script>
+        // Simple logout helper — redirects to server-side logout endpoint
+        function logout() {
+            try {
+                // Use absolute or relative path depending on deployment
+                window.location.href = '../logout.php';
+            } catch (e) {
+                console.error('Logout failed:', e);
+            }
+        }
+    </script>
 </body>
 </html>
