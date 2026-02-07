@@ -16,8 +16,8 @@ function registrasi($data)
 {
     global $conn;
     $username = strtolower(stripslashes($data["username"]));
-    $password = mysqli_real_escape_string($conn, $data["password"]);
-    $password2 = mysqli_real_escape_string($conn, $data["password2"]);
+    $password = $data["password"];
+    $password2 = $data["password2"];
 
     // cek konfirmasi
     if ($password !== $password2) {
@@ -28,11 +28,19 @@ function registrasi($data)
     }
 
     // enkripsi password
-    $password = password_hash($password, PASSWORD_DEFAULT);
+    $password_hashed = password_hash($password, PASSWORD_DEFAULT);
 
-    // tambah ke databasse
-    mysqli_query($conn, "INSERT INTO user VALUES('', '$username', '$password')");
-    return mysqli_affected_rows($conn);
+    // tambah ke database using prepared statement (explicit columns)
+    $stmt = mysqli_prepare($conn, "INSERT INTO user (username, pasword) VALUES(?, ?)");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, 'ss', $username, $password_hashed);
+        mysqli_stmt_execute($stmt);
+        $affected = mysqli_stmt_affected_rows($stmt);
+        mysqli_stmt_close($stmt);
+        return $affected;
+    }
+
+    return false;
 }
 
 function tambah($data)
@@ -198,30 +206,57 @@ function upload()
     $ukuranFile = $_FILES['gambar']['size'];
     $error = $_FILES['gambar']['error'];
     $tmpName = $_FILES['gambar']['tmp_name'];
-
     // cek apakah ada gambar diupload
-    if ($error === 4) {
-        echo "<script>
-            alert('pilih gambar dahulu');
-        </script>";
-    }
-    // cek apakah yang diupload gambar
-    $ekstensiGambarValid = ['jpg', 'jpeg', 'png'];
-    $ekstensiGambar = explode('.', $namaFile);
-    $ekstensiGambar = strtolower(end($ekstensiGambar));
-    if (!in_array($ekstensiGambar, $ekstensiGambarValid)) {
-        echo "<script>
-        alert('pilih gambar dahulu');
-        </script>";
+    if ($error === 4 || !isset($_FILES['gambar'])) {
         return false;
     }
-    // generate nama baru
-    $namaFileBaru = uniqid();
-    $namaFileBaru .= '.';
-    $namaFileBaru .= $ekstensiGambar;
-    // upload gambar
-    move_uploaded_file($tmpName, 'img/' . $namaFileBaru);
-    return $namaFileBaru;
+
+    if (!is_uploaded_file($tmpName)) {
+        return false;
+    }
+
+    // cek apakah yang diupload gambar (extension + mime)
+    $ekstensiGambarValid = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+    $ekstensiGambar = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
+    if (!in_array($ekstensiGambar, $ekstensiGambarValid)) {
+        return false;
+    }
+
+    // validate mime type
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime = finfo_file($finfo, $tmpName);
+    finfo_close($finfo);
+    $allowed_mimes = ['image/jpeg','image/png','image/webp','image/gif'];
+    if (!in_array($mime, $allowed_mimes)) {
+        return false;
+    }
+
+    // generate secure filename
+    try {
+        $random = bin2hex(random_bytes(12));
+    } catch (Exception $e) {
+        $random = uniqid();
+    }
+    $namaFileBaru = $random . '.' . $ekstensiGambar;
+
+    // ensure upload dir
+    $uploadDir = 'uploads/img/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $targetPath = $uploadDir . $namaFileBaru;
+    if (move_uploaded_file($tmpName, $targetPath)) {
+        chmod($targetPath, 0644);
+        // extra check
+        if (!getimagesize($targetPath)) {
+            unlink($targetPath);
+            return false;
+        }
+        return $namaFileBaru;
+    }
+
+    return false;
 }
 function unggah()
 {
@@ -229,30 +264,48 @@ function unggah()
     $ukuranFile = $_FILES['dokumen']['size'];
     $error = $_FILES['dokumen']['error'];
     $tmpName = $_FILES['dokumen']['tmp_name'];
-
-    // cek apakah ada gambar diupload
-    if ($error === 4) {
-        echo "<script>
-            alert('pilih gambar dahulu');
-        </script>";
-    }
-    // cek apakah yang diupload gambar
-    $ekstensiDokumenValid = ['pdf'];
-    $ekstensiDokumen = explode('.', $namaFile);
-    $ekstensiDokumen = strtolower(end($ekstensiDokumen));
-    if (!in_array($ekstensiDokumen, $ekstensiDokumenValid)) {
-        echo "<script>
-        alert('pilih file dahulu');
-        </script>";
+    // cek apakah ada file diupload
+    if ($error === 4 || !isset($_FILES['dokumen'])) {
         return false;
     }
-    // generate nama baru
-    $namaFileBaru = uniqid();
-    $namaFileBaru .= '.';
-    $namaFileBaru .= $ekstensiDokumen;
-    // upload gambar
-    move_uploaded_file($tmpName, 'dok/' . $namaFileBaru);
-    return $namaFileBaru;
+
+    if (!is_uploaded_file($tmpName)) {
+        return false;
+    }
+
+    $ekstensiDokumenValid = ['pdf'];
+    $ekstensiDokumen = strtolower(pathinfo($namaFile, PATHINFO_EXTENSION));
+    if (!in_array($ekstensiDokumen, $ekstensiDokumenValid)) {
+        return false;
+    }
+
+    // validate mime
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime = finfo_file($finfo, $tmpName);
+    finfo_close($finfo);
+    if ($mime !== 'application/pdf') {
+        return false;
+    }
+
+    try {
+        $random = bin2hex(random_bytes(12));
+    } catch (Exception $e) {
+        $random = uniqid();
+    }
+    $namaFileBaru = $random . '.' . $ekstensiDokumen;
+
+    $uploadDir = 'uploads/dok/';
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    $targetPath = $uploadDir . $namaFileBaru;
+    if (move_uploaded_file($tmpName, $targetPath)) {
+        chmod($targetPath, 0644);
+        return $namaFileBaru;
+    }
+
+    return false;
 }
 
 function hapus($id)

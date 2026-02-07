@@ -4,26 +4,37 @@ require 'function.php';
 
 if (isset($_POST["login"])) {
 
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+    $username = trim($_POST["username"] ?? '');
+    $password = $_POST["password"] ?? '';
 
-    $result = mysqli_query($conn, "SELECT * FROM user WHERE 
-            username = '$username'");
+    if ($username === '' || $password === '') {
+        $error = true;
+    } else {
+        // Use prepared statement to avoid SQL injection
+        $stmt = mysqli_prepare($conn, "SELECT * FROM user WHERE username = ? LIMIT 1");
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, 's', $username);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
 
-    // cek username
-    if (mysqli_num_rows($result) === 1) {
+            if ($result && mysqli_num_rows($result) === 1) {
+                $row = mysqli_fetch_assoc($result);
+                if (password_verify($password, $row["pasword"])) {
+                    // set session
+                    $_SESSION["login"] = true;
+                    // optional: store user id / username in session
+                    $_SESSION['user'] = $row['username'];
 
-        // cek password
-        $row = mysqli_fetch_assoc($result);
-        if (password_verify($password, $row["pasword"])) {
-            // set session
-            $_SESSION["login"] = true;
+                    header("Location: admin.php");
+                    exit;
+                }
+            }
 
-            header("Location: admin.php");
-            exit;
+            mysqli_stmt_close($stmt);
         }
+
+        $error = true;
     }
-    $error = true;
 }
 ?>
 <!DOCTYPE html>

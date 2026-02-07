@@ -20,7 +20,8 @@ $config = [
     'db_host' => $_ENV['DB_HOST'] ?? 'localhost',
     'db_name' => $_ENV['DB_NAME'] ?? 'db_berita',
     'db_user' => $_ENV['DB_USER'] ?? 'bmkg_user',
-    'db_pass' => $_ENV['DB_PASS'] ?? 'bmkg_pass_2024', // Change this!
+    // NOTE: Do NOT hardcode production passwords in the repo. Set DB_PASS in environment.
+    'db_pass' => $_ENV['DB_PASS'] ?? '',
     'db_charset' => 'utf8mb4'
 ];
 
