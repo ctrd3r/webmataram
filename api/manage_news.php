@@ -3,19 +3,30 @@
  * News Management API - Simplified Version
  */
 
-// TEMPORARY: Display errors for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Security: Disable error reporting in production
+if (getenv('APP_ENV') === 'production') {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+    ini_set('log_errors', 1);
+    ini_set('error_log', __DIR__ . '/../logs/php_errors.log');
+} else {
+    // Development: Show errors
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+}
 
 // Start output buffering
 ob_start();
 
-// Headers
+// Security Headers
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Access-Control-Allow-Headers: Content-Type');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
+header('X-XSS-Protection: 1; mode=block');
 
 require_once 'config.php';
 
@@ -89,18 +100,47 @@ function getNewsList($conn) {
     $status = isset($_GET['status']) ? $_GET['status'] : '';
     $search = isset($_GET['search']) ? $_GET['search'] : '';
     
+    // Validate status - whitelist only allowed values
+    $allowed_statuses = ['draft', 'publish'];
+    if ($status && !in_array($status, $allowed_statuses)) {
+        sendResponse(400, false, 'Invalid status value');
+    }
+    
     $sql = "SELECT b.*, k.nama_kategori, p.nama_lengkap as penulis 
             FROM berita b
             LEFT JOIN kategori k ON b.id_kategori = k.id_kategori
             LEFT JOIN penulis p ON b.id_penulis = p.id_penulis
             WHERE 1=1";
     
-    if ($status) $sql .= " AND b.status = '" . $conn->real_escape_string($status) . "'";
-    if ($search) $sql .= " AND b.judul LIKE '%" . $conn->real_escape_string($search) . "%'";
+    $params = [];
+    $types = '';
+    
+    // Use prepared statement for status
+    if ($status) {
+        $sql .= " AND b.status = ?";
+        $types .= "s";
+        $params[] = $status;
+    }
+    
+    // Use prepared statement for search
+    if ($search) {
+        $sql .= " AND b.judul LIKE ?";
+        $types .= "s";
+        $search_param = '%' . $search . '%';
+        $params[] = $search_param;
+    }
     
     $sql .= " ORDER BY b.tanggal_publish DESC LIMIT 50";
     
-    $result = $conn->query($sql);
+    if (!empty($params)) {
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    } else {
+        $result = $conn->query($sql);
+    }
+    
     $news = [];
     while ($row = $result->fetch_assoc()) {
         $news[] = $row;
@@ -148,22 +188,34 @@ function addNews($conn) {
     $gambar = isset($data['gambar']) ? trim($data['gambar']) : '';
     $status = isset($data['status']) ? $data['status'] : 'draft';
     
+    // Validate status - whitelist only allowed values
+    $allowed_statuses = ['draft', 'publish'];
+    if (!in_array($status, $allowed_statuses)) {
+        sendResponse(400, false, 'Invalid status value');
+    }
+    
     // Generate slug
     $slug = strtolower($judul);
     $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
     $slug = preg_replace('/[\s-]+/', '-', $slug);
     $slug = trim($slug, '-');
     
-    // Make slug unique
+    // Make slug unique using prepared statement
     $originalSlug = $slug;
     $counter = 1;
     while (true) {
-        $check = $conn->query("SELECT id_berita FROM berita WHERE slug = '" . $conn->real_escape_string($slug) . "'");
-        if ($check->num_rows == 0) break;
+        $check_stmt = $conn->prepare("SELECT id_berita FROM berita WHERE slug = ? LIMIT 1");
+        $check_stmt->bind_param("s", $slug);
+        $check_stmt->execute();
+        $check_result = $check_stmt->get_result();
+        
+        if ($check_result->num_rows == 0) {
+            break;
+        }
         $slug = $originalSlug . '-' . $counter++;
     }
     
-    // Insert
+    // Insert using prepared statement
     $stmt = $conn->prepare("INSERT INTO berita (judul, slug, isi_berita, id_kategori, id_penulis, gambar_utama, status, tanggal_publish) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())");
     $stmt->bind_param("sssiiss", $judul, $slug, $isi_berita, $id_kategori, $id_penulis, $gambar, $status);
     
