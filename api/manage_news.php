@@ -143,6 +143,11 @@ function getNewsList($conn) {
     
     $news = [];
     while ($row = $result->fetch_assoc()) {
+        // Add gambar_url for frontend compatibility
+        // Return just the filename - frontend will add the path prefix
+        if (!isset($row['gambar_url']) && isset($row['gambar_utama'])) {
+            $row['gambar_url'] = $row['gambar_utama']; // Just filename
+        }
         $news[] = $row;
     }
     sendResponse(200, true, 'Success', $news);
@@ -159,7 +164,13 @@ function getNewsDetail($conn, $id) {
     $result = $stmt->get_result();
     
     if ($result->num_rows > 0) {
-        sendResponse(200, true, 'Success', $result->fetch_assoc());
+        $data = $result->fetch_assoc();
+        // Add gambar_url for frontend compatibility
+        // For admin panel (uses ../ prefix), provide relative path
+        if (!isset($data['gambar_url']) && isset($data['gambar_utama'])) {
+            $data['gambar_url'] = $data['gambar_utama']; // Just filename, let frontend add path
+        }
+        sendResponse(200, true, 'Success', $data);
     } else {
         sendResponse(404, false, 'News not found');
     }

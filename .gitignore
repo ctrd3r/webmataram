@@ -33,7 +33,6 @@ build/
 
 # Uploads and runtime data (do not store user uploads in repo)
 /uploads/
-/images/news/
 /logs/
 /tmp/
 

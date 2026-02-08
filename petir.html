@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html class="light" lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Petir Real-time - Stasiun Geofisika Mataram | BMKG NTB</title>
+    <meta name="description"
+        content="Monitoring sambaran petir real-time wilayah Nusa Tenggara Barat dari Stasiun Geofisika Mataram BMKG. Data lokasi, intensitas, dan frekuensi petir dengan peta interaktif.">
+    <meta name="keywords"
+        content="petir real-time, sambaran petir, lightning, BMKG, NTB, Mataram, monitoring petir, deteksi petir, cuaca ekstrem">
+    <meta name="author" content="Stasiun Geofisika Mataram - BMKG">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://geofisika-mataram.bmkg.go.id/petir.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://geofisika-mataram.bmkg.go.id/petir.html">
+    <meta property="og:title" content="Petir Real-time - Stasiun Geofisika Mataram BMKG">
+    <meta property="og:description"
+        content="Monitoring sambaran petir real-time wilayah Nusa Tenggara Barat dengan peta interaktif dari Stasiun Geofisika Mataram BMKG.">
+    <meta property="og:image" content="https://geofisika-mataram.bmkg.go.id/images/og-petir.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Petir Real-time - Stasiun Geofisika Mataram BMKG">
+    <meta property="twitter:description"
+        content="Data sambaran petir real-time wilayah NTB dengan peta interaktif dari BMKG Stasiun Geofisika Mataram.">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Petir Real-time",
+      "description": "Monitoring sambaran petir real-time wilayah Nusa Tenggara Barat",
+      "url": "https://geofisika-mataram.bmkg.go.id/petir.html",
+      "mainEntity": {
+        "@type": "Dataset",
+        "name": "Data Petir Real-time NTB",
+        "description": "Dataset sambaran petir real-time wilayah Nusa Tenggara Barat",
+        "provider": {
+          "@type": "Organization",
+          "name": "Stasiun Geofisika Mataram - BMKG"
+        }
+      },
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Beranda",
+            "item": "https://geofisika-mataram.bmkg.go.id/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Petir Real-time",
+            "item": "https://geofisika-mataram.bmkg.go.id/petir.html"
+          }
+        ]
+      }
+    }
+    </script>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Tailwind Config -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1e40af",
+                        "secondary": "#0ea5e9",
+                        "accent": "#f59e0b",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                        "bmkg-blue": "#1e3a8a",
+                        "bmkg-green": "#059669",
+                    },
+                    fontFamily: {
+                        "sans": ["Inter", "sans-serif"]
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom styles for lightning map */
+        .lightning-marker {
+            background: radial-gradient(circle, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+            animation: pulse-lightning 2s infinite;
+        }
+
+        @keyframes pulse-lightning {
+            0% {
+                box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+            }
+        }
+
+        .intensity-high {
+            background: radial-gradient(circle, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.8);
+        }
+
+        .intensity-medium {
+            background: radial-gradient(circle, #f97316 0%, #ea580c 50%, #c2410c 100%);
+            box-shadow: 0 0 12px rgba(249, 115, 22, 0.7);
+        }
+
+        .intensity-low {
+            background: radial-gradient(circle, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            box-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+        }
+
+        #lightning-map {
+            height: 500px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-white transition-colors duration-300">
+    <!-- Header -->
+    <header
+        class="bg-white dark:bg-slate-900 shadow-lg sticky top-0 z-40 border-b border-slate-200 dark:border-slate-700"
+        role="banner">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo dan Nama -->
+                <div class="flex items-center space-x-4">
+                    <a href="index.html" class="flex items-center space-x-4">
+                        <div class="flex items-center justify-center w-12 h-12 bg-white rounded-lg p-1">
+                            <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG"
+                                class="w-full h-full object-contain" crossorigin="anonymous" />
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-bmkg-blue dark:text-blue-400">
+                                Stasiun Geofisika Mataram
+                            </h1>
+                            <p class="text-xs text-slate-600 dark:text-slate-400">
+                                BMKG - Nusa Tenggara Barat
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex space-x-8" role="navigation">
+                    <a href="index.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Beranda</a>
+                    <a href="gempabumi.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Gempa Bumi</a>
+                    <a href="tsunami.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tsunami</a>
+                    <a href="magnet-bumi.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Magnet Bumi</a>
+                    <a href="petir.html" class="text-bmkg-blue font-medium">Info Petir</a>
+                    <a href="mitigasi.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Mitigasi</a>
+                    <a href="tanda-waktu.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Tanda Waktu</a>
+                    <a href="berita.html" class="text-slate-600 hover:text-bmkg-blue transition-colors">Berita</a>
+                </nav>
+
+                <!-- Action Buttons -->
+                <div class="flex items-center space-x-3">
+                    <!-- BMKG Clock Container -->
+                    <div id="bmkg-clock-container" class="bmkg-clock-container"></div>
+                    
+                    <button
+                        class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                        id="theme-toggle">
+                        <span class="material-symbols-outlined text-xl dark:hidden">dark_mode</span>
+                        <span class="material-symbols-outlined text-xl hidden dark:block">light_mode</span>
+                    </button>
+                    <button id="mobile-menu-btn"
+                        class="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                        <span class="material-symbols-outlined text-xl">menu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu"
+            class="md:hidden hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700">
+            <div class="px-4 py-2 space-y-1">
+                <a href="index.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Beranda</a>
+                <a href="gempabumi.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Gempa Bumi</a>
+                <a href="tsunami.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Tsunami</a>
+                <a href="magnet-bumi.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Magnet Bumi</a>
+                <a href="petir.html"
+                    class="block px-3 py-2 text-bmkg-blue font-medium rounded hover:bg-slate-50 dark:hover:bg-slate-800">Info Petir</a>
+                <a href="mitigasi.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Mitigasi</a>
+                <a href="tanda-waktu.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Tanda Waktu</a>
+                <a href="berita.html"
+                    class="block px-3 py-2 text-slate-600 hover:text-bmkg-blue rounded hover:bg-slate-50 dark:hover:bg-slate-800">Berita</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <nav class="bg-slate-50 dark:bg-slate-800 py-3" aria-label="Breadcrumb">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ol class="flex items-center space-x-2 text-sm">
+                <li>
+                    <a href="index.html" class="text-slate-600 dark:text-slate-400 hover:text-bmkg-blue">
+                        <span class="material-symbols-outlined text-lg">home</span>
+                    </a>
+                </li>
+                <li class="text-slate-400">/</li>
+                <li class="text-bmkg-blue font-medium">Petir Real-time</li>
+            </ol>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                    <span class="material-symbols-outlined text-yellow-600 text-2xl">flash_on</span>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-slate-900 dark:text-white">Petir Real-time</h1>
+                    <p class="text-slate-600 dark:text-slate-400">Monitoring sambaran petir wilayah NTB secara real-time</p>
+                </div>
+            </div>
+
+            <!-- Status Update -->
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
+                <div class="flex items-center gap-3">
+                    <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
+                    <span class="text-sm font-medium text-yellow-900 dark:text-yellow-100">
+                        Data real-time dari sensor petir BMKG • Update setiap 5 menit • Sumber: Lightning Detection Network
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Total Sambaran</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="total-strikes">--</p>
+                        <p class="text-xs text-slate-500 mt-1">24 jam terakhir</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-yellow-600">flash_on</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Intensitas Tertinggi</p>
+                        <p class="text-2xl font-bold text-slate-900 dark:text-white" id="max-intensity">-- kA</p>
+                        <p class="text-xs text-slate-500 mt-1">Arus puncak</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-red-600">trending_up</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Wilayah Teraktif</p>
+                        <p class="text-lg font-bold text-slate-900 dark:text-white" id="most-active-area">--</p>
+                        <p class="text-xs text-slate-500 mt-1" id="active-area-count">-- sambaran</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-orange-600">location_on</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm font-medium text-slate-600 dark:text-slate-400">Status Monitoring</p>
+                        <p class="text-sm font-bold text-green-600" id="monitoring-status">AKTIF</p>
+                        <p class="text-xs text-slate-500 mt-1">Sensor online</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-green-600">sensors</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map and Controls -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mb-8">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-white">Peta Petir Real-time NTB</h2>
+                        <p class="text-slate-600 dark:text-slate-400 mt-1">Lokasi sambaran petir dalam 24 jam terakhir</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-4">
+                        <!-- Time Filter -->
+                        <select id="time-filter" class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm">
+                            <option value="1">1 Jam Terakhir</option>
+                            <option value="6">6 Jam Terakhir</option>
+                            <option value="24" selected>24 Jam Terakhir</option>
+                            <option value="72">3 Hari Terakhir</option>
+                        </select>
+                        
+                        <!-- Intensity Filter -->
+                        <select id="intensity-filter" class="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white text-sm">
+                            <option value="all">Semua Intensitas</option>
+                            <option value="high">Tinggi (>50 kA)</option>
+                            <option value="medium">Sedang (20-50 kA)</option>
+                            <option value="low">Rendah (<20 kA)</option>
+                        </select>
+                        
+                        <!-- Refresh Button -->
+                        <button id="refresh-map" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors text-sm flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">refresh</span>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Map Container -->
+            <div class="p-6">
+                <div id="lightning-map" class="w-full"></div>
+                
+                <!-- Map Legend -->
+                <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-6">
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full intensity-high"></div>
+                            <span class="text-sm text-slate-600 dark:text-slate-400">Intensitas Tinggi (>50 kA)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full intensity-medium"></div>
+                            <span class="text-sm text-slate-600 dark:text-slate-400">Intensitas Sedang (20-50 kA)</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-4 h-4 rounded-full intensity-low"></div>
+                            <span class="text-sm text-slate-600 dark:text-slate-400">Intensitas Rendah (<20 kA)</span>
+                        </div>
+                    </div>
+                    <div class="text-sm text-slate-500 dark:text-slate-400">
+                        Terakhir diperbarui: <span id="last-update">--:--:-- WITA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightning Data Table -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 mb-8">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white">Data Sambaran Petir Terbaru</h2>
+                    <div class="flex items-center gap-2">
+                        <button id="export-lightning-data" class="px-4 py-2 text-sm bg-green-50 dark:bg-green-900/30 text-green-600 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors">
+                            <span class="material-symbols-outlined text-sm mr-1">download</span>
+                            Export CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="lightning-loading" class="p-8 text-center hidden">
+                <div class="w-8 h-8 border-4 border-yellow-200 border-t-yellow-600 rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-slate-600 dark:text-slate-400">Memuat data petir...</p>
+            </div>
+
+            <!-- Data Table -->
+            <div id="lightning-table">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-slate-50 dark:bg-slate-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">#</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Waktu</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Koordinat</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Lokasi</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Intensitas</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tipe</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lightning-data" class="bg-white dark:bg-slate-800 divide-y divide-slate-200 dark:divide-slate-700">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div class="text-sm text-slate-700 dark:text-slate-300">
+                            Menampilkan <span id="showing-from">1</span> - <span id="showing-to">10</span> dari <span id="total-records">0</span> data
+                        </div>
+                        <div class="flex space-x-2" id="pagination-container">
+                            <!-- Pagination buttons akan diisi oleh JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informasi Tambahan -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Tentang Deteksi Petir -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-yellow-600">info</span>
+                    Tentang Deteksi Petir
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <div class="w-6 h-6 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-yellow-600 text-sm font-bold">1</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Lightning Detection Network</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Jaringan sensor yang mendeteksi gelombang elektromagnetik dari sambaran petir</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-6 h-6 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-yellow-600 text-sm font-bold">2</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Akurasi Lokasi</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Presisi lokasi sambaran dengan akurasi hingga 500 meter</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="w-6 h-6 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <span class="text-yellow-600 text-sm font-bold">3</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Real-time Monitoring</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Data diperbarui setiap 5 menit untuk monitoring cuaca ekstrem</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Peringatan dan Kontak -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-200 dark:border-slate-700">
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-red-600">warning</span>
+                    Peringatan & Kontak
+                </h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                        <div class="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-red-600">emergency</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Peringatan Cuaca Ekstrem</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Hindari aktivitas outdoor saat aktivitas petir tinggi</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-blue-600">phone</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Stasiun Geofisika Mataram</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">stageof.mataram@bmkg.go.id</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                        <div class="w-10 h-10 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg flex items-center justify-center">
+                            <span class="material-symbols-outlined text-yellow-600">link</span>
+                        </div>
+                        <div>
+                            <p class="font-medium text-slate-900 dark:text-white">Info Cuaca BMKG</p>
+                            <div class="text-sm text-slate-600 dark:text-slate-400">
+                                <a href="http://web.meteo.bmkg.go.id" target="_blank" class="hover:text-bmkg-blue">
+                                    web.meteo.bmkg.go.id
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white mt-16" role="contentinfo">
+        <!-- Main Footer Content -->
+        <div class="bg-gradient-to-r from-bmkg-blue to-blue-800 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Logo & Organization Info -->
+                    <div class="lg:col-span-1">
+                        <div class="flex items-center space-x-4 mb-6">
+                            <div class="flex items-center justify-center w-16 h-16 bg-white rounded-lg p-2">
+                                <img src="https://www.bmkg.go.id/images/profil/logo-bmkg.png" alt="Logo BMKG"
+                                    class="w-full h-full object-contain" crossorigin="anonymous" />
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Stasiun Geofisika Mataram</h3>
+                                <p class="text-blue-100 text-sm">BMKG - Nusa Tenggara Barat</p>
+                            </div>
+                        </div>
+                        <p class="text-blue-100 mb-6 text-sm leading-relaxed">
+                            Unit Pelaksana Teknis BMKG yang bertugas melakukan monitoring dan analisis geofisika untuk
+                            wilayah Nusa Tenggara Barat.
+                        </p>
+                    </div>
+
+                    <!-- Link BMKG -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Link BMKG</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="http://web.meteo.bmkg.go.id" target="_blank"
+                                    class="text-blue-100 hover:text-white transition-colors">Informasi Cuaca</a></li>
+                            <li><a href="http://dataonline.bmkg.go.id" target="_blank"
+                                    class="text-blue-100 hover:text-white transition-colors">Data Online BMKG</a></li>
+                            <li><a href="https://inatews.bmkg.go.id/wrs/index.html" target="_blank"
+                                    class="text-blue-100 hover:text-white transition-colors">WRS</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Layanan -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Layanan Geofisika</h4>
+                        <ul class="space-y-2 text-sm">
+                            <li><a href="gempabumi.html" class="text-blue-100 hover:text-white transition-colors">Gempa Bumi</a></li>
+                            <li><a href="tsunami.html" class="text-blue-100 hover:text-white transition-colors">Tsunami</a></li>
+                            <li><a href="petir.html" class="text-blue-100 hover:text-white transition-colors">Info Petir</a></li>
+                            <li><a href="magnet-bumi.html" class="text-blue-100 hover:text-white transition-colors">Magnet Bumi</a></li>
+                            <li><a href="tanda-waktu.html" class="text-blue-100 hover:text-white transition-colors">Tanda Waktu</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Kontak -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Kontak</h4>
+                        <div class="space-y-2 text-sm text-blue-100">
+                            <p>Jl. Adisucipto No. 10</p>
+                            <p>Rembiga, Kota Mataram</p>
+                            <p>NTB 83115</p>
+                            <p class="mt-4">
+                                <a href="mailto:stageof.mataram@bmkg.go.id" class="hover:text-white transition-colors">
+                                    stageof.mataram@bmkg.go.id
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div>
+                        <h4 class="text-lg font-bold mb-4">Sosial Media</h4>
+                        <p class="text-blue-100 text-sm mb-4">Ikuti informasi terkini dari kami</p>
+                        <div class="flex flex-wrap gap-3">
+                            <a href="https://www.facebook.com/stasiungeofisika.mataram" target="_blank" rel="noopener noreferrer"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"
+                                aria-label="Facebook Stasiun Geofisika Mataram">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                </svg>
+                            </a>
+                            <a href="https://twitter.com/stageof_mataram" target="_blank" rel="noopener noreferrer"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"
+                                aria-label="Twitter Stasiun Geofisika Mataram">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                                </svg>
+                            </a>
+                            <a href="https://www.instagram.com/infogempa_ntb" target="_blank" rel="noopener noreferrer"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"
+                                aria-label="Instagram Stasiun Geofisika Mataram">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 6.62 5.367 11.987 11.988 11.987 6.62 0 11.987-5.367 11.987-11.987C24.014 5.367 18.637.001 12.017.001zM8.449 16.988c-1.297 0-2.448-.49-3.323-1.297C4.198 14.895 3.708 13.744 3.708 12.447s.49-2.448 1.418-3.323c.875-.807 2.026-1.297 3.323-1.297s2.448.49 3.323 1.297c.928.875 1.418 2.026 1.418 3.323s-.49 2.448-1.418 3.244c-.875.807-2.026 1.297-3.323 1.297zm7.83-9.606c-.49 0-.928-.175-1.297-.49-.368-.315-.49-.753-.49-1.243 0-.49.122-.928.49-1.243.369-.315.807-.49 1.297-.49s.928.175 1.297.49c.315.315.49.753.49 1.243 0 .49-.175.928-.49 1.243-.369.315-.807.49-1.297.49z"/>
+                                </svg>
+                            </a>
+                            <a href="https://www.youtube.com/@stasiungeofisikamataram7031" target="_blank" rel="noopener noreferrer"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"
+                                aria-label="YouTube Stasiun Geofisika Mataram">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                </svg>
+                            </a>
+                            <a href="https://wa.me/6281338099295" target="_blank" rel="noopener noreferrer"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"
+                                aria-label="WhatsApp Stasiun Geofisika Mataram">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/>
+                                </svg>
+                            </a>
+                            <a href="https://linktr.ee/Stageof_Mataram" target="_blank" rel="noopener noreferrer"
+                                class="w-10 h-10 bg-white/10 hover:bg-white/20 rounded-lg flex items-center justify-center transition-colors"
+                                aria-label="Linktree Stasiun Geofisika Mataram">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M7.953 15.066c-.08 0-.16-.024-.229-.072l-1.008-.7a.437.437 0 0 1-.098-.612l.292-.42c.162-.234.481-.29.713-.128l.706.49.706-.49a.507.507 0 0 1 .713.128l.292.42a.437.437 0 0 1-.098.612l-1.008.7a.434.434 0 0 1-.229.072h-.052zm8.094 0c-.08 0-.16-.024-.229-.072l-1.008-.7a.437.437 0 0 1-.098-.612l.292-.42c.162-.234.481-.29.713-.128l.706.49.706-.49a.507.507 0 0 1 .713.128l.292.42a.437.437 0 0 1-.098.612l-1.008.7a.434.434 0 0 1-.229.072h-.052zM12 13.5a.5.5 0 0 1-.5-.5V2a.5.5 0 0 1 1 0v11a.5.5 0 0 1-.5.5z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Footer -->
+        <div class="bg-slate-800 py-4">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center text-sm text-slate-400">
+                    <p>&copy; 2024 Stasiun Geofisika Mataram - BMKG. Hak Cipta Dilindungi.</p>
+                    <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="#" class="hover:text-white transition-colors">Kebijakan Privasi</a>
+                        <a href="#" class="hover:text-white transition-colors">Syarat Penggunaan</a>
+                        <a href="#" class="hover:text-white transition-colors">Sitemap</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Leaflet JS for Map -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <script src="bmkg-clock.js"></script>
+    <script src="script.js"></script>
+    <script src="petir.js"></script>
+</body>
+</html>

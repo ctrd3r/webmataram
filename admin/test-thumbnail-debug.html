@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Thumbnail Images</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .header h1 { color: #333; margin-bottom: 10px; }
+        .header p { color: #666; }
+        .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .section h2 { color: #333; margin-bottom: 15px; font-size: 18px; border-bottom: 2px solid #007bff; padding-bottom: 10px; }
+        .test-item { margin-bottom: 15px; padding: 15px; background: #f9f9f9; border-left: 4px solid #007bff; border-radius: 4px; }
+        .test-item.success { border-left-color: #28a745; }
+        .test-item.error { border-left-color: #dc3545; }
+        .test-item.warning { border-left-color: #ffc107; }
+        .test-item h3 { color: #333; margin-bottom: 8px; font-size: 14px; }
+        .test-item p { color: #666; font-size: 13px; margin-bottom: 5px; }
+        .test-item code { background: #f0f0f0; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+        .test-item pre { background: #f0f0f0; padding: 10px; border-radius: 4px; overflow-x: auto; font-size: 12px; margin-top: 8px; }
+        .button-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        button { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-primary:hover { background: #0056b3; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-secondary:hover { background: #545b62; }
+        .loading { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .image-preview { max-width: 300px; max-height: 300px; border: 1px solid #ddd; border-radius: 4px; margin-top: 10px; }
+        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500; margin-right: 5px; }
+        .status-ok { background: #d4edda; color: #155724; }
+        .status-error { background: #f8d7da; color: #721c24; }
+        .status-warning { background: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Debug Thumbnail Images</h1>
+            <p>Diagnose why thumbnail images are not displaying in the admin panel</p>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="runAllTests()">
+                <span id="runButtonText">Jalankan Semua Test</span>
+            </button>
+            <button class="btn-secondary" onclick="clearResults()">Hapus Hasil</button>
+        </div>
+
+        <!-- Test Results -->
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function runAllTests() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="section"><div class="test-item"><div class="loading"></div> Menjalankan test...</div></div>';
+            
+            try {
+                // Test 1: Check API Response
+                await testAPIResponse();
+                
+                // Test 2: Check Database
+                await testDatabase();
+                
+                // Test 3: Check File System
+                await testFileSystem();
+                
+                // Test 4: Check Frontend Path Construction
+                await testFrontendPaths();
+                
+                // Test 5: Check Admin Panel
+                await testAdminPanel();
+                
+            } catch (error) {
+                console.error('Test error:', error);
+                addResult('Error', 'error', 'Terjadi kesalahan saat menjalankan test: ' + error.message);
+            }
+        }
+
+        async function testAPIResponse() {
+            addResult('API Response Test', 'loading', 'Mengecek API response...');
+            
+            try {
+                const response = await fetch('../api/manage_news.php?action=list&limit=1');
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    const news = data.data[0];
+                    const hasGambarUrl = 'gambar_url' in news;
+                    const hasGambarUtama = 'gambar_utama' in news;
+                    const gambarValue = news.gambar_url || news.gambar_utama;
+                    
+                    let html = `
+                        <strong>Status:</strong> <span class="status-badge status-ok">✓ OK</span><br>
+                        <strong>Total News:</strong> ${data.data.length}<br>
+                        <strong>First News ID:</strong> ${news.id_berita}<br>
+                        <strong>First News Title:</strong> ${news.judul}<br>
+                        <strong>Has gambar_url:</strong> ${hasGambarUrl ? '✓ Yes' : '✗ No'}<br>
+                        <strong>Has gambar_utama:</strong> ${hasGambarUtama ? '✓ Yes' : '✗ No'}<br>
+                        <strong>Image Filename:</strong> <code>${gambarValue || 'EMPTY'}</code><br>
+                        <strong>Is Empty:</strong> ${!gambarValue ? '⚠️ YES - This is the problem!' : '✓ No'}
+                    `;
+                    
+                    if (!gambarValue) {
+                        html += '<br><strong style="color: red;">⚠️ ISSUE FOUND:</strong> Image filename is empty in database!';
+                    }
+                    
+                    updateResult('API Response Test', 'success', html);
+                } else {
+                    updateResult('API Response Test', 'error', 'API returned error: ' + (data.message || 'Unknown error'));
+                }
+            } catch (error) {
+                updateResult('API Response Test', 'error', 'Failed to fetch API: ' + error.message);
+            }
+        }
+
+        async function testDatabase() {
+            addResult('Database Test', 'loading', 'Mengecek database...');
+            
+            try {
+                const response = await fetch('../api/test_image_response.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const gambarUtama = data.database_row.gambar_utama;
+                    const isEmpty = data.gambar_utama_empty;
+                    
+                    let html = `
+                        <strong>Status:</strong> <span class="status-badge status-ok">✓ OK</span><br>
+                        <strong>Database Value:</strong> <code>${gambarUtama || 'EMPTY'}</code><br>
+                        <strong>Is Empty:</strong> ${isEmpty ? '⚠️ YES' : '✓ No'}<br>
+                        <strong>Is Null:</strong> ${data.gambar_utama_is_null ? '⚠️ YES' : '✓ No'}<br>
+                        <strong>Type:</strong> ${data.gambar_utama_type}
+                    `;
+                    
+                    if (isEmpty) {
+                        html += '<br><strong style="color: red;">⚠️ ISSUE:</strong> gambar_utama field is empty in database!<br>This means images were not uploaded correctly.';
+                    }
+                    
+                    updateResult('Database Test', isEmpty ? 'warning' : 'success', html);
+                } else {
+                    updateResult('Database Test', 'error', 'Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                updateResult('Database Test', 'error', 'Failed: ' + error.message);
+            }
+        }
+
+        async function testFileSystem() {
+            addResult('File System Test', 'loading', 'Mengecek file system...');
+            
+            try {
+                const response = await fetch('../api/test_thumbnail_complete.php');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const fileExists = data.file_system.file_exists;
+                    const dirExists = data.file_system.dir_exists;
+                    
+                    let html = `
+                        <strong>Images Directory:</strong> <code>${data.file_system.images_dir}</code><br>
+                        <strong>Directory Exists:</strong> ${dirExists ? '✓ Yes' : '✗ No'}<br>
+                        <strong>Directory Writable:</strong> ${data.file_system.dir_writable ? '✓ Yes' : '✗ No'}<br>
+                        <strong>File Path:</strong> <code>${data.file_system.file_path}</code><br>
+                        <strong>File Exists:</strong> ${fileExists ? '✓ Yes' : '✗ No'}<br>
+                    `;
+                    
+                    if (fileExists) {
+                        html += `<strong>File Size:</strong> ${data.file_system.file_size_kb} KB`;
+                    } else {
+                        html += '<br><strong style="color: red;">⚠️ ISSUE:</strong> Image file not found!<br>Check if images were uploaded to the correct directory.';
+                    }
+                    
+                    updateResult('File System Test', fileExists ? 'success' : 'error', html);
+                } else {
+                    updateResult('File System Test', 'error', 'Error: ' + (data.error || 'Unknown error'));
+                }
+            } catch (error) {
+                updateResult('File System Test', 'error', 'Failed: ' + error.message);
+            }
+        }
+
+        async function testFrontendPaths() {
+            addResult('Frontend Path Test', 'loading', 'Mengecek path construction...');
+            
+            try {
+                const response = await fetch('../api/manage_news.php?action=list&limit=1');
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    const news = data.data[0];
+                    const gambarUrl = news.gambar_url || news.gambar_utama;
+                    const adminPath = `../images/news/${gambarUrl || 'placeholder-news.jpg'}`;
+                    
+                    let html = `
+                        <strong>API Returns:</strong> <code>${gambarUrl || 'EMPTY'}</code><br>
+                        <strong>Frontend Constructs:</strong> <code>${adminPath}</code><br>
+                        <strong>Expected Path:</strong> <code>images/news/${gambarUrl}</code><br>
+                    `;
+                    
+                    if (!gambarUrl) {
+                        html += '<br><strong style="color: red;">⚠️ ISSUE:</strong> Image filename is empty, using placeholder!';
+                        updateResult('Frontend Path Test', 'warning', html);
+                    } else {
+                        html += '<br><strong style="color: green;">✓ Path construction looks correct</strong>';
+                        updateResult('Frontend Path Test', 'success', html);
+                    }
+                } else {
+                    updateResult('Frontend Path Test', 'error', 'No news data available');
+                }
+            } catch (error) {
+                updateResult('Frontend Path Test', 'error', 'Failed: ' + error.message);
+            }
+        }
+
+        async function testAdminPanel() {
+            addResult('Admin Panel Test', 'loading', 'Mengecek admin panel...');
+            
+            try {
+                const response = await fetch('../api/manage_news.php?action=list&limit=1');
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    const news = data.data[0];
+                    const gambarUrl = news.gambar_url || news.gambar_utama;
+                    const imagePath = `../images/news/${gambarUrl || 'placeholder-news.jpg'}`;
+                    
+                    let html = `
+                        <strong>Test Image Display:</strong><br>
+                        <img src="${imagePath}" alt="Test" class="image-preview" onerror="this.style.border='2px solid red'; this.title='Image failed to load'">
+                        <br><br>
+                        <strong>Image Path Used:</strong> <code>${imagePath}</code><br>
+                    `;
+                    
+                    updateResult('Admin Panel Test', 'success', html);
+                } else {
+                    updateResult('Admin Panel Test', 'error', 'No news data available');
+                }
+            } catch (error) {
+                updateResult('Admin Panel Test', 'error', 'Failed: ' + error.message);
+            }
+        }
+
+        function addResult(title, status, content) {
+            const resultsDiv = document.getElementById('results');
+            const section = document.createElement('div');
+            section.className = 'section';
+            section.id = 'result-' + title.replace(/\s+/g, '-');
+            
+            const item = document.createElement('div');
+            item.className = `test-item ${status}`;
+            item.innerHTML = `<h3>${title}</h3><p>${content}</p>`;
+            
+            section.appendChild(item);
+            resultsDiv.appendChild(section);
+        }
+
+        function updateResult(title, status, content) {
+            const resultId = 'result-' + title.replace(/\s+/g, '-');
+            const section = document.getElementById(resultId);
+            
+            if (section) {
+                const item = section.querySelector('.test-item');
+                item.className = `test-item ${status}`;
+                item.innerHTML = `<h3>${title}</h3><p>${content}</p>`;
+            } else {
+                addResult(title, status, content);
+            }
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        // Run tests on page load
+        window.addEventListener('load', () => {
+            console.log('Test page loaded. Click "Jalankan Semua Test" to start.');
+        });
+    </script>
+</body>
+</html>
