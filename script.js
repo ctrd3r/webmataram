@@ -70,6 +70,9 @@ class GeofisikaMataram {
             // Load initial data
             await this.loadInitialData();
             
+            // Load random news
+            await this.loadRandomNews();
+            
             // Setup performance monitoring
             this.initializePerformanceMonitoring();
             
@@ -524,6 +527,101 @@ class GeofisikaMataram {
         } catch (error) {
             this.handleError('Failed to load initial data', error);
         }
+    }
+
+    /**
+     * Load random news from API
+     */
+    async loadRandomNews() {
+        try {
+            const container = document.getElementById('random-news-container');
+            if (!container) return;
+            
+            // Check if API is available
+            const response = await fetch('api/get_random_news.php?limit=3');
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch random news');
+            }
+            
+            const result = await response.json();
+            
+            if (result.success && result.data && result.data.length > 0) {
+                this.displayRandomNews(result.data);
+            } else {
+                this.displayRandomNews([]);
+            }
+            
+        } catch (error) {
+            console.warn('Failed to load random news:', error);
+            this.displayRandomNews([]);
+        }
+    }
+
+    /**
+     * Display random news cards
+     */
+    displayRandomNews(news) {
+        const container = document.getElementById('random-news-container');
+        if (!container) return;
+        
+        if (!news || news.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-3 text-center py-8">
+                    <p class="text-slate-500 dark:text-slate-400">Tidak ada berita tersedia</p>
+                </div>
+            `;
+            return;
+        }
+        
+        let html = '';
+        news.forEach(item => {
+            const imageUrl = item.gambar_url || 'images/placeholder-news.jpg';
+            const category = item.kategori || 'Berita';
+            const title = item.judul || 'Judul tidak tersedia';
+            const summary = item.ringkasan || '';
+            const date = item.tanggal_publish_formatted || '';
+            const url = item.detail_url || '#';
+            
+            html += `
+                <article class="bg-white dark:bg-slate-900 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden card-hover">
+                    <a href="${url}" class="block group">
+                        <div class="relative h-48 overflow-hidden">
+                            <img 
+                                src="${imageUrl}" 
+                                alt="${item.alt_gambar || title}"
+                                class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+                                loading="lazy"
+                                onerror="this.src='images/placeholder-news.jpg'"
+                            />
+                            <div class="absolute top-3 left-3">
+                                <span class="bg-bmkg-blue text-white text-xs font-bold px-2 py-1 rounded">
+                                    ${category}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="font-bold text-slate-900 dark:text-white mb-2 line-clamp-2 group-hover:text-bmkg-blue transition-colors">
+                                ${title}
+                            </h4>
+                            ${summary ? `<p class="text-sm text-slate-600 dark:text-slate-400 mb-3 line-clamp-2">${summary}</p>` : ''}
+                            <div class="flex items-center justify-between text-xs text-slate-500 dark:text-slate-500">
+                                <span class="flex items-center gap-1">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">calendar_today</span>
+                                    ${date}
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <span class="material-symbols-outlined" style="font-size: 14px;">visibility</span>
+                                    ${item.views || 0}x
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+                </article>
+            `;
+        });
+        
+        container.innerHTML = html;
     }
 
     /**
